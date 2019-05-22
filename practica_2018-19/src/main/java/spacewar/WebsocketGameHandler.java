@@ -1,5 +1,6 @@
 package spacewar;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,7 +35,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		msg.put("event", "JOIN");
 		msg.put("id", player.getPlayerId());
 		msg.put("shipType", player.getShipType());
-		player.getSession().sendMessage(new TextMessage(msg.toString()));
+		player.sendMessage(msg.toString());
 		
 		globalPlayers.put(player.getPlayerName(), player); // Añade el jugador al mapa de jugadores global
 		game.addPlayer(player);
@@ -52,12 +53,12 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				msg.put("event", "JOIN");
 				msg.put("id", player.getPlayerId());
 				msg.put("shipType", player.getShipType());
-				player.getSession().sendMessage(new TextMessage(msg.toString()));
+				player.sendMessage(msg.toString());
 				break;
 			case "JOIN ROOM":
 				msg.put("event", "NEW ROOM");
 				msg.put("room", "GLOBAL");
-				player.getSession().sendMessage(new TextMessage(msg.toString()));
+				player.sendMessage(msg.toString());
 				break;
 			case "UPDATE MOVEMENT":
 				player.loadMovement(node.path("movement").get("thrust").asBoolean(),
@@ -74,7 +75,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				System.out.println("Chat message received: " + text);
 				msg.put("event", "CHAT MSG");
 				msg.put("text", text);
-				player.getSession().sendMessage(new TextMessage(msg.toString()));
+				sendMessageToAll(msg.toString());
 				break;
 			default:
 				break;
@@ -95,5 +96,13 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		msg.put("event", "REMOVE PLAYER");
 		msg.put("id", player.getPlayerId());
 		game.broadcast(msg.toString());
+	}
+	
+	// Método que envia un msg a todos los jugadores
+	public void sendMessageToAll(String msg) throws Exception {
+		Collection<Player> copy = globalPlayers.values();
+		for (Player p : copy) {
+			p.sendMessage(msg);
+		}
 	}
 }

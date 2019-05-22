@@ -27,7 +27,8 @@ public class Player extends Spaceship {
 		return this.session;
 	}
 
-	public void sendMessage(String msg) throws Exception {
+	public synchronized void sendMessage(String msg) throws Exception {
+		//Si dos hilos quieren llamar a la misma sesión de ws a la vez, la protegemos con EM
 		this.session.sendMessage(new TextMessage(msg));
 	}
 
