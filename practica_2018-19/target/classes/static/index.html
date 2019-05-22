@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8" />
+
+	<!-- Título de la página -->
+	<title>SpaceWar!</title>
+
+	<!-- Bootstrap 4.2.1 -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	 crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+	 crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+	 crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+	 crossorigin="anonymous"></script>
+
+	<!-- JS Phaser -->
+	<script src="scripts/phaser.min.js"></script>
+	<script src="src/states/boot.js"></script>
+	<script src="src/states/preload.js"></script>
+	<script src="src/states/menu.js"></script>
+	<script src="src/states/lobby.js"></script>
+	<script src="src/states/matchmaking.js"></script>
+	<script src="src/states/room.js"></script>
+	<script src="src/states/game.js"></script>
+
+	<!-- JS Web -->
+	<script src="src/index.js"></script>
+
+	<!-- CSS Web -->
+	<link rel="stylesheet" href="style/main.css">
+</head>
+
+<body>
+	<div class="row">
+		<div class="col">
+			<!-- div donde ubicaremos el juego -->
+			<div id="gameDiv"></div>
+		</div>
+		<div class="col">
+			<div class="chatDiv">
+				<h1>Chat</h1>
+				<div class="chatTop">
+					<div id="chatArea">
+						<!-- Área del chat -->
+					</div>
+				</div>
+				<div class="chatBottom">
+					<input type="text" id="chatInput" required autocomplete="off" onsubmit="submitChatMsg()">
+					<a class="btn btn-primary" onclick="submitChatMsg();">Send</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

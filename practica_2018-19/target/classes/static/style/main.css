@@ -1,0 +1,26 @@
+.chatDiv {
+    height: 600px;
+    width: 20vw;
+}
+
+.chatTop {
+    height: 80%;
+    width: 100%;
+}
+
+#chatArea {
+    resize: none;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.chatBottom {
+    height: 20%;
+    width: 100%;
+    padding-top: 10px;
+}
+
+#chatInput {
+    width: 75%;
+}
