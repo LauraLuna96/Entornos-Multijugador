@@ -1,5 +1,7 @@
 package spacewar;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.web.socket.CloseStatus;
@@ -18,10 +20,14 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private ObjectMapper mapper = new ObjectMapper();
 	private AtomicInteger playerId = new AtomicInteger(0);
 	private AtomicInteger projectileId = new AtomicInteger(0);
+	private Map<String, Player> globalPlayers = new ConcurrentHashMap<>(); // Mapa de jugadores global
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		Player player = new Player(playerId.incrementAndGet(), session);
+		String[] uri = session.getUri().toString().split("/");
+		String playerName = uri[uri.length-1];
+		Player player = new Player(playerId.incrementAndGet(), session, playerName);
+		System.out.println("Created player with name: " + player.getPlayerName());
 		session.getAttributes().put(PLAYER_ATTRIBUTE, player);
 		
 		ObjectNode msg = mapper.createObjectNode();
@@ -30,6 +36,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		msg.put("shipType", player.getShipType());
 		player.getSession().sendMessage(new TextMessage(msg.toString()));
 		
+		globalPlayers.put(player.getPlayerName(), player); // Añade el jugador al mapa de jugadores global
 		game.addPlayer(player);
 	}
 
@@ -61,6 +68,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
 					game.addProjectile(projectile.getId(), projectile);
 				}
+				break;
+			case "CHAT MSG":
+				
 				break;
 			default:
 				break;
