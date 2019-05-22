@@ -107,7 +107,7 @@ window.onload = function () {
 				delete game.global.otherPlayers[msg.id]
 				break
 			case 'CHAT MSG':
-				showChatMsg(msg.text);
+				showChatMsg(msg.text, msg.player);
 				break
 			default:
 				console.dir(msg)
@@ -137,10 +137,10 @@ function submitChatMsg() {
 	console.log("Chat msg sent: " + msg.text);
 }
 
-function showChatMsg(text) {
+function showChatMsg(text, name) {
 	maxMsgs = 40;
 	if ($("#chatArea").children().length >= maxMsgs) {
 		$("#chatArea").find(':first-child').remove();
 	}
-	$("#chatArea").append("<p>" + text + "</p>")
+	$("#chatArea").append("<p><b>" + name + ":</b> "+ text + "</p>")
 }

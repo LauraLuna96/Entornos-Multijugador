@@ -75,6 +75,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				System.out.println("Chat message received: " + text);
 				msg.put("event", "CHAT MSG");
 				msg.put("text", text);
+				msg.put("player", player.getPlayerName());
 				sendMessageToAll(msg.toString());
 				break;
 			default:
