@@ -138,6 +138,9 @@ function submitChatMsg() {
 }
 
 function showChatMsg(text) {
-	current = $('.chatArea').val()
-	$('.chatArea').val(current + "<br>" + text);
+	maxMsgs = 40;
+	if ($("#chatArea").children().length >= maxMsgs) {
+		$("#chatArea").find(':first-child').remove();
+	}
+	$("#chatArea").append("<p>" + text + "</p>")
 }
