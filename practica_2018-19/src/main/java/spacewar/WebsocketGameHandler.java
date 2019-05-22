@@ -70,7 +70,11 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				}
 				break;
 			case "CHAT MSG":
-				
+				String text = node.get("text").asText();
+				System.out.println("Chat message received: " + text);
+				msg.put("event", "CHAT MSG");
+				msg.put("text", text);
+				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
 			default:
 				break;
