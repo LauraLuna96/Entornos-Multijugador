@@ -1,5 +1,13 @@
 window.onload = function () {
 
+	// Cosas de la interfaz/web
+	$('#modal').modal({backdrop: 'static', keyboard: false});
+	$("#chatInput").keydown(function(e) {	// Cuando se pulse una tecla sobre el input del chat ...
+		if (e.keyCode === 13) {  			// Si la tecla es enter
+        submitChatMsg();					// enviamos el mensaje al servidor
+    }
+	});
+
 	game = new Phaser.Game(1024, 600, Phaser.AUTO, 'gameDiv')
 
 	// GLOBAL VARIABLES
@@ -130,11 +138,13 @@ window.onload = function () {
 
 // Chat
 function submitChatMsg() {
+	val =  $('#chatInput').val();
+	if (val == "") return;	// Si el mensaje está vacío no enviamos nada
 	let msg = new Object()
 	msg.event = 'CHAT MSG'
-	msg.text = $('#chatInput').val();
-	game.global.socket.send(JSON.stringify(msg))
+	msg.text = val;
 	console.log("Chat msg sent: " + msg.text);
+	game.global.socket.send(JSON.stringify(msg));
 }
 
 function showChatMsg(text) {
