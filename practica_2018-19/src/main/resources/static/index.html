@@ -35,6 +35,26 @@
 </head>
 
 <body>
+	<!-- MODAL DE CONEXIÓN -->
+	<div id="modal" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Conexión con el servidor</h4>
+				</div>
+				<div class="modal-body">
+					<p>Antes de comenzar a jugar, debes elegir un <i>nickname</i></p>
+					<input type="text" id="nameInput" required autocomplete="off" onsubmit="submitChatMsg();">
+					<a class="btn btn-primary" onclick="submitChatMsg();">Send</a>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col">
 			<!-- div donde ubicaremos el juego -->
@@ -49,8 +69,8 @@
 					</div>
 				</div>
 				<div class="chatBottom">
-					<input type="text" id="chatInput" required autocomplete="off" onsubmit="submitChatMsg()">
-					<a class="btn btn-primary" onclick="submitChatMsg();">Send</a>
+					<input type="text" id="chatInput" required autocomplete="off">
+					<button onclick="submitChatMsg()" type="button" class="btn btn-primary">Enviar</button>
 				</div>
 			</div>
 		</div>
