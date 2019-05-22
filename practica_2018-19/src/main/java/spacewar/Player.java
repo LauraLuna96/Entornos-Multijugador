@@ -8,13 +8,15 @@ import org.springframework.web.socket.WebSocketSession;
 public class Player extends Spaceship {
 
 	private final WebSocketSession session;
+	private final String playerName;
 	private final int playerId;
 	private final String shipType;
 
-	public Player(int playerId, WebSocketSession session) {
+	public Player(int playerId, WebSocketSession session, String playerName) {
 		this.playerId = playerId;
 		this.session = session;
 		this.shipType = this.getRandomShipType();
+		this.playerName = playerName;
 	}
 
 	public int getPlayerId() {
@@ -31,6 +33,10 @@ public class Player extends Spaceship {
 
 	public String getShipType() {
 		return shipType;
+	}
+	
+	public String getPlayerName() {
+		return this.playerName;
 	}
 
 	private String getRandomShipType() {

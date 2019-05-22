@@ -13,7 +13,7 @@ window.onload = function() {
 	}
 
 	// WEBSOCKET CONFIGURATOR
-	game.global.socket = new WebSocket("ws://127.0.0.1:8080/spacewar")
+	game.global.socket = new WebSocket("ws://127.0.0.1:8080/spacewar/Hulio")
 	
 	game.global.socket.onopen = () => {
 		if (game.global.DEBUG_MODE) {
