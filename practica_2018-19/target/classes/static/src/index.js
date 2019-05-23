@@ -114,7 +114,7 @@ function configWebsocket() {
 				break
 			case 'NEW ROOM':
 				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] NEW ROOM message recieved')
+					console.log('[DEBUG] NEW ROOM message received')
 					console.dir(msg)
 				}
 				game.global.myPlayer.room = {
