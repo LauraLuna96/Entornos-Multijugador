@@ -39,7 +39,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		player.sendMessage(msg.toString());
 		
 		globalPlayers.put(player.getPlayerName(), player); // Añade el jugador al mapa de jugadores global
-		game.addPlayer(player);
+		//game.addPlayer(player);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						node.path("movement").get("rotRight").asBoolean());
 				if (node.path("bullet").asBoolean()) {
 					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
-					game.addProjectile(projectile.getId(), projectile);
+					//game.addProjectile(projectile.getId(), projectile);
 				}
 				break;
 			case "CHAT MSG":
@@ -92,12 +92,12 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
-		game.removePlayer(player);
+		//game.removePlayer(player);
 
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "REMOVE PLAYER");
 		msg.put("id", player.getPlayerId());
-		game.broadcast(msg.toString());
+		//game.broadcast(msg.toString());
 	}
 	
 	// Método que envia un msg a todos los jugadores

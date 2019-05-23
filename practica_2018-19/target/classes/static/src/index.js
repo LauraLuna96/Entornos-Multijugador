@@ -4,7 +4,7 @@ window.onload = function () {
 	$('#modal').modal({ backdrop: 'static', keyboard: false });
 	$("#chatInput").keydown(function (e) {	// Cuando se pulse una tecla sobre el input del chat ...
 		if (e.keyCode === 13) {  			// Si la tecla es enter
-			submitChatMsg();					// enviamos el mensaje al servidor
+			submitChatMsg();				// enviamos el mensaje al servidor
 		}
 	});
 
