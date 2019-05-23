@@ -8,6 +8,22 @@ window.onload = function () {
 		}
 	});
 
+	var e = $.Event('keypress');
+    e.which = 65; // Character 'A'
+	$('body').trigger(e);
+	var e = $.Event('keypress');
+    e.which = 87; // Character 'W'
+	$('body').trigger(e);
+	var e = $.Event('keypress');
+    e.which = 83; // Character 'S'
+	$('body').trigger(e);
+	var e = $.Event('keypress');
+    e.which = 68; // Character 'D'
+	$('body').trigger(e);
+	var e = $.Event('keypress');
+    e.which = 32; // Character 'space'
+    $('body').trigger(e);
+
 	game = new Phaser.Game(1024, 600, Phaser.AUTO, 'gameDiv')
 
 	// GLOBAL VARIABLES
@@ -62,7 +78,7 @@ function showChatMsg(text, name) {
 	if ($("#chatArea").children().length >= maxMsgs) {
 		$("#chatArea").find(':first-child').remove();
 	}
-	$("#chatArea").append("<p><b>" + name + ":</b> " + text + "</p>")
+	$("#chatArea").append("<p style='word-break:break-word;'><b>" + name + ":</b> " + text + "</p>")
 }
 
 function configWebsocket() {
