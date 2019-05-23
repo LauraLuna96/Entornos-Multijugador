@@ -1,26 +1,194 @@
+:root {
+    --bg-color: #202020;
+    --bg-color-dark: #131313;
+    --theme-color1: #ffffff;
+    --theme-color2: #40ffe6;
+    --border-color: #e9ecef;
+    --warning-color1: #e2004b;
+    --warning-color2: #ffffff;
+    --theme-color2-dark: #00a6ac;
+    --title-font: 'Orbitron', sans-serif;
+    --text-font: 'Lato', sans-serif;
+}
+
+body {
+    font-family: var(--text-font);
+    background-color: var(--bg-color-dark);
+    color: var(--theme-color1);
+    padding: 1vh 2vw;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--title-font);
+}
+
+.page-header {
+    padding: 1vh 1vw;
+}
+
+.row {
+    margin:0px;
+}
+
+.alert-danger {
+    background-color: var(--warning-color1);
+    color: var(--theme-color1);
+    border-color: var(--theme-color1);
+}
+
 .chatDiv {
     height: 600px;
     width: 20vw;
+    background-color: var(--bg-color);
+    padding: 10px 10px 0px 10px;
+    border-radius: .3rem;
 }
 
 .chatTop {
-    height: 80%;
+    height: 90%;
     width: 100%;
+}
+
+#chatHeader {
+    height: 10%;
+    border-bottom: solid var(--border-color) 1px;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 #chatArea {
     resize: none;
-    height: 100%;
+    height: 90%;
     width: 100%;
     overflow-y: scroll;
+    background-color: var(--bg-color-dark);
 }
 
 .chatBottom {
-    height: 20%;
+    height: 10%;
     width: 100%;
     padding-top: 10px;
 }
 
 #chatInput {
-    width: 75%;
+    width: 70%;
+    height: 34px;
 }
+
+#chatSubmit {
+    font-size: 0.75em;
+    width: calc(30% - calc(10px + 0.3em));
+}
+
+.modal-centered {
+    width: 100%;
+    text-align: center;
+}
+
+.modal-content {
+    background-color: var(--bg-color);
+}
+
+.modal-header {
+    background-color: var(--bg-color-dark);
+}
+
+.btn-spacewars {
+    vertical-align: top;
+    margin: 0px 5px;
+    font-family: var(--title-font);
+    background-color: var(--theme-color2-dark);
+    color: var(--theme-color1);
+    border: solid var(--theme-color1) 2px;
+    -webkit-transition: 0.5s;
+    /* Safari */
+    transition: 0.5s;
+}
+
+.btn-spacewars:hover {
+    color: var(--theme-color2);
+    border-color: var(--theme-color2);
+    -webkit-transition: 0.5s;
+    /* Safari */
+    transition: 0.5s;
+    box-shadow: 0px 0px 5px var(--theme-color2);
+}
+
+.btn-lg {
+    font-size: 24px;
+    margin: 10px;
+}
+
+.btn-lg:hover {
+    padding-left: 1.75em;
+    padding-right: 1.75em;
+    letter-spacing: 0.3em;
+}
+
+input[type=text] {
+    background-color: var(--bg-color-dark);
+    color: var(--theme-color1);
+    border: solid var(--theme-color1) 2px;
+    border-radius: 5px;
+    padding: 0px 15px;
+}
+
+input:focus {
+    outline: none;
+    box-shadow: 0px 0px 5px var(--theme-color2);
+}
+
+/* SCROLL BAR */
+
+::-webkit-scrollbar {
+    width: 20px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #000000;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--theme-color2);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-color2-dark);
+}
+
+.anim-rot {
+    animation-name: anim-rot;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+}
+
+.anim-loading {
+    font-size: 40px;
+    -webkit-animation: anim-loading 2s linear infinite;
+    -moz-animation: anim-loading 2s linear infinite;
+    animation: anim-loading 2s linear infinite;
+}
+
+@-moz-keyframes anim-rot {
+    0% { -moz-transform: rotate(20deg); }
+    50% { -moz-transform: rotate(-20deg); }
+    100% { -moz-transform: rotate(20deg); }
+}
+@-webkit-keyframes anim-rot {
+    0% { -webkit-transform: rotate(20deg); }
+    50% { -webkit-transform: rotate(-20deg); }
+    100% { -webkit-transform: rotate(20deg); }
+}
+@keyframes anim-rot {
+    0% { transform: rotate(20deg); }
+    50% { transform: rotate(-20deg); }
+    100% { transform: rotate(20deg); }
+}
+
+@-moz-keyframes anim-loading { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes anim-loading { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes anim-loading { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }

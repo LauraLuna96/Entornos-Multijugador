@@ -1,5 +1,13 @@
 window.onload = function () {
 
+	// Cosas de la interfaz/web
+	$('#modal').modal({ backdrop: 'static', keyboard: false });
+	$("#chatInput").keydown(function (e) {	// Cuando se pulse una tecla sobre el input del chat ...
+		if (e.keyCode === 13) {  			// Si la tecla es enter
+			submitChatMsg();					// enviamos el mensaje al servidor
+		}
+	});
+
 	game = new Phaser.Game(1024, 600, Phaser.AUTO, 'gameDiv')
 
 	// GLOBAL VARIABLES
@@ -13,17 +21,65 @@ window.onload = function () {
 	}
 
 	// WEBSOCKET CONFIGURATOR
-	game.global.socket = new WebSocket("ws://127.0.0.1:8080/spacewar/Hulio")
+	//game.global.socket = new WebSocket("ws://127.0.0.1:8080/spacewar/Hulio")
 
+	// El ws se configura en una función a parte
+
+
+	// PHASER SCENE CONFIGURATOR
+	game.state.add('bootState', Spacewar.bootState)
+	game.state.add('preloadState', Spacewar.preloadState)
+	game.state.add('menuState', Spacewar.menuState)
+	game.state.add('lobbyState', Spacewar.lobbyState)
+	game.state.add('matchmakingState', Spacewar.matchmakingState)
+	game.state.add('roomState', Spacewar.roomState)
+	game.state.add('gameState', Spacewar.gameState)
+
+	//game.state.start('bootState')
+
+}
+
+// Conexión con el servidor
+function openWebsocket() {
+	name = $("#nameInput").val();
+	game.global.socket = new WebSocket("ws://127.0.0.1:8080/spacewar/" + name);
+	configWebsocket();
+}
+
+// Chat
+function submitChatMsg() {
+	val = $('#chatInput').val();
+	if (val == "") return;	// Si el mensaje está vacío no enviamos nada
+	let msg = new Object()
+	msg.event = 'CHAT MSG'
+	msg.text = val;
+	console.log("Chat msg sent: " + msg.text);
+	game.global.socket.send(JSON.stringify(msg));
+}
+
+function showChatMsg(text, name) {
+	maxMsgs = 40;
+	if ($("#chatArea").children().length >= maxMsgs) {
+		$("#chatArea").find(':first-child').remove();
+	}
+	$("#chatArea").append("<p><b>" + name + ":</b> " + text + "</p>")
+}
+
+function configWebsocket() {
 	game.global.socket.onopen = () => {
+		$(".modal").modal("hide")
 		if (game.global.DEBUG_MODE) {
 			console.log('[DEBUG] WebSocket connection opened.')
 		}
 	}
 
-	game.global.socket.onclose = () => {
+	game.global.socket.onclose = (e) => {
 		if (game.global.DEBUG_MODE) {
 			console.log('[DEBUG] WebSocket connection closed.')
+		}
+
+		if (e.code == 404) {
+			console.log("Error 404");
 		}
 	}
 
@@ -107,7 +163,7 @@ window.onload = function () {
 				delete game.global.otherPlayers[msg.id]
 				break
 			case 'CHAT MSG':
-				showChatMsg(msg.text);
+				showChatMsg(msg.text, msg.player);
 				break
 			default:
 				console.dir(msg)
@@ -115,32 +171,6 @@ window.onload = function () {
 		}
 	}
 
-	// PHASER SCENE CONFIGURATOR
-	game.state.add('bootState', Spacewar.bootState)
-	game.state.add('preloadState', Spacewar.preloadState)
-	game.state.add('menuState', Spacewar.menuState)
-	game.state.add('lobbyState', Spacewar.lobbyState)
-	game.state.add('matchmakingState', Spacewar.matchmakingState)
-	game.state.add('roomState', Spacewar.roomState)
-	game.state.add('gameState', Spacewar.gameState)
-
-	game.state.start('bootState')
-
-}
-
-// Chat
-function submitChatMsg() {
-	let msg = new Object()
-	msg.event = 'CHAT MSG'
-	msg.text = $('#chatInput').val();
-	game.global.socket.send(JSON.stringify(msg))
-	console.log("Chat msg sent: " + msg.text);
-}
-
-function showChatMsg(text) {
-	maxMsgs = 40;
-	if ($("#chatArea").children().length >= maxMsgs) {
-		$("#chatArea").find(':first-child').remove();
-	}
-	$("#chatArea").append("<p>" + text + "</p>")
+	// Una vez que hemos configurado el WS, empezamos el juego
+	game.state.start('bootState');
 }

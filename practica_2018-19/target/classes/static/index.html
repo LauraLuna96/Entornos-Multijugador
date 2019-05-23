@@ -17,6 +17,10 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
 	 crossorigin="anonymous"></script>
 
+	<!-- Font awesome icons -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+	 crossorigin="anonymous">
+
 	<!-- JS Phaser -->
 	<script src="scripts/phaser.min.js"></script>
 	<script src="src/states/boot.js"></script>
@@ -31,10 +35,43 @@
 	<script src="src/index.js"></script>
 
 	<!-- CSS Web -->
+	<link href="https://fonts.googleapis.com/css?family=Lato|Orbitron&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="style/main.css">
 </head>
 
 <body>
+	<div class="page-header">
+		<h1><i class="fas fa-meteor anim-rot"></i> SpaceWars!</h1>
+	</div>
+	<!-- MODAL DE CONEXIÓN -->
+	<div id="modal" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title"><i class="fas fa-user-astronaut"></i> Conectar con el servidor</h1>
+				</div>
+				<div class="modal-body">
+					<p>Antes de comenzar a jugar, debes elegir un <i>nickname</i>. Este <b>debe ser único</b>, pero al cerrar sesión
+						quedará libre y otra persona lo podrá utilizar (no se registra de quién es cada nombre). Se mostrará <i>in-game</i>
+						cuando entres a las partidas, y en el ranking de puntuaciones si consigues entrar en el top 10.</p>
+					<div class="modal-centered">
+						<div id="menu-conectar">
+							<h5>Nombre de jugador</h5>
+							<input placeholder="Hulio" type="text" id="nameInput" required autocomplete="off" onsubmit="submitChatMsg();">
+							<p><i>Se permite cualquier nombre de entre 4 a 20 caracteres</i></p>
+							<button type="button" class="btn btn-spacewars btn-lg" onclick="openWebsocket();">Conectar</button>
+						</div>
+						<div id="menu-cargando" style="display:none">
+							<i class="fas fa-sync anim-loading"></i>
+						</div>
+						<div id="menu-error" style="display:none" class="alert alert-danger" role="alert"><i class="far fa-frown-open"></i> Oops! Ha habido un error en la conexión con el servidor. Por favor, prueba otra vez.</div>
+					</div>
+				</div>
+				<!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+			</div>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col">
 			<!-- div donde ubicaremos el juego -->
@@ -42,15 +79,17 @@
 		</div>
 		<div class="col">
 			<div class="chatDiv">
-				<h1>Chat</h1>
 				<div class="chatTop">
+					<div id="chatHeader">
+						<h2><i class="fas fa-comments"></i> Chat</h2>
+					</div>
 					<div id="chatArea">
 						<!-- Área del chat -->
 					</div>
 				</div>
 				<div class="chatBottom">
-					<input type="text" id="chatInput" required autocomplete="off" onsubmit="submitChatMsg()">
-					<a class="btn btn-primary" onclick="submitChatMsg();">Send</a>
+					<input type="text" id="chatInput" required autocomplete="off">
+					<button id="chatSubmit" onclick="submitChatMsg()" type="button" class="btn btn-spacewars">Enviar</button>
 				</div>
 			</div>
 		</div>

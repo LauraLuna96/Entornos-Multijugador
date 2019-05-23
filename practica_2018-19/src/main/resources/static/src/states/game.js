@@ -1,4 +1,4 @@
-Spacewar.gameState = function(game) {
+Spacewar.gameState = function (game) {
 	this.bulletTime
 	this.fireBullet
 	this.numStars = 100 // Should be canvas size dependant
@@ -7,17 +7,17 @@ Spacewar.gameState = function(game) {
 
 Spacewar.gameState.prototype = {
 
-	init : function() {
+	init: function () {
 		if (game.global.DEBUG_MODE) {
 			console.log("[DEBUG] Entering **GAME** state");
 		}
 	},
 
-	preload : function() {
+	preload: function () {
 		// We create a procedural starfield background
 		for (var i = 0; i < this.numStars; i++) {
 			let sprite = game.add.sprite(game.world.randomX,
-					game.world.randomY, 'spacewar', 'staralpha.png');
+				game.world.randomY, 'spacewar', 'staralpha.png');
 			let random = game.rnd.realInRange(0, 0.6);
 			sprite.scale.setTo(random, random)
 		}
@@ -26,25 +26,25 @@ Spacewar.gameState.prototype = {
 		game.global.proyectiles = new Array(this.maxProjectiles)
 		for (var i = 0; i < this.maxProjectiles; i++) {
 			game.global.projectiles[i] = {
-				image : game.add.sprite(0, 0, 'spacewar', 'projectile.png')
+				image: game.add.sprite(0, 0, 'spacewar', 'projectile.png')
 			}
 			game.global.projectiles[i].image.anchor.setTo(0.5, 0.5)
 			game.global.projectiles[i].image.visible = false
 		}
 
 		// we load a random ship
-		let random = [ 'blue', 'darkgrey', 'green', 'metalic', 'orange',
-				'purple', 'red' ]
+		let random = ['blue', 'darkgrey', 'green', 'metalic', 'orange',
+			'purple', 'red']
 		let randomImage = random[Math.floor(Math.random() * random.length)]
-				+ '_0' + (Math.floor(Math.random() * 6) + 1) + '.png'
+			+ '_0' + (Math.floor(Math.random() * 6) + 1) + '.png'
 		game.global.myPlayer.image = game.add.sprite(0, 0, 'spacewar',
-				game.global.myPlayer.shipType)
+			game.global.myPlayer.shipType)
 		game.global.myPlayer.image.anchor.setTo(0.5, 0.5)
 	},
 
-	create : function() {
+	create: function () {
 		this.bulletTime = 0
-		this.fireBullet = function() {
+		this.fireBullet = function () {
 			if (game.time.now > this.bulletTime) {
 				this.bulletTime = game.time.now + 250;
 				// this.weapon.fire()
@@ -54,6 +54,15 @@ Spacewar.gameState.prototype = {
 			}
 		}
 
+		// Esto es para que las teclas se puedan usar fuera del canvas (en el chat, por ej)
+		game.onBlur.add(function () {
+			game.input.keyboard.enabled = false;
+		});
+
+		game.onFocus.add(function () {
+			game.input.keyboard.enabled = true;
+		});
+
 		this.wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 		this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
 		this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
@@ -61,22 +70,22 @@ Spacewar.gameState.prototype = {
 		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 		// Stop the following keys from propagating up to the browser
-		game.input.keyboard.addKeyCapture([ Phaser.Keyboard.W,
-				Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D,
-				Phaser.Keyboard.SPACEBAR ]);
+		/*game.input.keyboard.addKeyCapture([Phaser.Keyboard.W,
+		Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D,
+		Phaser.Keyboard.SPACEBAR]);*/
 
 		game.camera.follow(game.global.myPlayer.image);
 	},
 
-	update : function() {
+	update: function () {
 		let msg = new Object()
 		msg.event = 'UPDATE MOVEMENT'
 
 		msg.movement = {
-			thrust : false,
-			brake : false,
-			rotLeft : false,
-			rotRight : false
+			thrust: false,
+			brake: false,
+			rotLeft: false,
+			rotRight: false
 		}
 
 		msg.bullet = false
