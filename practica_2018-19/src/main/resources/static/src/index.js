@@ -51,9 +51,11 @@ function openWebsocket() {
 
 // Chat
 function submitChatMsg() {
-	val = $('#chatInput').val();
-	if (val == "") return;	// Si el mensaje está vacío no enviamos nada
-	let msg = new Object()
+	val = $('#chatInput').val();	// Cogemos el valor del input
+	if (val == "") return;			// Si el mensaje está vacío no enviamos nada
+	$('#chatInput').val("");		// Reseteamos el valor del input
+	
+	let msg = new Object()			// Mensaje a enviar por ws
 	msg.event = 'CHAT MSG'
 	msg.text = val;
 	console.log("Chat msg sent: " + msg.text);
