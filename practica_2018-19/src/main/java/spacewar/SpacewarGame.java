@@ -18,7 +18,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class SpacewarGame {
 
-	public final static SpacewarGame INSTANCE = new SpacewarGame();
+	//public final static SpacewarGame INSTANCE = new SpacewarGame();
+	public Sala sala;
 
 	private final static int FPS = 30;
 	private final static long TICK_DELAY = 1000 / FPS;
@@ -29,35 +30,35 @@ public class SpacewarGame {
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 	// GLOBAL GAME ROOM
-	private Map<String, Player> players = new ConcurrentHashMap<>();
+	//private Map<String, Player> players = new ConcurrentHashMap<>();
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
-	private AtomicInteger numPlayers = new AtomicInteger();
+	//private AtomicInteger numPlayers = new AtomicInteger();
 
-	private SpacewarGame() {
-
+	public SpacewarGame(Sala sala) {
+		this.sala = sala;
 	}
 
-	public void addPlayer(Player player) {
+	/*public void addPlayer(Player player) {
 		players.put(player.getSession().getId(), player);
 
 		int count = numPlayers.getAndIncrement();
 		if (count == 0) {
 			this.startGameLoop();
 		}
-	}
+	}*/
 
-	public Collection<Player> getPlayers() {
+	/*public Collection<Player> getPlayers() {
 		return players.values();
-	}
+	}*/
 
-	public void removePlayer(Player player) {
+	/*public void removePlayer(Player player) {
 		players.remove(player.getSession().getId());
 
 		int count = this.numPlayers.decrementAndGet();
 		if (count == 0) {
 			this.stopGameLoop();
 		}
-	}
+	}*/
 
 	public void addProjectile(int id, Projectile projectile) {
 		projectiles.put(id, projectile);
@@ -68,7 +69,7 @@ public class SpacewarGame {
 	}
 
 	public void removeProjectile(Projectile projectile) {
-		players.remove(projectile.getId(), projectile);
+		projectiles.remove(projectile.getId(), projectile);
 	}
 
 	public void startGameLoop() {
@@ -82,7 +83,7 @@ public class SpacewarGame {
 		}
 	}
 
-	public void broadcast(String message) {
+	/*public void broadcast(String message) {
 		for (Player player : getPlayers()) {
 			try {
 				player.getSession().sendMessage(new TextMessage(message.toString()));
@@ -92,7 +93,7 @@ public class SpacewarGame {
 				this.removePlayer(player);
 			}
 		}
-	}
+	}*/
 
 	private void tick() {
 		ObjectNode json = mapper.createObjectNode();
@@ -105,7 +106,7 @@ public class SpacewarGame {
 
 		try {
 			// Update players
-			for (Player player : getPlayers()) {
+			for (Player player : sala.getPlayers()) {
 				player.calculateMovement();
 
 				ObjectNode jsonPlayer = mapper.createObjectNode();
@@ -122,7 +123,7 @@ public class SpacewarGame {
 				projectile.applyVelocity2Position();
 
 				// Handle collision
-				for (Player player : getPlayers()) {
+				for (Player player : sala.getPlayers()) {
 					if ((projectile.getOwner().getPlayerId() != player.getPlayerId()) && player.intersect(projectile)) {
 						// System.out.println("Player " + player.getPlayerId() + " was hit!!!");
 						projectile.setHit(true);
@@ -158,7 +159,7 @@ public class SpacewarGame {
 			json.putPOJO("players", arrayNodePlayers);
 			json.putPOJO("projectiles", arrayNodeProjectiles);
 
-			this.broadcast(json.toString());
+			this.sala.broadcast(json.toString());
 		} catch (Throwable ex) {
 
 		}

@@ -15,13 +15,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class WebsocketGameHandler extends TextWebSocketHandler {
-
-	private SpacewarGame game = SpacewarGame.INSTANCE;
+  
+	//private SpacewarGame game = SpacewarGame.INSTANCE;
 	private static final String PLAYER_ATTRIBUTE = "PLAYER";
 	private ObjectMapper mapper = new ObjectMapper();
 	private AtomicInteger playerId = new AtomicInteger(0);
 	private AtomicInteger projectileId = new AtomicInteger(0);
 	private Map<String, Player> globalPlayers = new ConcurrentHashMap<>(); // Mapa de jugadores global
+	private Map<String, Sala> salas = new ConcurrentHashMap<>(); // Mapa de salas existentes
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
