@@ -25,18 +25,13 @@ Spacewar.menuState.prototype = {
 
 	create: function () {
 
-		//Se crean los botones y se les asignan funciones
-		/*button = game.add.button(400, 450, 'bLobby', goLobby);
-		button.scale.setTo(0.5,0.5);
-		button = game.add.button(600, 450, 'bMatchmaking', goMatchmaking);
-		button.scale.setTo(0.5,0.5);*/
 
 	},
 
-	update: function () {
-		if (typeof game.global.myPlayer.id !== 'undefined') {
+	update : function() {
+		/*if (typeof game.global.myPlayer.id !== 'undefined') {
 			game.state.start('lobbyState')
-		}
+		} */
 	}
 }
 
