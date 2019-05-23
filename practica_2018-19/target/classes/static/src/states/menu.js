@@ -1,35 +1,44 @@
-Spacewar.menuState = function(game) {
+Spacewar.menuState = function (game) {
 
 }
 
 Spacewar.menuState.prototype = {
 
-	init : function() {
+	init: function () {
 		if (game.global.DEBUG_MODE) {
 			console.log("[DEBUG] Entering **MENU** state");
 		}
 	},
 
-	preload : function() {
+	preload: function () {
 		// In case JOIN message from server failed, we force it
 		if (typeof game.global.myPlayer.id == 'undefined') {
 			if (game.global.DEBUG_MODE) {
 				console.log("[DEBUG] Forcing joining server...");
 			}
 			let message = {
-				event : 'JOIN'
+				event: 'JOIN'
 			}
 			game.global.socket.send(JSON.stringify(message))
 		}
 	},
 
-	create : function() {
+	create: function () {
+
 
 	},
 
 	update : function() {
-		if (typeof game.global.myPlayer.id !== 'undefined') {
+		/*if (typeof game.global.myPlayer.id !== 'undefined') {
 			game.state.start('lobbyState')
-		}
+		} */
 	}
+}
+
+function goLobby() {
+	game.state.start('lobbyState');
+}
+
+function goMatchmaking() {
+	game.state.start('matchmakingState');
 }

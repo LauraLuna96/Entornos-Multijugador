@@ -52,9 +52,11 @@ function openWebsocket() {
 
 // Chat
 function submitChatMsg() {
-	val = $('#chatInput').val();
-	if (val == "") return;	// Si el mensaje está vacío no enviamos nada
-	let msg = new Object()
+	val = $('#chatInput').val();	// Cogemos el valor del input
+	if (val == "") return;			// Si el mensaje está vacío no enviamos nada
+	$('#chatInput').val("");		// Reseteamos el valor del input
+	
+	let msg = new Object()			// Mensaje a enviar por ws
 	msg.event = 'CHAT MSG'
 	msg.text = val;
 	console.log("Chat msg sent: " + msg.text);
@@ -114,7 +116,7 @@ function configWebsocket() {
 				break
 			case 'NEW ROOM':
 				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] NEW ROOM message received')
+					console.log('[DEBUG] NEW ROOM message recieved')
 					console.dir(msg)
 				}
 				game.global.myPlayer.room = {

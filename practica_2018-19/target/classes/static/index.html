@@ -65,7 +65,8 @@
 						<div id="menu-cargando" style="display:none">
 							<i class="fas fa-sync anim-loading"></i>
 						</div>
-						<div id="menu-error" style="display:none" class="alert alert-danger" role="alert"><i class="far fa-frown-open"></i> Oops! Ha habido un error en la conexión con el servidor. Por favor, prueba otra vez.</div>
+						<div id="menu-error" style="display:none" class="alert alert-danger" role="alert"><i class="far fa-frown-open"></i>
+							Oops! Ha habido un error en la conexión con el servidor. Por favor, prueba otra vez.</div>
 					</div>
 				</div>
 				<!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
@@ -74,8 +75,29 @@
 	</div>
 	<div class="row">
 		<div class="col">
-			<!-- div donde ubicaremos el juego -->
-			<div id="gameDiv"></div>
+			<div class="gameContainer">
+				<!-- div donde ubicaremos el juego -->
+				<div id="gameDiv">
+						<div class="menu-container">
+								<div id="menu-salas" style="display:none;" class="menu">
+									<h3>Lobby</h3>
+									<i>Selecciona una sala para jugar.</i><br>
+									<div id="area-salas" class="area-menu">
+										<button type="button" class="btn btn-spacewars">caraculo</button>
+									</div>
+								</div>
+								<div id="menu-principal" style="display:none;" class="menu">
+									<h3>Menú principal</h3>
+									<i>¡Bienvenido a SpaceWars!</i>
+									<div id="area-principal" class="area-menu">
+										<button type="button" class="btn btn-spacewars btn-lg" id="btn-goLobby">Elegir sala manualmente</button><br>
+										<button type="button" class="btn btn-spacewars btn-lg" id="btn-goMatchmaking">Matchmaking automático</button>
+									</div>
+								</div>
+							</div>
+				</div>
+				
+			</div>
 		</div>
 		<div class="col">
 			<div class="chatDiv">
