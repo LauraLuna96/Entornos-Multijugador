@@ -24,8 +24,9 @@ Spacewar.menuState.prototype = {
 	},
 
 	create: function () {
-
-
+		$("#menu-principal").show();
+		$("#btn-goLobby").click(function(){goLobby()});
+		$("#btn-goMatchmaking").click(function(){goMatchmaking()});
 	},
 
 	update : function() {
@@ -36,9 +37,11 @@ Spacewar.menuState.prototype = {
 }
 
 function goLobby() {
+	$("#menu-principal").hide();
 	game.state.start('lobbyState');
 }
 
 function goMatchmaking() {
+	$("#menu-principal").hide();
 	game.state.start('matchmakingState');
 }
