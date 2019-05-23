@@ -1,29 +1,19 @@
 window.onload = function () {
 
 	// Cosas de la interfaz/web
+
+	// Abrimos el modal para la conexión al servidor
 	$('#modal').modal({ backdrop: 'static', keyboard: false });
+
+	// Asignamos un evento de keydown a la ventana de input del chat para que se envíe
+	// el mensaje si pulsamos "enter" (además de si pulsamos el botón Enviar)
 	$("#chatInput").keydown(function (e) {	// Cuando se pulse una tecla sobre el input del chat ...
 		if (e.keyCode === 13) {  			// Si la tecla es enter
 			submitChatMsg();				// enviamos el mensaje al servidor
 		}
 	});
 
-	var e = $.Event('keypress');
-    e.which = 65; // Character 'A'
-	$('body').trigger(e);
-	var e = $.Event('keypress');
-    e.which = 87; // Character 'W'
-	$('body').trigger(e);
-	var e = $.Event('keypress');
-    e.which = 83; // Character 'S'
-	$('body').trigger(e);
-	var e = $.Event('keypress');
-    e.which = 68; // Character 'D'
-	$('body').trigger(e);
-	var e = $.Event('keypress');
-    e.which = 32; // Character 'space'
-    $('body').trigger(e);
-
+	// Creamos el juego
 	game = new Phaser.Game(1024, 600, Phaser.AUTO, 'gameDiv')
 
 	// GLOBAL VARIABLES
@@ -38,9 +28,7 @@ window.onload = function () {
 
 	// WEBSOCKET CONFIGURATOR
 	//game.global.socket = new WebSocket("ws://127.0.0.1:8080/spacewar/Hulio")
-
-	// El ws se configura en una función a parte
-
+	// El ws se crea y configura en una función a parte
 
 	// PHASER SCENE CONFIGURATOR
 	game.state.add('bootState', Spacewar.bootState)
@@ -52,7 +40,6 @@ window.onload = function () {
 	game.state.add('gameState', Spacewar.gameState)
 
 	//game.state.start('bootState')
-
 }
 
 // Conexión con el servidor
@@ -87,6 +74,7 @@ function configWebsocket() {
 		if (game.global.DEBUG_MODE) {
 			console.log('[DEBUG] WebSocket connection opened.')
 		}
+		game.state.start('bootState');
 	}
 
 	game.global.socket.onclose = (e) => {
@@ -186,7 +174,4 @@ function configWebsocket() {
 				break
 		}
 	}
-
-	// Una vez que hemos configurado el WS, empezamos el juego
-	game.state.start('bootState');
 }

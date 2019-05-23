@@ -55,13 +55,21 @@ Spacewar.gameState.prototype = {
 		}
 
 		// Esto es para que las teclas se puedan usar fuera del canvas (en el chat, por ej)
-		game.onBlur.add(function () {
+		/*game.onBlur.add(function () {
 			game.input.keyboard.enabled = false;
 		});
 
 		game.onFocus.add(function () {
 			game.input.keyboard.enabled = true;
-		});
+		});*/
+		$("#gameDiv").mouseenter(function() {
+            game.input.enabled = true;
+        });
+
+        $("#gameDiv").mouseleave(function() {
+            game.input.enabled = false;
+
+        });
 
 		this.wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 		this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
