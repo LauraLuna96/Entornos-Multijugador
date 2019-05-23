@@ -23,7 +23,8 @@ window.onload = function () {
 		socket: null,
 		myPlayer: new Object(),
 		otherPlayers: [],
-		projectiles: []
+		projectiles: [],
+		salas: []
 	}
 
 	// WEBSOCKET CONFIGURATOR
@@ -68,6 +69,15 @@ function showChatMsg(text, name) {
 		$("#chatArea").find(':first-child').remove();
 	}
 	$("#chatArea").append("<p style='word-break:break-word;'><b>" + name + ":</b> " + text + "</p>")
+}
+
+// Creación de una sala, se lo manda el cliente al servidor 
+function createSala() {
+	let msg = new Object()
+	msg.event = 'CREATE ROOM'
+	msg.name = 'Sala de prueba'
+	console.log("Enviada petición de creación de sala")
+	game.global.socket.send(JSON.stringify(msg))
 }
 
 function configWebsocket() {
