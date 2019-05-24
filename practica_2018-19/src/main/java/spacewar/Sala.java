@@ -16,6 +16,10 @@ public class Sala {
 		this.name = name;
 		this.game = new SpacewarGame(this);
 	}
+	
+	public int getNumPlayers() {
+		return numPlayers.get();
+	}
 
 	public SpacewarGame getGame() {
 		return game;
@@ -62,6 +66,16 @@ public class Sala {
 				this.removePlayer(player);
 			}
 		}
+	}
+	
+	// Método que devuelve la colección de jugadores escrita en JSON
+	public String playerString() {
+		String result = "";
+		for (Player player : getPlayers()) {
+			result+=player.getPlayerName()+",";
+		}
+		result=result.substring(0,result.length()-1);
+		return result;
 	}
 
 }

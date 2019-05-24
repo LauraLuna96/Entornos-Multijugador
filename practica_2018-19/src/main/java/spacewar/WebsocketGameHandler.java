@@ -54,6 +54,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			JsonNode node = mapper.readTree(message.getPayload());
 			ObjectNode msg = mapper.createObjectNode();
 			Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
+			Sala sala = (Sala) session.getAttributes().get(ROOM_ATTRIBUTE);
 
 			switch (node.get("event").asText()) {
 			//////////////////////////////////////////////////////
@@ -76,9 +77,13 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				String roomName = node.get("roomName").asText();	// Sacamos el nombre de la sala
 				Sala s = salas.get(roomName);						// y con él, la sala del mapa
 				session.getAttributes().put(ROOM_ATTRIBUTE, s);		// y la huardamos en la sesión de ws
+				s.addPlayer(player);
+				
+				System.out.println("[ROOM] Player " + player.getPlayerName() + " joined the room " + s.getName());
 				
 				msg.put("event", "ROOM INFO");					// Después, enviamos al jugador un msg
 				msg.put("roomName", roomName);					// con la info de la sala a la que ha entrado
+				
 				player.sendMessage(msg.toString());
 				break;
 
@@ -87,15 +92,22 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				lobbyPlayers.remove(player.getPlayerName()); 	// Quita al jugador del lobby
 				Sala room = new Sala(node.get("roomName").asText()); // Crea la sala
 				
+				System.out.println("[ROOM] New room " + room.getName() + " created.");
+				
 				salas.put(room.getName(), room);				// Guarda la sala en el mapa
 				msg.put("event", "NEW ROOM");					// y avisa a los demás jugadores del lobby
 				msg.put("roomName", room.getName());			// de que se ha creado una sala nueva
 				sendMessageToAllInLobby(msg.toString());		// para que la muestren en la lista
 				
+				room.addPlayer(player);
+				
+				System.out.println("[ROOM] Player " + player.getPlayerName() + " joined the room " + room.getName());
+				
 				session.getAttributes().put(ROOM_ATTRIBUTE, room);	// Guardamos la sala en la sesión de ws
 				ObjectNode msg2 = mapper.createObjectNode();	// y mandamos el mensaje al jugador
 				msg2.put("event", "ROOM INFO");					// con la info de la sala a la que ha
 				msg2.put("roomName", room.getName());			// entrado (nombre, etc)
+				msg2.put("players", room.playerString());
 				player.sendMessage(msg2.toString());
 				break;
 
@@ -108,6 +120,18 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 
 			// Un jugador ha salido de la sala donde estaba
 			case "LEAVE ROOM":
+				sala.removePlayer(player);
+				System.out.println("[ROOM] Player " + player.getPlayerName() + " left the room "+ sala.getName());
+				if(sala.getNumPlayers() <= 0) {
+					System.out.println("[ROOM] Room " + sala.getName() + " is empty. Deleting it now.");
+					msg.put("event", "DELETE ROOM");
+					sendMessageToAllInLobby(msg.toString());
+					salas.remove(sala.getName());
+				} else {
+					msg.put("event", "LEAVE ROOM");
+					msg.put("playerName", player.getPlayerName());
+					sala.broadcast(msg.toString());
+				}
 				lobbyPlayers.put(player.getPlayerName(), player); // Añade el jugador al lobby
 				break;
 
