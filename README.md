@@ -14,7 +14,7 @@ cliente->servidor: Cuando un cliente se quiere unir a una sala específica
 servidor->cliente: Cuando un cliente se ha unido a una sala, avisa a los demás (de la sala)
 
 "UPDATE ROOM"
-servidor->cliente: Cuando una sala ha tenido algún cambio (ej. se ha unido un jugador) se avisa a los demás clientes del lobby para que actualicen su información visible
+servidor->cliente: Cuando una sala ha tenido algún cambio (ej. se ha unido un jugador) se avisa a los demás clientes del lobby para que actualicen su información visible --> Se usará en el caso de implementar un 2do modo de juego.
 
 "LEAVE ROOM"
 cliente->servidor: Cuando quiere salir de la sala donde está
