@@ -184,11 +184,20 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
 		globalPlayers.remove(player.getPlayerName());
 		
+		Sala sala = (Sala) session.getAttributes().get(ROOM_ATTRIBUTE);
+		if (sala != null) {
+			sala.removePlayer(player);
+			ObjectNode msg = mapper.createObjectNode();
+			msg.put("event", "LEAVE ROOM");
+			msg.put("playerName", player.getPlayerName());
+			sala.broadcast(msg.toString());
+		}
+		
 		System.out.println("[SYS] Player " + player.getPlayerName() + " disconnected.");
 
-		ObjectNode msg = mapper.createObjectNode();
-		msg.put("event", "REMOVE PLAYER");
-		msg.put("id", player.getPlayerId());
+		//ObjectNode msg = mapper.createObjectNode();
+		//msg.put("event", "REMOVE PLAYER");
+		//msg.put("id", player.getPlayerId());
 		// game.broadcast(msg.toString());
 	}
 

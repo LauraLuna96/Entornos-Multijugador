@@ -87,12 +87,24 @@
 								<button type="button" class="btn btn-spacewars btn-lg" id="btn-goMatchmaking">Matchmaking automático</button>
 							</div>
 						</div>
-						<div id="menu-lobby" style="display:none;" class="menu">
+						<div id="menu-lobby" class="menu">
+							<div id="area-lobby-btn">
+								<button type="button" id="btn-openRoomDialog" class="btn btn-spacewars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="far fa-plus-square"></i> Crear
+									sala nueva</button>
+								<form class="dropdown-menu" aria-labelledby="btn-openRoomDialog">
+									<div class="form-group">
+										<label for="new-roomName">Nombre de la sala</label>
+										<input type="text" autocomplete="off" class="form-control" id="new-roomName" placeholder="Nombre de la sala">
+									</div>
+									<button type="button" id="btn-createRoom" class="btn btn-spacewars"><i class="far fa-plus-square"></i> Crear</button>
+								</form>
+								<button type="button" id="btn-leaveLobby" class="btn btn-spacewars"><i class="fas fa-times"></i> Salir del
+									lobby</button>
+							</div>
 							<h3>Lobby</h3>
-							<i>Selecciona una sala para jugar.</i><br>
+							<i>Selecciona una sala para jugar.</i>
 							<div id="area-lobby" class="area-menu">
-								<button type="button" id="btn-createRoom" class="btn btn-spacewars">Crear sala nueva</button>
-								<button type="button" id="btn-leaveLobby" class="btn btn-spacewars">Salir del lobby</button>
+								<!-- Area para mostrar los botones de las salas -->
 							</div>
 						</div>
 						<div id="menu-matchmaking" style="display:none;" class="menu">
