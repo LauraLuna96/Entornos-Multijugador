@@ -12,22 +12,26 @@ public class Player extends Spaceship {
 	private final int playerId;
 	private final String shipType;
 	private Sala sala; // Sala a la que pertenece el jugador, le llega en el constructor
-	private int vida;
+	private int life;
 
 	public Player(int playerId, WebSocketSession session, String playerName) {
 		this.playerId = playerId;
 		this.session = session;
 		this.shipType = this.getRandomShipType();
 		this.playerName = playerName;
-		this.vida = 3;
+		this.life = 3;
+	}
+	
+	public void removeLife(int n) {
+		this.life-=n;
 	}
 
-	public int getVida() {
-		return this.vida;
+	public int getLife() {
+		return this.life;
 	}
 
-	public void setVida(int vida) {
-		this.vida = vida;
+	public void setLife(int life) {
+		this.life = life;
 	}
 
 	public Sala getSala() {
