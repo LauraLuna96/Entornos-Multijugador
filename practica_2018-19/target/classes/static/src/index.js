@@ -108,6 +108,9 @@ function configWebsocket() {
 					console.log('[DEBUG] ID assigned to player: ' + game.global.myPlayer.id)
 				}
 				break
+			case 'GET ROOMS':
+				updateRoomList(msg.salas);
+				break
 			case 'NEW ROOM':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] NEW ROOM message received')
@@ -129,19 +132,19 @@ function configWebsocket() {
 				updateSalaInfo();
 				break
 			case 'LEAVE ROOM':
-			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] LEAVE ROOM message received')
-				console.dir(msg)
-			}
-			var pos = -1;
-			for (i = 0; i < game.global.currentSala.players.length; i++) {
-				if (game.global.currentSala.players[i] == msg.playerName) {
-					pos = i;
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] LEAVE ROOM message received')
+					console.dir(msg)
 				}
-			}
-			if (pos >= 0) game.global.currentSala.players.remove(pos);
-			updateSalaInfo();
-			break;
+				var pos = -1;
+				for (i = 0; i < game.global.currentSala.players.length; i++) {
+					if (game.global.currentSala.players[i] == msg.playerName) {
+						pos = i;
+					}
+				}
+				if (pos >= 0) game.global.currentSala.players.remove(pos);
+				updateSalaInfo();
+				break;
 			case 'GAME STATE UPDATE':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] GAME STATE UPDATE message received')

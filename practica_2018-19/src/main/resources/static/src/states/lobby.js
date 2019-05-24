@@ -58,3 +58,10 @@ function leaveLobby() {
 	game.global.socket.send(JSON.stringify(msg))
 	game.state.start('menuState')
 }
+
+function updateRoomList(rooms) {
+	$("#area-lobby").html("");
+	for (i = 0; i < rooms.length; i++) {
+		$("#area-lobby").append('<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> '+ rooms[i].roomName + '</button> '+ rooms[i].numPlayers+'/'+rooms[i].maxPlayers+' jugadores</div>')
+	}
+}

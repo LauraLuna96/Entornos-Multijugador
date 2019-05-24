@@ -12,6 +12,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class WebsocketGameHandler extends TextWebSocketHandler {
@@ -63,6 +64,18 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			// Un jugador ha entrado al lobby
 			case "JOIN LOBBY":
 				lobbyPlayers.put(player.getPlayerName(), player); // Añade el jugador al lobby
+				
+				msg.put("event", "GET ROOMS");
+				ArrayNode arrayNode = mapper.createArrayNode();
+				for (Sala s : salas.values()) {
+					ObjectNode jsonSala = mapper.createObjectNode();
+					jsonSala.put("roomName", s.getName());
+					jsonSala.put("numPlayers", s.getNumPlayers());
+					jsonSala.put("maxPlayers", 2);
+					arrayNode.addPOJO(jsonSala);
+				}
+				msg.putPOJO("salas", arrayNode);
+				player.sendMessage(msg.toString());
 				break;
 
 			// Un jugador ha salido del lobby
@@ -83,6 +96,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				
 				msg.put("event", "ROOM INFO");					// Después, enviamos al jugador un msg
 				msg.put("roomName", roomName);					// con la info de la sala a la que ha entrado
+				msg.put("players", s.playerString());
 				
 				player.sendMessage(msg.toString());
 				break;
@@ -106,15 +120,28 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				session.getAttributes().put(ROOM_ATTRIBUTE, room);	// Guardamos la sala en la sesión de ws
 				ObjectNode msg2 = mapper.createObjectNode();	// y mandamos el mensaje al jugador
 				msg2.put("event", "ROOM INFO");					// con la info de la sala a la que ha
-				msg2.put("roomName", room.getName());			// entrado (nombre, etc)
+				msg2.put("roomName", room.getName());			// entrado (nombre, otros jugadores, etc)
 				msg2.put("players", room.playerString());
 				player.sendMessage(msg2.toString());
+				
+				msg.put("event", "GET ROOMS");
+				ArrayNode arrayNode2 = mapper.createArrayNode();
+				for (Sala sa : salas.values()) {
+					ObjectNode jsonSala = mapper.createObjectNode();
+					jsonSala.put("roomName", sa.getName());
+					jsonSala.put("numPlayers", sa.getNumPlayers());
+					jsonSala.put("maxPlayers", 2);
+					arrayNode2.addPOJO(jsonSala);
+				}
+				msg.putPOJO("salas", arrayNode2);
+				sendMessageToAllInLobby(msg.toString());
 				break;
 
 			// Algo ha cambiado en la info. de una sala
 			case "UPDATE ROOM":
 				msg.put("event", "ROOM INFO");
-				msg.put("roomName", "prueba");
+				msg.put("roomName", sala.getName());
+				msg.put("players", sala.playerString());
 				player.sendMessage(msg.toString());
 				break;
 
@@ -125,15 +152,39 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				if(sala.getNumPlayers() <= 0) {
 					System.out.println("[ROOM] Room " + sala.getName() + " is empty. Deleting it now.");
 					msg.put("event", "DELETE ROOM");
+					msg.put("roomName", sala.getName());
 					sendMessageToAllInLobby(msg.toString());
 					salas.remove(sala.getName());
 					session.getAttributes().remove(ROOM_ATTRIBUTE);
+					
+					msg.put("event", "GET ROOMS");
+					ArrayNode arrayNode3 = mapper.createArrayNode();
+					for (Sala sa : salas.values()) {
+						ObjectNode jsonSala = mapper.createObjectNode();
+						jsonSala.put("roomName", sa.getName());
+						jsonSala.put("numPlayers", sa.getNumPlayers());
+						jsonSala.put("maxPlayers", 2);
+						arrayNode3.addPOJO(jsonSala);
+					}
+					msg.putPOJO("salas", arrayNode3);
+					sendMessageToAllInLobby(msg.toString());
 				} else {
 					msg.put("event", "LEAVE ROOM");
 					msg.put("playerName", player.getPlayerName());
 					sala.broadcast(msg.toString());
 				}
 				lobbyPlayers.put(player.getPlayerName(), player); // Añade el jugador al lobby
+				msg.put("event", "GET ROOMS");
+				ArrayNode arrayNode3 = mapper.createArrayNode();
+				for (Sala sa : salas.values()) {
+					ObjectNode jsonSala = mapper.createObjectNode();
+					jsonSala.put("roomName", sa.getName());
+					jsonSala.put("numPlayers", sa.getNumPlayers());
+					jsonSala.put("maxPlayers", 2);
+					arrayNode3.addPOJO(jsonSala);
+				}
+				msg.putPOJO("salas", arrayNode3);
+				player.sendMessage(msg.toString());
 				break;
 
 			//////////////////////////////////////////////////////
