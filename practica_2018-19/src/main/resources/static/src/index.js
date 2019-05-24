@@ -124,8 +124,24 @@ function configWebsocket() {
 				}
 				if (game.global.currentSala == null) game.global.currentSala = new Object();
 				game.global.currentSala.roomName = msg.roomName;
+				console.log(msg.players);
+				game.global.currentSala.players = msg.players.split(",");
 				updateSalaInfo();
 				break
+			case 'LEAVE ROOM':
+			if (game.global.DEBUG_MODE) {
+				console.log('[DEBUG] LEAVE ROOM message received')
+				console.dir(msg)
+			}
+			var pos = -1;
+			for (i = 0; i < game.global.currentSala.players.length; i++) {
+				if (game.global.currentSala.players[i] == msg.playerName) {
+					pos = i;
+				}
+			}
+			if (pos >= 0) game.global.currentSala.players.remove(pos);
+			updateSalaInfo();
+			break;
 			case 'GAME STATE UPDATE':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] GAME STATE UPDATE message received')
