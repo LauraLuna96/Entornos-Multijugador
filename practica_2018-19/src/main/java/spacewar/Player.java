@@ -12,14 +12,24 @@ public class Player extends Spaceship {
 	private final int playerId;
 	private final String shipType;
 	private Sala sala; // Sala a la que pertenece el jugador, le llega en el constructor
+	private int vida;
 
 	public Player(int playerId, WebSocketSession session, String playerName) {
 		this.playerId = playerId;
 		this.session = session;
 		this.shipType = this.getRandomShipType();
 		this.playerName = playerName;
+		this.vida = 3;
 	}
-	
+
+	public int getVida() {
+		return this.vida;
+	}
+
+	public void setVida(int vida) {
+		this.vida = vida;
+	}
+
 	public Sala getSala() {
 		return this.sala;
 	}
@@ -33,14 +43,15 @@ public class Player extends Spaceship {
 	}
 
 	public synchronized void sendMessage(String msg) throws Exception {
-		//Si dos hilos quieren llamar a la misma sesión de ws a la vez, la protegemos con EM
+		// Si dos hilos quieren llamar a la misma sesión de ws a la vez, la protegemos
+		// con EM
 		this.session.sendMessage(new TextMessage(msg));
 	}
 
 	public String getShipType() {
 		return shipType;
 	}
-	
+
 	public String getPlayerName() {
 		return this.playerName;
 	}
