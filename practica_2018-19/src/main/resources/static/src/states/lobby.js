@@ -18,7 +18,7 @@ Spacewar.lobbyState.prototype = {
 		//game.state.start('matchmakingState')
 		$("#menu-lobby").show();
 		$("#btn-createRoom").click(function(){createRoom()});
-		$("#btn-leaveLobby").click(function(){goMatchmaking()});
+		$("#btn-leaveLobby").click(function(){leaveLobby()});
 	},
 
 	update : function() {
