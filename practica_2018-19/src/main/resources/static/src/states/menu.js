@@ -25,8 +25,8 @@ Spacewar.menuState.prototype = {
 
 	create: function () {
 		$("#menu-principal").show();
-		$("#btn-goLobby").click(function(){goLobby()});
-		$("#btn-goMatchmaking").click(function(){goMatchmaking()});
+		//$("#btn-goLobby").click(function(){goLobby()});
+		//$("#btn-goMatchmaking").click(function(){goMatchmaking()});
 	},
 
 	update : function() {

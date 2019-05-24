@@ -16,7 +16,7 @@ Spacewar.roomState.prototype = {
 
 	create : function() {
 		$("#menu-sala").show();
-		$("#btn-leaveRoom").click(function(){leaveRoom();});
+		//$("#btn-leaveRoom").click(function(){leaveRoom();});
 	},
 
 	update : function() {
