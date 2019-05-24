@@ -108,6 +108,9 @@ function configWebsocket() {
 					console.log('[DEBUG] ID assigned to player: ' + game.global.myPlayer.id)
 				}
 				break
+			case 'GET ROOMS':
+				updateRoomList(msg.salas);
+				break
 			case 'NEW ROOM':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] NEW ROOM message received')
