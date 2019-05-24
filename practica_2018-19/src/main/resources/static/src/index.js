@@ -3,7 +3,7 @@ window.onload = function () {
 	// Cosas de la interfaz/web
 
 	// Abrimos el modal para la conexión al servidor
-	//$('#modal').modal({ backdrop: 'static', keyboard: false });
+	$('#modal').modal({ backdrop: 'static', keyboard: false });
 
 	// Asignamos un evento de keydown a la ventana de input del chat para que se envíe
 	// el mensaje si pulsamos "enter" (además de si pulsamos el botón Enviar)
@@ -24,7 +24,8 @@ window.onload = function () {
 		myPlayer: new Object(),
 		otherPlayers: [],
 		projectiles: [],
-		salas: []
+		salas: [],
+		currentSala: null
 	}
 
 	// WEBSOCKET CONFIGURATOR
@@ -41,6 +42,7 @@ window.onload = function () {
 	game.state.add('gameState', Spacewar.gameState)
 
 	//game.state.start('bootState')
+	// El juego se inicializa cuando el websocket se abre
 }
 
 // Conexión con el servidor
@@ -55,7 +57,7 @@ function submitChatMsg() {
 	val = $('#chatInput').val();	// Cogemos el valor del input
 	if (val == "") return;			// Si el mensaje está vacío no enviamos nada
 	$('#chatInput').val("");		// Reseteamos el valor del input
-	
+
 	let msg = new Object()			// Mensaje a enviar por ws
 	msg.event = 'CHAT MSG'
 	msg.text = val;
@@ -71,15 +73,7 @@ function showChatMsg(text, name) {
 	$("#chatArea").append("<p style='word-break:break-word;'><b>" + name + ":</b> " + text + "</p>")
 }
 
-// Creación de una sala, se lo manda el cliente al servidor 
-function createSala() {
-	let msg = new Object()
-	msg.event = 'NEW ROOM'
-	msg.name = 'Sala de prueba'
-	console.log("Enviada petición de creación de sala")
-	game.global.socket.send(JSON.stringify(msg))
-}
-
+// Configuración de websocket (eventos onclose/onopen, etc)
 function configWebsocket() {
 	game.global.socket.onopen = () => {
 		$(".modal").modal("hide")
@@ -105,7 +99,7 @@ function configWebsocket() {
 		switch (msg.event) {
 			case 'JOIN':
 				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] JOIN message recieved')
+					console.log('[DEBUG] JOIN message received')
 					console.dir(msg)
 				}
 				game.global.myPlayer.id = msg.id
@@ -116,16 +110,25 @@ function configWebsocket() {
 				break
 			case 'NEW ROOM':
 				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] NEW ROOM message recieved')
+					console.log('[DEBUG] NEW ROOM message received')
 					console.dir(msg)
 				}
-				game.global.myPlayer.room = {
+				/*game.global.myPlayer.room = {
 					name: msg.room
+				}*/
+				break
+			case 'ROOM INFO':
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] ROOM INFO message received')
+					console.dir(msg)
 				}
+				if (game.global.currentSala == null) game.global.currentSala = new Object();
+				game.global.currentSala.roomName = msg.roomName;
+				updateSalaInfo();
 				break
 			case 'GAME STATE UPDATE':
 				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] GAME STATE UPDATE message recieved')
+					console.log('[DEBUG] GAME STATE UPDATE message received')
 					console.dir(msg)
 				}
 				if (typeof game.global.myPlayer.image !== 'undefined') {
@@ -172,7 +175,7 @@ function configWebsocket() {
 				break
 			case 'REMOVE PLAYER':
 				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] REMOVE PLAYER message recieved')
+					console.log('[DEBUG] REMOVE PLAYER message received')
 					console.dir(msg.players)
 				}
 				game.global.otherPlayers[msg.id].image.destroy()

@@ -10,7 +10,7 @@ public class Sala {
 	private SpacewarGame game;
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private String name;
-	private AtomicInteger numPlayers = new AtomicInteger();
+	private AtomicInteger numPlayers = new AtomicInteger(0);
 	
 	Sala(String name) {
 		this.name = name;

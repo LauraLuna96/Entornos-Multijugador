@@ -33,15 +33,21 @@ Spacewar.menuState.prototype = {
 		/*if (typeof game.global.myPlayer.id !== 'undefined') {
 			game.state.start('lobbyState')
 		} */
+	},
+
+	shutdown : function() {
+		$("#menu-principal").hide();
 	}
 }
 
 function goLobby() {
-	$("#menu-principal").hide();
+	let msg = new Object()
+	msg.event = 'JOIN LOBBY'
+	console.log("Enviada petición de unirse al lobby")
+	game.global.socket.send(JSON.stringify(msg))
 	game.state.start('lobbyState');
 }
 
 function goMatchmaking() {
-	$("#menu-principal").hide();
 	game.state.start('matchmakingState');
 }

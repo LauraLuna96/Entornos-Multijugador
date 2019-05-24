@@ -15,10 +15,19 @@ Spacewar.roomState.prototype = {
 	},
 
 	create : function() {
-
+		$("#menu-sala").show();
 	},
 
 	update : function() {
-		game.state.start('gameState')
+		//game.state.start('gameState')
+	},
+
+	shutdown : function() {
+		$("#menu-sala").hide();
 	}
+}
+
+function updateSalaInfo() {
+	console.log("Updated current room info");
+	$("#menu-sala-header").html("Sala " + game.global.currentSala.roomName);
 }
