@@ -42,7 +42,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .chatDiv {
     height: 600px;
-    width: 20vw;
+    width: 100%;
+    min-width: 20vw;
     background-color: var(--bg-color);
     padding: 10px 10px 0px 10px;
     border-radius: .3rem;
@@ -179,7 +180,7 @@ input:focus {
     margin-top: 7px;
 }
 
-#area-salas {
+#area-lobby {
     overflow-y: scroll;
 }
 

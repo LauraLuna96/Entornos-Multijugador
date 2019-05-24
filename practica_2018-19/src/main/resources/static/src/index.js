@@ -74,7 +74,7 @@ function showChatMsg(text, name) {
 // Creación de una sala, se lo manda el cliente al servidor 
 function createSala() {
 	let msg = new Object()
-	msg.event = 'CREATE ROOM'
+	msg.event = 'NEW ROOM'
 	msg.name = 'Sala de prueba'
 	console.log("Enviada petición de creación de sala")
 	game.global.socket.send(JSON.stringify(msg))
