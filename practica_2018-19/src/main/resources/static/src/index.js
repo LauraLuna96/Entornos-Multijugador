@@ -129,19 +129,19 @@ function configWebsocket() {
 				updateSalaInfo();
 				break
 			case 'LEAVE ROOM':
-			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] LEAVE ROOM message received')
-				console.dir(msg)
-			}
-			var pos = -1;
-			for (i = 0; i < game.global.currentSala.players.length; i++) {
-				if (game.global.currentSala.players[i] == msg.playerName) {
-					pos = i;
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] LEAVE ROOM message received')
+					console.dir(msg)
 				}
-			}
-			if (pos >= 0) game.global.currentSala.players.remove(pos);
-			updateSalaInfo();
-			break;
+				var pos = -1;
+				for (i = 0; i < game.global.currentSala.players.length; i++) {
+					if (game.global.currentSala.players[i] == msg.playerName) {
+						pos = i;
+					}
+				}
+				if (pos >= 0) game.global.currentSala.players.remove(pos);
+				updateSalaInfo();
+				break;
 			case 'GAME STATE UPDATE':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] GAME STATE UPDATE message received')
@@ -177,12 +177,17 @@ function configWebsocket() {
 							}
 						} else {
 							if (projectile.isHit) {
-								// we load explosion
+								// we load explosion :)
 								let explosion = game.add.sprite(projectile.posX, projectile.posY, 'explosion')
 								explosion.animations.add('explosion')
 								explosion.anchor.setTo(0.5, 0.5)
 								explosion.scale.setTo(2, 2)
 								explosion.animations.play('explosion', 15, false, true)
+								game.global.myPlayer.life -= 1;
+
+								let msg = new Object();
+								msg.event = 'TAKE HIT';
+								game.global.socket.send(JSON.stringify(msg));
 							}
 							game.global.projectiles[projectile.id].image.visible = false
 						}
@@ -203,6 +208,14 @@ function configWebsocket() {
 			default:
 				console.dir(msg)
 				break
+			
+			case 'TAKE HIT':
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] TAKE HIT message received')
+					console.dir(msg.players)
+				}
+				game.global.myPlayer.life = msg.life;
+			break
 		}
 	}
 }
