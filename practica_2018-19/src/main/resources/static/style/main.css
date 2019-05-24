@@ -184,8 +184,19 @@ input:focus {
     overflow-y: scroll;
 }
 
+#area-lobby-btn {
+    float: right;
+    top: 0px;
+}
+
 #area-principal {
     text-align: center;
+}
+
+.dropdown-menu {
+    padding: 1em;
+    color: var(--bg-color);
+    background-color: var(--theme-color1);
 }
 
 /* SCROLL BAR */

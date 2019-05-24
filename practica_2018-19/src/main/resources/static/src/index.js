@@ -3,7 +3,7 @@ window.onload = function () {
 	// Cosas de la interfaz/web
 
 	// Abrimos el modal para la conexión al servidor
-	$('#modal').modal({ backdrop: 'static', keyboard: false });
+	//$('#modal').modal({ backdrop: 'static', keyboard: false });
 
 	// Asignamos un evento de keydown a la ventana de input del chat para que se envíe
 	// el mensaje si pulsamos "enter" (además de si pulsamos el botón Enviar)

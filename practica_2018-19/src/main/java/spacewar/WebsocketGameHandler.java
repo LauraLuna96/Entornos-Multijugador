@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class WebsocketGameHandler extends TextWebSocketHandler {
 
-	// private SpacewarGame game = SpacewarGame.INSTANCE;
+	// private SpacewarGame game = SpacewarGame.INSTANCE; Cada sala tendrá su propia instancia
 	private static final String PLAYER_ATTRIBUTE = "PLAYER";
 	private static final String ROOM_ATTRIBUTE = "ROOM";
 	private ObjectMapper mapper = new ObjectMapper();
