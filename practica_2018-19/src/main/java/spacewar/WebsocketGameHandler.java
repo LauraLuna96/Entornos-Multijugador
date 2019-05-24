@@ -127,6 +127,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					msg.put("event", "DELETE ROOM");
 					sendMessageToAllInLobby(msg.toString());
 					salas.remove(sala.getName());
+					session.getAttributes().remove(ROOM_ATTRIBUTE);
 				} else {
 					msg.put("event", "LEAVE ROOM");
 					msg.put("playerName", player.getPlayerName());
