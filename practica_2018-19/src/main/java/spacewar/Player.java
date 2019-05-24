@@ -27,8 +27,8 @@ public class Player extends Spaceship {
 		return this.life.decrementAndGet();
 	}
 
-	public AtomicInteger getLife() {
-		return this.life;
+	public int getLife() {
+		return this.life.get();
 	}
 
 	public void setLife(AtomicInteger life) {

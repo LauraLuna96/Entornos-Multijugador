@@ -98,8 +98,15 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				
 				msg.put("event", "ROOM INFO");					// Después, enviamos al jugador un msg
 				msg.put("roomName", roomName);					// con la info de la sala a la que ha entrado
-				msg.put("players", s.playerString());
-				
+				//msg.put("players", s.playerString());
+				ArrayNode arrayNodePlayers = mapper.createArrayNode();
+				for (Player p : s.getPlayers()) {
+					ObjectNode jsonPlayer = mapper.createObjectNode();
+					jsonPlayer.put("playerName", p.getPlayerName());
+					jsonPlayer.put("life", p.getLife());
+					arrayNodePlayers.addPOJO(jsonPlayer);
+				}
+				msg.putPOJO("players", arrayNodePlayers);
 				player.sendMessage(msg.toString());
 				break;
 
@@ -123,7 +130,14 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				ObjectNode msg2 = mapper.createObjectNode();	// y mandamos el mensaje al jugador
 				msg2.put("event", "ROOM INFO");					// con la info de la sala a la que ha
 				msg2.put("roomName", room.getName());			// entrado (nombre, otros jugadores, etc)
-				msg2.put("players", room.playerString());
+				ArrayNode arrayNodePlayers2 = mapper.createArrayNode();
+				for (Player p : sala.getPlayers()) {
+					ObjectNode jsonPlayer = mapper.createObjectNode();
+					jsonPlayer.put("playerName", p.getPlayerName());
+					jsonPlayer.put("life", p.getLife());
+					arrayNodePlayers2.addPOJO(jsonPlayer);
+				}
+				msg2.putPOJO("players", arrayNodePlayers2);
 				player.sendMessage(msg2.toString());
 				
 				msg.put("event", "GET ROOMS");
@@ -143,7 +157,14 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			case "UPDATE ROOM":
 				msg.put("event", "ROOM INFO");
 				msg.put("roomName", sala.getName());
-				msg.put("players", sala.playerString());
+				ArrayNode arrayNodePlayers3 = mapper.createArrayNode();
+				for (Player p : sala.getPlayers()) {
+					ObjectNode jsonPlayer = mapper.createObjectNode();
+					jsonPlayer.put("playerName", p.getPlayerName());
+					jsonPlayer.put("life", p.getLife());
+					arrayNodePlayers3.addPOJO(jsonPlayer);
+				}
+				msg.putPOJO("players", arrayNodePlayers3);
 				player.sendMessage(msg.toString());
 				break;
 

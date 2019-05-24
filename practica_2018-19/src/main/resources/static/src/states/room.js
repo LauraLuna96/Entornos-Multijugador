@@ -31,7 +31,7 @@ Spacewar.roomState.prototype = {
 function updateSalaInfo() {
 	console.log("Updated current room info");
 	$("#menu-sala-header").html("Sala " + game.global.currentSala.roomName);
-	//console.log(game.global.currentSala.players)
+	console.log(game.global.currentSala.players)
 }
 
 function leaveRoom() {

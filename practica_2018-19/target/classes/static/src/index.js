@@ -128,7 +128,7 @@ function configWebsocket() {
 				if (game.global.currentSala == null) game.global.currentSala = new Object();
 				game.global.currentSala.roomName = msg.roomName;
 				console.log(msg.players);
-				game.global.currentSala.players = msg.players.split(",");
+				game.global.currentSala.players = msg.players;
 				updateSalaInfo();
 				break
 			case 'LEAVE ROOM':
@@ -180,12 +180,17 @@ function configWebsocket() {
 							}
 						} else {
 							if (projectile.isHit) {
-								// we load explosion
+								// we load explosion :)
 								let explosion = game.add.sprite(projectile.posX, projectile.posY, 'explosion')
 								explosion.animations.add('explosion')
 								explosion.anchor.setTo(0.5, 0.5)
 								explosion.scale.setTo(2, 2)
 								explosion.animations.play('explosion', 15, false, true)
+								game.global.myPlayer.life -= 1;
+
+								let msg = new Object();
+								msg.event = 'TAKE HIT';
+								game.global.socket.send(JSON.stringify(msg));
 							}
 							game.global.projectiles[projectile.id].image.visible = false
 						}
@@ -206,6 +211,14 @@ function configWebsocket() {
 			default:
 				console.dir(msg)
 				break
+			
+			case 'TAKE HIT':
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] TAKE HIT message received')
+					console.dir(msg.players)
+				}
+				game.global.myPlayer.life = msg.life;
+			break
 		}
 	}
 }

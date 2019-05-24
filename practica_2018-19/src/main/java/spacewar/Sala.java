@@ -82,13 +82,13 @@ public class Sala {
 		}
 	
 	// Método que devuelve la colección de jugadores escrita en JSON
-	public String playerString() {
+	/*public String playerString() {
 		String result = "";
 		for (Player player : getPlayers()) {
 			result+=player.getPlayerName()+",";
 		}
 		result=result.substring(0,result.length()-1);
 		return result;
-	}
+	}*/
 
 }

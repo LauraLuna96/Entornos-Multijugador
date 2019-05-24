@@ -128,7 +128,7 @@ function configWebsocket() {
 				if (game.global.currentSala == null) game.global.currentSala = new Object();
 				game.global.currentSala.roomName = msg.roomName;
 				console.log(msg.players);
-				game.global.currentSala.players = msg.players.split(",");
+				game.global.currentSala.players = msg.players;
 				updateSalaInfo();
 				break
 			case 'LEAVE ROOM':
