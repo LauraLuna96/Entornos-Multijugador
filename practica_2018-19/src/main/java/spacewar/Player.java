@@ -1,6 +1,7 @@
 package spacewar;
 
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -12,25 +13,25 @@ public class Player extends Spaceship {
 	private final int playerId;
 	private final String shipType;
 	private Sala sala; // Sala a la que pertenece el jugador, le llega en el constructor
-	private int life;
+	private AtomicInteger life;
 
 	public Player(int playerId, WebSocketSession session, String playerName) {
 		this.playerId = playerId;
 		this.session = session;
 		this.shipType = this.getRandomShipType();
 		this.playerName = playerName;
-		this.life = 3;
-	}
-	
-	public void removeLife(int n) {
-		this.life-=n;
+		this.life = new AtomicInteger(3);
 	}
 
-	public int getLife() {
+	public void decreaseLife() {
+		this.life.decrementAndGet();
+	}
+
+	public AtomicInteger getLife() {
 		return this.life;
 	}
 
-	public void setLife(int life) {
+	public void setLife(AtomicInteger life) {
 		this.life = life;
 	}
 
