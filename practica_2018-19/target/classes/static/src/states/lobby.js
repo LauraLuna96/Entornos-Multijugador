@@ -31,9 +31,12 @@ Spacewar.lobbyState.prototype = {
 }
 
 function createRoom() {
+	var roomName = $('#new-roomName').val();
+	if (roomName == "") return;
+	$('#new-roomName').val("");
 	let msg = new Object()
 	msg.event = 'NEW ROOM'
-	msg.roomName = 'Sala de prueba'
+	msg.roomName = roomName;
 	console.log("Enviada petición de creación de sala: ")
 	game.global.socket.send(JSON.stringify(msg))
 	game.state.start('roomState')

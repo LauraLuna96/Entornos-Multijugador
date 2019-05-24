@@ -1,6 +1,7 @@
 :root {
     --bg-color: #202020;
     --bg-color-dark: #131313;
+    --bg-color-darker: #070707;
     --theme-color1: #ffffff;
     --theme-color2: #40ffe6;
     --border-color: #e9ecef;
@@ -52,7 +53,7 @@ h1, h2, h3, h4, h5, h6 {
 .chatDiv p {
     margin: 5px;
     padding: 1px 5px;
-    background-color: #000000;
+    background-color: var(--bg-color-darker);
     border-radius: 5px;
 }
 
@@ -193,6 +194,17 @@ input:focus {
     text-align: center;
 }
 
+.sala-row {
+    width: 100%;
+    padding: 5px 20px;
+    margin: 5px 0px;
+    background-color: var(--bg-color-darker);
+}
+
+.btn-sala {
+    vertical-align: middle;
+}
+
 .dropdown-menu {
     padding: 1em;
     color: var(--bg-color);
@@ -206,7 +218,7 @@ input:focus {
 }
 
 ::-webkit-scrollbar-track {
-    background-color: #000000;
+    background-color: var(--bg-color-darker);
     border-radius: 10px;
 }
 

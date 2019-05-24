@@ -83,28 +83,40 @@
 							<h3>Menú principal</h3>
 							<i>¡Bienvenido a SpaceWars!</i>
 							<div id="area-principal" class="area-menu">
-								<button type="button" class="btn btn-spacewars btn-lg" id="btn-goLobby" onclick="goLobby()">Elegir sala manualmente</button><br>
-								<button type="button" class="btn btn-spacewars btn-lg" id="btn-goMatchmaking" onclick="goMatchmaking()">Matchmaking automático</button>
+								<button type="button" class="btn btn-spacewars btn-lg" id="btn-goLobby" onclick="goLobby()">Elegir sala
+									manualmente</button><br>
+								<button type="button" class="btn btn-spacewars btn-lg" id="btn-goMatchmaking" onclick="goMatchmaking()">Matchmaking
+									automático</button>
 							</div>
 						</div>
 						<div id="menu-lobby" style="display:none;" class="menu">
 							<div id="area-lobby-btn">
-								<button type="button" id="btn-openRoomDialog" class="btn btn-spacewars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="far fa-plus-square"></i> Crear
+								<button type="button" id="btn-openRoomDialog" class="btn btn-spacewars" data-toggle="dropdown" aria-haspopup="true"
+								 aria-expanded="false"><i class="far fa-plus-square"></i> Crear
 									sala nueva</button>
 								<form class="dropdown-menu" aria-labelledby="btn-openRoomDialog">
 									<div class="form-group">
 										<label for="new-roomName">Nombre de la sala</label>
 										<input type="text" autocomplete="off" class="form-control" id="new-roomName" placeholder="Nombre de la sala">
 									</div>
-									<button type="button" id="btn-createRoom" class="btn btn-spacewars" onclick="createRoom();"><i class="far fa-plus-square"></i> Crear</button>
+									<button type="button" id="btn-createRoom" class="btn btn-spacewars" onclick="createRoom();"><i class="far fa-plus-square"></i>
+										Crear</button>
 								</form>
-								<button type="button" id="btn-leaveLobby" class="btn btn-spacewars" onclick="leaveLobby();"><i class="fas fa-times"></i> Salir del
+								<button type="button" id="btn-leaveLobby" class="btn btn-spacewars" onclick="leaveLobby();"><i class="fas fa-times"></i>
+									Salir del
 									lobby</button>
 							</div>
 							<h3>Lobby</h3>
 							<i>Selecciona una sala para jugar.</i>
 							<div id="area-lobby" class="area-menu">
 								<!-- Area para mostrar los botones de las salas -->
+								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
+								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
+								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
+								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
+								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
+								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
+								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
 							</div>
 						</div>
 						<div id="menu-matchmaking" style="display:none;" class="menu">
@@ -112,10 +124,13 @@
 							<i>Buscando sala automáticamente ...</i>
 						</div>
 						<div id="menu-sala" style="display:none;" class="menu">
+							<div id="area-lobby-btn">
+								<button type="button" class="btn btn-spacewars" id="btn-leaveRoom" onclick="leaveRoom()"><i class="fas fa-times"></i> Salir</button>
+							</div>
 							<h3 id="menu-sala-header">Sala</h3>
 							<i>Esperando a más jugadores ...</i>
 							<div id="area-sala" class="area-menu">
-								<button type="button" class="btn btn-spacewars" id="btn-leaveRoom" onclick="leaveRoom()">Salir</button>
+								
 							</div>
 						</div>
 					</div>
