@@ -108,8 +108,22 @@ function configWebsocket() {
 					console.log('[DEBUG] ID assigned to player: ' + game.global.myPlayer.id)
 				}
 				break
+
+			case 'JOIN ROOM':
+				console.log("Joined room " + msg.roomName)
+				if (game.global.currentSala == null) game.global.currentSala = new Object();
+				game.global.currentSala.roomName = msg.roomName;
+				game.global.currentSala.players = msg.players;
+				console.log(msg.players);
+				game.state.start('roomState')
+				break
 			case 'GET ROOMS':
+				game.state.start('roomState')
 				updateRoomList(msg.salas);
+				break
+			case 'ERROR ROOM':
+				game.state.start('lobbyState')
+				console.log("There was an error while joining the room");
 				break
 			case 'NEW ROOM':
 				if (game.global.DEBUG_MODE) {
@@ -127,8 +141,8 @@ function configWebsocket() {
 				}
 				if (game.global.currentSala == null) game.global.currentSala = new Object();
 				game.global.currentSala.roomName = msg.roomName;
+				game.global.currentSala.players = msg.players;
 				console.log(msg.players);
-				game.global.currentSala.players = msg.players.split(",");
 				updateSalaInfo();
 				break
 			case 'LEAVE ROOM':

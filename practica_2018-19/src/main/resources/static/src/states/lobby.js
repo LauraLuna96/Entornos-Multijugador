@@ -39,7 +39,6 @@ function createRoom() {
 	msg.roomName = roomName;
 	console.log("Enviada petición de creación de sala: ")
 	game.global.socket.send(JSON.stringify(msg))
-	game.state.start('roomState')
 }
 
 function joinRoom(roomName) {
@@ -48,7 +47,6 @@ function joinRoom(roomName) {
 	msg.roomName = roomName;
 	console.log("Enviada petición de unirse a sala: " + roomName)
 	game.global.socket.send(JSON.stringify(msg))
-	game.state.start('roomState')
 }
 
 function leaveLobby() {
