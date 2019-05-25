@@ -66,18 +66,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			// Un jugador ha entrado al lobby
 			case "JOIN LOBBY":
 				lobbyPlayers.put(player.getPlayerName(), player); // Añade el jugador al lobby
-				
-				msg.put("event", "GET ROOMS");
-				ArrayNode arrayNode = mapper.createArrayNode();
-				for (Sala s : salas.values()) {
-					ObjectNode jsonSala = mapper.createObjectNode();
-					jsonSala.put("roomName", s.getName());
-					jsonSala.put("numPlayers", s.getNumPlayers());
-					jsonSala.put("maxPlayers", 2);
-					arrayNode.addPOJO(jsonSala);
-				}
-				msg.putPOJO("salas", arrayNode);
-				player.sendMessage(msg.toString());
+				sendGetRoomsMessage(player);
 				break;
 
 			// Un jugador ha salido del lobby
@@ -87,27 +76,26 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 
 			// Un jugador se ha unido a una sala
 			case "JOIN ROOM":
-				lobbyPlayers.remove(player.getPlayerName()); // Quita al jugador del lobby
 
-				String roomName = node.get("roomName").asText(); // Sacamos el nombre de la sala
-				Sala s = salas.get(roomName); // y con él, la sala del mapa
-				session.getAttributes().put(ROOM_ATTRIBUTE, s); // y la huardamos en la sesión de ws
-				s.addPlayer(player);
-
-				System.out.println("[ROOM] Player " + player.getPlayerName() + " joined the room " + s.getName());
+				String roomName = node.get("roomName").asText(); 	// Sacamos el nombre de la sala
+				Sala s = salas.get(roomName); 						// y con él, la sala del mapa
 				
-				msg.put("event", "ROOM INFO");					// Después, enviamos al jugador un msg
-				msg.put("roomName", roomName);					// con la info de la sala a la que ha entrado
-				//msg.put("players", s.playerString());
-				ArrayNode arrayNodePlayers = mapper.createArrayNode();
-				for (Player p : s.getPlayers()) {
-					ObjectNode jsonPlayer = mapper.createObjectNode();
-					jsonPlayer.put("playerName", p.getPlayerName());
-					jsonPlayer.put("life", p.getLife());
-					arrayNodePlayers.addPOJO(jsonPlayer);
+				if (s.addPlayer(player)) {	// Devuelve true si se ha podido meter al jugador
+					
+					lobbyPlayers.remove(player.getPlayerName()); // Quita al jugador del lobby
+					session.getAttributes().put(ROOM_ATTRIBUTE, s); // Guardamos la sala en la sesión de ws
+					System.out.println("[ROOM] Player " + player.getPlayerName() + " joined the room " + s.getName());	
+					
+					msg.put("event", "JOIN ROOM");
+					player.sendMessage(msg.toString());
+					sendRoomInfoMessage(s);
+					sendGetRoomsMessageAll();
+					
+				} else {
+					msg.put("event", "ERROR ROOM");
+					player.sendMessage(msg.toString());
 				}
-				msg.putPOJO("players", arrayNodePlayers);
-				player.sendMessage(msg.toString());
+				
 				break;
 
 			// Un jugador ha creado una sala
@@ -118,43 +106,24 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				System.out.println("[ROOM] New room " + room.getName() + " created.");
 
 				salas.put(room.getName(), room); // Guarda la sala en el mapa
-				msg.put("event", "NEW ROOM"); // y avisa a los demás jugadores del lobby
+				
+				/*msg.put("event", "NEW ROOM"); // y avisa a los demás jugadores del lobby
 				msg.put("roomName", room.getName()); // de que se ha creado una sala nueva
-				sendMessageToAllInLobby(msg.toString()); // para que la muestren en la lista
-
-				room.addPlayer(player);
+				sendMessageToAllInLobby(msg.toString()); // para que la muestren en la lista*/
 
 				System.out.println("[ROOM] Player " + player.getPlayerName() + " joined the room " + room.getName());
 				
+				room.addPlayer(player);
 				session.getAttributes().put(ROOM_ATTRIBUTE, room);	// Guardamos la sala en la sesión de ws
-				ObjectNode msg2 = mapper.createObjectNode();	// y mandamos el mensaje al jugador
-				msg2.put("event", "ROOM INFO");					// con la info de la sala a la que ha
-				msg2.put("roomName", room.getName());			// entrado (nombre, otros jugadores, etc)
-				ArrayNode arrayNodePlayers2 = mapper.createArrayNode();
-				for (Player p : sala.getPlayers()) {
-					ObjectNode jsonPlayer = mapper.createObjectNode();
-					jsonPlayer.put("playerName", p.getPlayerName());
-					jsonPlayer.put("life", p.getLife());
-					arrayNodePlayers2.addPOJO(jsonPlayer);
-				}
-				msg2.putPOJO("players", arrayNodePlayers2);
-				player.sendMessage(msg2.toString());
 				
-				msg.put("event", "GET ROOMS");
-				ArrayNode arrayNode2 = mapper.createArrayNode();
-				for (Sala sa : salas.values()) {
-					ObjectNode jsonSala = mapper.createObjectNode();
-					jsonSala.put("roomName", sa.getName());
-					jsonSala.put("numPlayers", sa.getNumPlayers());
-					jsonSala.put("maxPlayers", 2);
-					arrayNode2.addPOJO(jsonSala);
-				}
-				msg.putPOJO("salas", arrayNode2);
-				sendMessageToAllInLobby(msg.toString());
+				msg.put("event", "JOIN ROOM");
+				player.sendMessage(msg.toString());
+				sendRoomInfoMessage(room);
+				sendGetRoomsMessageAll();
 				break;
 
 			// Algo ha cambiado en la info. de una sala
-			case "UPDATE ROOM":
+			/*case "UPDATE ROOM":
 				msg.put("event", "ROOM INFO");
 				msg.put("roomName", sala.getName());
 				ArrayNode arrayNodePlayers3 = mapper.createArrayNode();
@@ -166,13 +135,14 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				}
 				msg.putPOJO("players", arrayNodePlayers3);
 				player.sendMessage(msg.toString());
-				break;
+				break;*/
 
 			// Un jugador ha salido de la sala donde estaba
 			case "LEAVE ROOM":
 				sala.removePlayer(player);
 				System.out.println("[ROOM] Player " + player.getPlayerName() + " left the room " + sala.getName());
 				if (sala.getNumPlayers() <= 0) {
+					
 					System.out.println("[ROOM] Room " + sala.getName() + " is empty. Deleting it now.");
 					msg.put("event", "DELETE ROOM");
 					msg.put("roomName", sala.getName());
@@ -180,34 +150,14 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					salas.remove(sala.getName());
 					session.getAttributes().remove(ROOM_ATTRIBUTE);
 					
-					msg.put("event", "GET ROOMS");
-					ArrayNode arrayNode3 = mapper.createArrayNode();
-					for (Sala sa : salas.values()) {
-						ObjectNode jsonSala = mapper.createObjectNode();
-						jsonSala.put("roomName", sa.getName());
-						jsonSala.put("numPlayers", sa.getNumPlayers());
-						jsonSala.put("maxPlayers", 2);
-						arrayNode3.addPOJO(jsonSala);
-					}
-					msg.putPOJO("salas", arrayNode3);
-					sendMessageToAllInLobby(msg.toString());
 				} else {
 					msg.put("event", "LEAVE ROOM");
 					msg.put("playerName", player.getPlayerName());
 					sala.broadcast(msg.toString());
 				}
 				lobbyPlayers.put(player.getPlayerName(), player); // Añade el jugador al lobby
-				msg.put("event", "GET ROOMS");
-				ArrayNode arrayNode3 = mapper.createArrayNode();
-				for (Sala sa : salas.values()) {
-					ObjectNode jsonSala = mapper.createObjectNode();
-					jsonSala.put("roomName", sa.getName());
-					jsonSala.put("numPlayers", sa.getNumPlayers());
-					jsonSala.put("maxPlayers", 2);
-					arrayNode3.addPOJO(jsonSala);
-				}
-				msg.putPOJO("salas", arrayNode3);
-				player.sendMessage(msg.toString());
+				
+				sendGetRoomsMessageAll();
 				break;
 
 			//////////////////////////////////////////////////////
@@ -306,5 +256,55 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		for (Player p : copy) {
 			p.sendMessage(msg);
 		}
+	}
+	
+	public void sendGetRoomsMessage(Player player) throws Exception {
+		
+		ObjectNode msg = mapper.createObjectNode();
+		msg.put("event", "GET ROOMS");
+		
+		ArrayNode arrayNode = mapper.createArrayNode();
+		for (Sala sa : salas.values()) {
+			ObjectNode jsonSala = mapper.createObjectNode();
+			jsonSala = sa.getSalaAsObjectNode(jsonSala);
+			arrayNode.addPOJO(jsonSala);
+		}
+		msg.putPOJO("salas", arrayNode);
+		
+		player.sendMessage(msg.toString());
+	}
+	
+public void sendGetRoomsMessageAll() throws Exception {
+		
+		ObjectNode msg = mapper.createObjectNode();
+		msg.put("event", "GET ROOMS");
+		
+		ArrayNode arrayNode = mapper.createArrayNode();
+		for (Sala sa : salas.values()) {
+			ObjectNode jsonSala = mapper.createObjectNode();
+			jsonSala = sa.getSalaAsObjectNode(jsonSala);
+			arrayNode.addPOJO(jsonSala);
+		}
+		msg.putPOJO("salas", arrayNode);
+		
+		sendMessageToAllInLobby(msg.toString());
+	}
+	
+	public void sendRoomInfoMessage(Sala sala) {
+		
+		ObjectNode msg = mapper.createObjectNode();
+		
+		msg.put("event", "ROOM INFO");
+		msg.put("roomName", sala.getName());		
+
+		ArrayNode arrayNode = mapper.createArrayNode();
+		for (Player p : sala.getPlayers()) {
+			ObjectNode jsonPlayer = mapper.createObjectNode();
+			jsonPlayer.put("playerName", p.getPlayerName());
+			jsonPlayer.put("life", p.getLife());
+			arrayNode.addPOJO(jsonPlayer);
+		}
+		msg.putPOJO("players", arrayNode);
+		sala.broadcast(msg.toString());
 	}
 }

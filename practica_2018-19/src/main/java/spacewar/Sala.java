@@ -4,6 +4,10 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class Sala {
 
@@ -11,6 +15,7 @@ public class Sala {
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private String name;
 	private AtomicInteger numPlayers = new AtomicInteger(0);
+	private final static int MAX_PLAYERS = 3;
 	
 	Sala(String name) {
 		this.name = name;
@@ -37,16 +42,25 @@ public class Sala {
 		return name;
 	}
 	
-	public void addPlayer(Player player) {
-		players.put(player.getSession().getId(), player);
-
-		int count = numPlayers.getAndIncrement();
-		if (count == 0) {
-			game.startGameLoop();
+	// No queremos que, mientras estamos comprobando si un jugador puede meterse o no,
+	// se le cuele otro. Por eso lo marcamos como synchronized.
+	public synchronized boolean addPlayer(Player player) {
+		boolean metido = false;
+		if (players.size() < MAX_PLAYERS) {
+			players.put(player.getSession().getId(), player);
+			int count = numPlayers.getAndIncrement();
+			
+			if (count == MAX_PLAYERS) {
+				game.startGameLoop();
+			}
+			metido = true;
+		} else {
+			metido = false;
 		}
+		return metido;
 	}
 	
-	public void removePlayer(Player player) {
+	public synchronized void removePlayer(Player player) {
 		players.remove(player.getSession().getId());
 
 		int count = this.numPlayers.decrementAndGet();
@@ -79,6 +93,13 @@ public class Sala {
 					this.removePlayer(player);
 				}
 			}
+		}
+		
+		public ObjectNode getSalaAsObjectNode(ObjectNode jsonSala) {
+			jsonSala.put("roomName", getName());
+			jsonSala.put("numPlayers", getNumPlayers());
+			jsonSala.put("maxPlayers", MAX_PLAYERS);
+			return jsonSala;
 		}
 	
 	// Método que devuelve la colección de jugadores escrita en JSON

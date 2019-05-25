@@ -41,12 +41,15 @@ function createRoom() {
 	game.global.socket.send(JSON.stringify(msg))
 }
 
-function joinRoom(roomName) {
-	let msg = new Object()
-	msg.event = 'JOIN ROOM'
+function joinRoom(btn) {
+	console.log(btn);
+	var roomName = btn.data('roomname');
+	console.log(roomName);
+	let msg = new Object();
+	msg.event = 'JOIN ROOM';
 	msg.roomName = roomName;
-	console.log("Enviada petición de unirse a sala: " + roomName)
-	game.global.socket.send(JSON.stringify(msg))
+	console.log("Enviada petición para entrar a la sala " + roomName);
+	game.global.socket.send(JSON.stringify(msg));
 }
 
 function leaveLobby() {
@@ -60,6 +63,6 @@ function leaveLobby() {
 function updateRoomList(rooms) {
 	$("#area-lobby").html("");
 	for (i = 0; i < rooms.length; i++) {
-		$("#area-lobby").append('<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> '+ rooms[i].roomName + '</button> '+ rooms[i].numPlayers+'/'+rooms[i].maxPlayers+' jugadores</div>')
+		$("#area-lobby").append('<div class="sala-row"><button type="button" data-roomname="'+rooms[i].roomName+'" onclick="joinRoom($(this));" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> '+ rooms[i].roomName + '</button> '+ rooms[i].numPlayers+'/'+rooms[i].maxPlayers+' jugadores</div>')
 	}
 }
