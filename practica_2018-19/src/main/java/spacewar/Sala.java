@@ -68,14 +68,27 @@ public class Sala {
 		}
 	}
 	
+	// Método que manda un mensaje específico a todos menos uno
+		public void broadcastExcept(String message, String playerName) {
+			for (Player player : getPlayers()) {
+				try {
+					if (player.getPlayerName() != playerName) player.sendMessage(message.toString()); // Usamos el método sendMessage del player porque está protegido por EM
+				} catch (Throwable ex) {
+					System.err.println("Execption sending message to player " + player.getSession().getId());
+					ex.printStackTrace(System.err);
+					this.removePlayer(player);
+				}
+			}
+		}
+	
 	// Método que devuelve la colección de jugadores escrita en JSON
-	public String playerString() {
+	/*public String playerString() {
 		String result = "";
 		for (Player player : getPlayers()) {
 			result+=player.getPlayerName()+",";
 		}
 		result=result.substring(0,result.length()-1);
 		return result;
-	}
+	}*/
 
 }
