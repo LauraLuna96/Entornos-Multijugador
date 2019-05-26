@@ -45,8 +45,16 @@ Spacewar.gameState.prototype = {
 	create: function () {
 
 		////// INTERFAZ QUE MUESTRA DATOS DE LOS JUGADORES //////
-		
+		var textGroup = game.add.group();
+		for (var i = 0; i < game.global.currentSala.players.length; i++) {
+			//textGroup.add(game.make.text(10, 10 + i * 5 , game.global.currentSala.players[i].playerName + " / "+ game.global.currentSala.players[i].life + " / "+ game.global.currentSala.players[i].ammo + " / "+ game.global.currentSala.players[i].propeller + " / "+ game.global.currentSala.players[i].score, { font: "12px Arial", fill: generateHexColor() }));
+			textGroup.add(game.make.text(10, 20 + i * 20 , "holiwis profiwis", { font: "20px Orbitron", fill: generateHexColor() }));
+		}
+		function generateHexColor() { 
+			return '#' + ((0.5 + 0.5 * Math.random()) * 0xFFFFFF << 0).toString(16);
+		}
 		/////////////////////////////////////////////////////////
+
 		this.bulletTime = 0
 		this.fireBullet = function () {
 			if (game.time.now > this.bulletTime) {
@@ -66,14 +74,14 @@ Spacewar.gameState.prototype = {
 		game.onFocus.add(function () {
 			game.input.keyboard.enabled = true;
 		});*/
-		$("#gameDiv").mouseenter(function() {
-            game.input.enabled = true;
-        });
+		$("#gameDiv").mouseenter(function () {
+			game.input.enabled = true;
+		});
 
-        $("#gameDiv").mouseleave(function() {
-            game.input.enabled = false;
+		$("#gameDiv").mouseleave(function () {
+			game.input.enabled = false;
 
-        });
+		});
 
 		this.wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 		this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
@@ -112,6 +120,7 @@ Spacewar.gameState.prototype = {
 			msg.movement.rotRight = true;
 		if (this.spaceKey.isDown) {
 			msg.bullet = this.fireBullet()
+			//console.log("Shoot!")
 		}
 
 		if (game.global.DEBUG_MODE) {

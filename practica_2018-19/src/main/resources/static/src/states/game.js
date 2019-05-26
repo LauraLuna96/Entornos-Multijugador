@@ -126,6 +126,7 @@ Spacewar.gameState.prototype = {
 			msg.movement.rotRight = true;
 		if (this.spaceKey.isDown) {
 			msg.bullet = this.fireBullet()
+			//console.log("Shoot!")
 		}
 
 		if (game.global.DEBUG_MODE) {

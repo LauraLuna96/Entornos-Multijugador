@@ -32,7 +32,22 @@ Spacewar.lobbyState.prototype = {
 
 function createRoom() {
 	var roomName = $('#new-roomName').val();
-	if (roomName == "") return;
+	if (roomName == "") {
+		$("#create-room-error").html("El nombre no puede estar vacío");
+		$("#create-room-error").show();
+		return;
+	}
+	var splChars = "*|,\":<>[]{}`\';()@&$#% ";
+	for (i = 0; i < roomName.length; i++) {
+		if (splChars.indexOf(roomName.charAt(i)) != -1) {
+			// Caracteres no permitidos en el string!
+			console.log("[ERROR] Invalid characters in room name!")
+			$("#create-room-error").html("¡El nombre de la sala es inválido!");
+			$("#create-room-error").show();
+			return;
+		}
+	}
+	$("#create-room-error").hide();
 	$('#new-roomName').val("");
 	let msg = new Object()
 	msg.event = 'NEW ROOM'

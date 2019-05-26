@@ -96,11 +96,13 @@
 									sala nueva</button>
 								<form class="dropdown-menu" aria-labelledby="btn-openRoomDialog">
 									<div class="form-group">
-										<label for="new-roomName">Nombre de la sala</label>
+										<label for="new-roomName">(Sin caracteres especiales ni espacios)</label>
 										<input type="text" autocomplete="off" class="form-control" id="new-roomName" placeholder="Nombre de la sala">
 									</div>
 									<button type="button" id="btn-createRoom" class="btn btn-spacewars" onclick="createRoom();"><i class="far fa-plus-square"></i>
 										Crear</button>
+										<div id="create-room-error" class="alert alert-danger" style="display:none">
+										¡El nombre de la sala es inválido!</div>
 								</form>
 								<button type="button" id="btn-leaveLobby" class="btn btn-spacewars" onclick="leaveLobby();"><i class="fas fa-times"></i>
 									Salir del
