@@ -24,6 +24,7 @@ public class Player extends Spaceship {
 		this.playerName = playerName;
 		this.life = new AtomicInteger(3);
 		this.ammo = new AtomicInteger(20);
+		this.propeller = new AtomicInteger(3); // Tendrá 4 posibles valores (0,1,2,3) siendo 3 el máximo
 	}
 	
 	public int getPropeller() {
