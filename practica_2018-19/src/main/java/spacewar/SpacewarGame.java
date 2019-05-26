@@ -25,6 +25,7 @@ public class SpacewarGame {
 	private final static long TICK_DELAY = 1000 / FPS;
 	public final static boolean DEBUG_MODE = true;
 	public final static boolean VERBOSE_MODE = true;
+	private boolean isRunning = false;
 
 	ObjectMapper mapper = new ObjectMapper();
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -36,6 +37,10 @@ public class SpacewarGame {
 
 	public SpacewarGame(Sala sala) {
 		this.sala = sala;
+	}
+	
+	public boolean getIsRunning() {
+		return isRunning;
 	}
 	
 	public void sendBeginningMessages() throws Exception {
@@ -86,13 +91,17 @@ public class SpacewarGame {
 		projectiles.remove(projectile.getId(), projectile);
 	}
 
-	public void startGameLoop() {
-		scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(() -> tick(), TICK_DELAY, TICK_DELAY, TimeUnit.MILLISECONDS);
+	public synchronized void startGameLoop() {
+		if (!isRunning) {
+			isRunning = true;
+			scheduler = Executors.newScheduledThreadPool(1);
+			scheduler.scheduleAtFixedRate(() -> tick(), TICK_DELAY, TICK_DELAY, TimeUnit.MILLISECONDS);
+		}
 	}
 
-	public void stopGameLoop() {
+	public synchronized void stopGameLoop() {
 		if (scheduler != null) {
+			isRunning = false;
 			scheduler.shutdown();
 		}
 	}

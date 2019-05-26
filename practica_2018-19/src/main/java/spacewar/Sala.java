@@ -23,6 +23,10 @@ public class Sala {
 		this.game = new SpacewarGame(this);
 	}
 	
+	public int getMaxPlayers() {
+		return MAX_PLAYERS;
+	}
+	
 	public int getNumPlayers() {
 		return numPlayers.get();
 	}
@@ -43,6 +47,19 @@ public class Sala {
 		return name;
 	}
 	
+	public synchronized void startGameIfFull() throws Exception {
+		if (!game.getIsRunning()) {
+			int count = numPlayers.get();
+			if (count == MAX_PLAYERS) {
+				System.out.println("[GAME] Room " + this.name + " is full, starting game now.");
+				game.sendBeginningMessages();
+				game.startGameLoop();
+			}
+		} else {
+			System.out.println("[ERROR] Error while starting game in room " + this.name + ", there is a game already in progress.");
+		}
+	}
+	
 	// No queremos que, mientras estamos comprobando si un jugador puede meterse o no,
 	// se le cuele otro. Por eso lo marcamos como synchronized.
 	public synchronized boolean addPlayer(Player player) throws Exception {
@@ -50,12 +67,8 @@ public class Sala {
 		if (players.size() < MAX_PLAYERS) {
 			players.put(player.getSession().getId(), player);
 			game.addPlayer(player);
-			int count = numPlayers.incrementAndGet();
-			
-			if (count == MAX_PLAYERS) {
-				game.sendBeginningMessages();
-				game.startGameLoop();
-			}
+			numPlayers.incrementAndGet();
+			//System.out.println("[ROOM] Room " + this.name + " now has " + count + " players.");
 			metido = true;
 		} else {
 			metido = false;

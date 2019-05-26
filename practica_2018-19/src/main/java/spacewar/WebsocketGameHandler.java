@@ -91,6 +91,10 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					sendRoomInfoMessage(s);
 					sendGetRoomsMessageAll();
 					
+					// Ahora comprobamos si la sala está llena, y si tenemos que empezar el juego
+					// Es importante que esto se envíe después del mensaje de JOIN ROOM
+					s.startGameIfFull();
+					
 				} else {
 					msg.put("event", "ERROR ROOM");
 					player.sendMessage(msg.toString());
@@ -121,6 +125,10 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				player.sendMessage(msg.toString());
 				sendRoomInfoMessage(room);
 				sendGetRoomsMessageAll();
+				
+				// Ahora comprobamos si la sala está llena, y si tenemos que empezar el juego
+				// Es importante que esto se envíe después del mensaje de JOIN ROOM
+				room.startGameIfFull();
 				break;
 
 			// Algo ha cambiado en la info. de una sala
