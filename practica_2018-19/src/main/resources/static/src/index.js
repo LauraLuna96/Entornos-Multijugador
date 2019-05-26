@@ -48,6 +48,18 @@ window.onload = function () {
 // Conexión con el servidor
 function openWebsocket() {
 	name = $("#nameInput").val();
+	if (name == "" | name.length < 4 | name.length > 20) {
+		console.log("[ERROR] Player name is too short or too long!")
+		return;
+	}
+	var splChars = "*|,\":<>[]{}`\';()@&$#% ";
+	for (i = 0; i < splChars.length; i++) {
+		if (splChars.indexOf(name.value.charAt(i)) != -1) {
+			// Caracteres no permitidos en el string!
+			console.log("[ERROR] Invalid characters in player name!")
+			return;
+		}
+	}
 	game.global.socket = new WebSocket("ws://127.0.0.1:8080/spacewar/" + name);
 	configWebsocket();
 }
