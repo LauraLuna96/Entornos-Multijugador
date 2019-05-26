@@ -97,6 +97,10 @@ function configWebsocket() {
 		var msg = JSON.parse(message.data)
 
 		switch (msg.event) {
+			case 'START GAME':
+				console.log("Received start game message")
+				game.state.start('gameState')
+				break
 			case 'JOIN':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] JOIN message received')
@@ -223,14 +227,14 @@ function configWebsocket() {
 			default:
 				console.dir(msg)
 				break
-			
+
 			case 'TAKE HIT':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] TAKE HIT message received')
 					console.dir(msg.players)
 				}
 				game.global.myPlayer.life = msg.life;
-			break
+				break
 		}
 	}
 }

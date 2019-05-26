@@ -30,35 +30,49 @@ public class SpacewarGame {
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 	// GLOBAL GAME ROOM
-	//private Map<String, Player> players = new ConcurrentHashMap<>();
+	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
 	//private AtomicInteger numPlayers = new AtomicInteger();
 
 	public SpacewarGame(Sala sala) {
 		this.sala = sala;
 	}
+	
+	public void sendBeginningMessages() throws Exception {
+		for (Player p : players.values()) {
+			ObjectNode msg = mapper.createObjectNode();
+			msg.put("event", "JOIN");
+			msg.put("id", p.getPlayerId());
+			msg.put("shipType",p.getShipType());
+			p.sendMessage(msg.toString());
+		}
+		ObjectNode msg2 = mapper.createObjectNode();
+		msg2.put("event", "START GAME");
 
-	/*public void addPlayer(Player player) {
+		sala.broadcast(msg2.toString());
+	}
+
+	public void addPlayer(Player player) {
 		players.put(player.getSession().getId(), player);
 
-		int count = numPlayers.getAndIncrement();
+		/*int count = numPlayers.getAndIncrement();
 		if (count == 0) {
 			this.startGameLoop();
-		}
-	}*/
+		}*/
+	}
 
-	/*public Collection<Player> getPlayers() {
+	public Collection<Player> getPlayers() {
 		return players.values();
-	}*/
+	}
 
-	/*public void removePlayer(Player player) {
+	public void removePlayer(Player player) {
 		players.remove(player.getSession().getId());
-
-		int count = this.numPlayers.decrementAndGet();
+		
+		/*int count = this.numPlayers.decrementAndGet();
 		if (count == 0) {
 			this.stopGameLoop();
-		}
-	}*/
+		}*/
+	}
 
 	public void addProjectile(int id, Projectile projectile) {
 		projectiles.put(id, projectile);

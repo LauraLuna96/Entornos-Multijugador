@@ -117,6 +117,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				session.getAttributes().put(ROOM_ATTRIBUTE, room);	// Guardamos la sala en la sesión de ws
 				
 				msg.put("event", "JOIN ROOM");
+				msg.put("roomName", room.getName());
 				player.sendMessage(msg.toString());
 				sendRoomInfoMessage(room);
 				sendGetRoomsMessageAll();
@@ -165,10 +166,10 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 
 			// Un jugador se ha unido a la partida
 			case "JOIN":
-				msg.put("event", "JOIN");
+				/*msg.put("event", "JOIN");
 				msg.put("id", player.getPlayerId());
 				msg.put("shipType", player.getShipType());
-				player.sendMessage(msg.toString());
+				player.sendMessage(msg.toString());*/
 				break;
 
 			// Actualizar posición

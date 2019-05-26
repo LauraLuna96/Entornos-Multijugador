@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class Sala {
@@ -44,13 +45,15 @@ public class Sala {
 	
 	// No queremos que, mientras estamos comprobando si un jugador puede meterse o no,
 	// se le cuele otro. Por eso lo marcamos como synchronized.
-	public synchronized boolean addPlayer(Player player) {
+	public synchronized boolean addPlayer(Player player) throws Exception {
 		boolean metido = false;
 		if (players.size() < MAX_PLAYERS) {
 			players.put(player.getSession().getId(), player);
-			int count = numPlayers.getAndIncrement();
+			game.addPlayer(player);
+			int count = numPlayers.incrementAndGet();
 			
 			if (count == MAX_PLAYERS) {
+				game.sendBeginningMessages();
 				game.startGameLoop();
 			}
 			metido = true;
@@ -62,6 +65,7 @@ public class Sala {
 	
 	public synchronized void removePlayer(Player player) {
 		players.remove(player.getSession().getId());
+		game.removePlayer(player);
 
 		int count = this.numPlayers.decrementAndGet();
 		if (count == 0) {

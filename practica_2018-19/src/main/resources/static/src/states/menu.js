@@ -12,7 +12,7 @@ Spacewar.menuState.prototype = {
 
 	preload: function () {
 		// In case JOIN message from server failed, we force it
-		if (typeof game.global.myPlayer.id == 'undefined') {
+		/*if (typeof game.global.myPlayer.id == 'undefined') {
 			if (game.global.DEBUG_MODE) {
 				console.log("[DEBUG] Forcing joining server...");
 			}
@@ -20,7 +20,7 @@ Spacewar.menuState.prototype = {
 				event: 'JOIN'
 			}
 			game.global.socket.send(JSON.stringify(message))
-		}
+		}*/
 	},
 
 	create: function () {
