@@ -40,6 +40,7 @@ window.onload = function () {
 	game.state.add('matchmakingState', Spacewar.matchmakingState)
 	game.state.add('roomState', Spacewar.roomState)
 	game.state.add('gameState', Spacewar.gameState)
+	game.state.add('endState', Spacewar.endState) // Creación del estado end para cuando finaliza una partida
 
 	//game.state.start('bootState')
 	// El juego se inicializa cuando el websocket se abre
