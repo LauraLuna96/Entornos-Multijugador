@@ -96,7 +96,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					s.startGameIfFull();
 					
 				} else {
-					msg.put("event", "ERROR ROOM");
+					msg.put("event", "ERROR");
+					msg.put("errorType", "JOIN ROOM ERROR");
 					player.sendMessage(msg.toString());
 				}
 				

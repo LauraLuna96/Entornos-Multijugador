@@ -123,9 +123,8 @@ function configWebsocket() {
 			case 'GET ROOMS':
 				updateRoomList(msg.salas);
 				break
-			case 'ERROR ROOM':
-				game.state.start('lobbyState')
-				console.log("There was an error while joining the room");
+			case 'ERROR':
+				handleError(msg);
 				break
 			case 'NEW ROOM':
 				if (game.global.DEBUG_MODE) {
@@ -224,10 +223,6 @@ function configWebsocket() {
 			case 'CHAT MSG':
 				showChatMsg(msg.text, msg.player);
 				break
-			default:
-				console.dir(msg)
-				break
-
 			case 'TAKE HIT':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] TAKE HIT message received')
@@ -235,6 +230,21 @@ function configWebsocket() {
 				}
 				game.global.myPlayer.life = msg.life;
 				break
+			default:
+				console.dir(msg)
+				break
 		}
+	}
+}
+
+function handleError(error) {
+	switch (error.errorType) {
+		case 'JOIN ROOM ERROR':
+			game.state.start('lobbyState')
+			console.log("[ERROR] There was an error while joining the room, you've been sent back to the lobby");
+			break
+		default:
+			console.log("[ERROR] Unknown error received, type: " + error.errorType);
+			break
 	}
 }
