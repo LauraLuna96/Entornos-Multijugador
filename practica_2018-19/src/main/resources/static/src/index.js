@@ -76,11 +76,11 @@ function showChatMsg(text, name) {
 // Configuración de websocket (eventos onclose/onopen, etc)
 function configWebsocket() {
 	game.global.socket.onopen = () => {
-		$(".modal").modal("hide")
 		if (game.global.DEBUG_MODE) {
 			console.log('[DEBUG] WebSocket connection opened.')
 		}
-		game.state.start('bootState');
+		//game.state.start('bootState');
+		//$(".modal").modal("hide")
 	}
 
 	game.global.socket.onclose = (e) => {
@@ -97,22 +97,25 @@ function configWebsocket() {
 		var msg = JSON.parse(message.data)
 
 		switch (msg.event) {
-			case 'START GAME':
-				console.log("Received start game message")
-				game.state.start('gameState')
+
+			///// MENSAJES DE ERROR Y CONFIRMACIÓN
+			// Estos mensajes sirven para enviar información sobre diversos errores o confirmaciones
+			// de acciones realizadas, y se gestionan en métodos a parte
+			case 'ERROR':
+				handleError(msg);
 				break
-			case 'JOIN':
-				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] JOIN message received')
-					console.dir(msg)
-				}
-				game.global.myPlayer.id = msg.id
-				game.global.myPlayer.shipType = msg.shipType
-				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] ID assigned to player: ' + game.global.myPlayer.id)
-				}
+			case 'CONFIRMATION':
+				handleConfirmation(msg);
 				break
 
+			///// MENSAJES DEL CHAT
+			// Mensajes para la gestión del chat
+			case 'CHAT MSG':
+				showChatMsg(msg.text, msg.player);
+				break
+
+			///// MENSAJES DE SALAS
+			// Mensajes para la gestión de las salas
 			case 'JOIN ROOM':
 				console.log("Joined room " + msg.roomName)
 				if (game.global.currentSala == null) game.global.currentSala = new Object();
@@ -123,10 +126,7 @@ function configWebsocket() {
 			case 'GET ROOMS':
 				updateRoomList(msg.salas);
 				break
-			case 'ERROR':
-				handleError(msg);
-				break
-			case 'NEW ROOM':
+			case 'NEW ROOM':	// No se usa (se pasa la info de todas las salas a la vez con get rooms)
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] NEW ROOM message received')
 					console.dir(msg)
@@ -160,6 +160,24 @@ function configWebsocket() {
 				if (pos >= 0) game.global.currentSala.players.remove(pos);
 				updateSalaInfo();
 				break;
+
+			///// MENSAJES DE LA PARTIDA
+			// Mensajes durante la partida
+			case 'START GAME':
+				console.log("Received start game message")
+				game.state.start('gameState')
+				break
+			case 'JOIN':
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] JOIN message received')
+					console.dir(msg)
+				}
+				game.global.myPlayer.id = msg.id
+				game.global.myPlayer.shipType = msg.shipType
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] ID assigned to player: ' + game.global.myPlayer.id)
+				}
+				break
 			case 'GAME STATE UPDATE':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] GAME STATE UPDATE message received')
@@ -220,9 +238,6 @@ function configWebsocket() {
 				game.global.otherPlayers[msg.id].image.destroy()
 				delete game.global.otherPlayers[msg.id]
 				break
-			case 'CHAT MSG':
-				showChatMsg(msg.text, msg.player);
-				break
 			case 'TAKE HIT':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] TAKE HIT message received')
@@ -238,13 +253,29 @@ function configWebsocket() {
 }
 
 function handleError(error) {
-	switch (error.errorType) {
+	switch (error.type) {
 		case 'JOIN ROOM ERROR':
 			game.state.start('lobbyState')
 			console.log("[ERROR] There was an error while joining the room, you've been sent back to the lobby");
 			break
+		case 'PLAYER NAME TAKEN ERROR':
+			console.log("[ERROR] The username was already taken! Choose a diferent one");
+			game.global.socket.close();
+			break
 		default:
-			console.log("[ERROR] Unknown error received, type: " + error.errorType);
+			console.log("[ERROR] Unknown error received, type: " + error.type);
+			break
+	}
+}
+
+function handleConfirmation(confirm) {
+	switch (confirm.type) {
+		case 'CORRECT NAME':
+			game.state.start('bootState');
+			$(".modal").modal("hide")
+			break
+		default:
+			console.log("[CONFIRM] Unknown confirmation received, type: " + confirm.type);
 			break
 	}
 }

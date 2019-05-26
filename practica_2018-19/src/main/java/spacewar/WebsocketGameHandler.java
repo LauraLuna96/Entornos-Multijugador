@@ -36,19 +36,34 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		// que será de la forma ip:puerto/spacewars/{playerName}
 		String[] uri = session.getUri().toString().split("/");
 		String playerName = uri[uri.length - 1];
-		Player player = new Player(playerId.incrementAndGet(), session, playerName);
+		
+		if (!globalPlayers.containsKey(playerName)) {
+			Player player = new Player(playerId.incrementAndGet(), session, playerName);
 
-		System.out.println("[SYS] New player " + playerName + " created.");
-		session.getAttributes().put(PLAYER_ATTRIBUTE, player);
+			System.out.println("[SYS] New player " + playerName + " created.");
+			session.getAttributes().put(PLAYER_ATTRIBUTE, player);
 
-		/*
-		 * ObjectNode msg = mapper.createObjectNode(); msg.put("event", "JOIN");
-		 * msg.put("id", player.getPlayerId()); msg.put("shipType",
-		 * player.getShipType()); player.sendMessage(msg.toString());
-		 */
+			/*
+			 * ObjectNode msg = mapper.createObjectNode(); msg.put("event", "JOIN");
+			 * msg.put("id", player.getPlayerId()); msg.put("shipType",
+			 * player.getShipType()); player.sendMessage(msg.toString());
+			 */
 
-		globalPlayers.put(player.getPlayerName(), player); // Añade el jugador al mapa de jugadores global
-		// game.addPlayer(player);
+			globalPlayers.put(player.getPlayerName(), player); // Añade el jugador al mapa de jugadores global
+			
+			ObjectNode msg = mapper.createObjectNode();
+			msg.put("event", "CONFIRMATION");
+			msg.put("type", "CORRECT NAME");
+			session.sendMessage(new TextMessage(msg.toString()));
+			// game.addPlayer(player);
+		} else {
+			// El nombre del jugador ya existe!
+			System.out.println("[SYS] Player name " + playerName + " is already taken. Rejecting new player with same name.");
+			ObjectNode msg = mapper.createObjectNode();
+			msg.put("event", "ERROR");
+			msg.put("type", "PLAYER NAME TAKEN ERROR");
+			session.sendMessage(new TextMessage(msg.toString()));
+		}
 	}
 
 	@Override
@@ -97,7 +112,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					
 				} else {
 					msg.put("event", "ERROR");
-					msg.put("errorType", "JOIN ROOM ERROR");
+					msg.put("type", "JOIN ROOM ERROR");
 					player.sendMessage(msg.toString());
 				}
 				
@@ -224,6 +239,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
+		if (player == null) return;
 		globalPlayers.remove(player.getPlayerName());
 
 		Sala sala = (Sala) session.getAttributes().get(ROOM_ATTRIBUTE);
@@ -312,6 +328,9 @@ public void sendGetRoomsMessageAll() throws Exception {
 			ObjectNode jsonPlayer = mapper.createObjectNode();
 			jsonPlayer.put("playerName", p.getPlayerName());
 			jsonPlayer.put("life", p.getLife());
+			//ammo
+			//propeller
+			//score
 			arrayNode.addPOJO(jsonPlayer);
 		}
 		msg.putPOJO("players", arrayNode);
