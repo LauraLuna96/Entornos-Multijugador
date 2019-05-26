@@ -2,12 +2,12 @@ package spacewar;
 
 // CLASE PADRE DE POWER UPS //
 
-public class PowerUp extends SpaceObject {
+public abstract class GenericPowerUp extends SpaceObject {
 
 	private final int id;
 	private static final int POWERUP_COLLISION_FACTOR = 200;
 
-	public PowerUp(int id) {
+	public GenericPowerUp(int id) {
 		this.id = id;
 	}
 
@@ -15,6 +15,6 @@ public class PowerUp extends SpaceObject {
 		return this.id;
 	}
 	
-	public void applyPowerUp(Player player) {}
+	public abstract void applyPowerUp(Player player);
 
 }
