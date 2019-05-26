@@ -202,6 +202,11 @@ function configWebsocket() {
 							game.global.myPlayer.image.x = player.posX
 							game.global.myPlayer.image.y = player.posY
 							game.global.myPlayer.image.angle = player.facingAngle
+							game.global.myPlayer.life = player.life
+							game.global.myPlayer.ammo = player.ammo
+							game.global.myPlayer.propeller = player.propeller
+							console.log("MyPlayer life: " + game.global.myPlayer.life);
+
 						} else {
 							if (typeof game.global.otherPlayers[player.id] == 'undefined') {
 								game.global.otherPlayers[player.id] = {
@@ -212,6 +217,8 @@ function configWebsocket() {
 								game.global.otherPlayers[player.id].image.x = player.posX
 								game.global.otherPlayers[player.id].image.y = player.posY
 								game.global.otherPlayers[player.id].image.angle = player.facingAngle
+								game.global.otherPlayers[player.id].life = player.life
+								console.log("OtherPlayer["+ player.id +"] life: " + game.global.otherPlayers[player.id].life);
 							}
 						}
 					}
@@ -232,11 +239,6 @@ function configWebsocket() {
 								explosion.anchor.setTo(0.5, 0.5)
 								explosion.scale.setTo(2, 2)
 								explosion.animations.play('explosion', 15, false, true)
-								game.global.myPlayer.life -= 1;
-
-								let msg = new Object();
-								msg.event = 'TAKE HIT';
-								game.global.socket.send(JSON.stringify(msg));
 							}
 							game.global.projectiles[projectile.id].image.visible = false
 						}

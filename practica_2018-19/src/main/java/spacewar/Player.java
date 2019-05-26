@@ -16,6 +16,7 @@ public class Player extends Spaceship {
 	private AtomicInteger life;
 	private AtomicInteger ammo; // Munición
 	private AtomicInteger propeller; //Propulsor
+	private AtomicInteger score;
 
 	public Player(int playerId, WebSocketSession session, String playerName) {
 		this.playerId = playerId;
@@ -25,6 +26,15 @@ public class Player extends Spaceship {
 		this.life = new AtomicInteger(3);
 		this.ammo = new AtomicInteger(20);
 		this.propeller = new AtomicInteger(3); // Tendrá 4 posibles valores (0,1,2,3) siendo 3 el máximo
+		this.score = new AtomicInteger(0);
+	}
+	
+	public int getScore() {
+		return this.score.get();
+	}
+	
+	public void increaseScore(int n) {
+		this.score.addAndGet(n);
 	}
 	
 	public int getPropeller() {

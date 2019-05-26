@@ -208,12 +208,6 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				}
 				break;
 
-			case "TAKE HIT":
-				msg.put("event", "TAKE HIT");
-				msg.put("playerName", player.getPlayerName());
-				msg.put("life", player.decreaseLife());
-				sala.broadcastExcept(msg.toString(),player.getPlayerName());
-				break;
 
 			//////////////////////////////////////////////////////
 			// CHAT
@@ -328,9 +322,10 @@ public void sendGetRoomsMessageAll() throws Exception {
 			ObjectNode jsonPlayer = mapper.createObjectNode();
 			jsonPlayer.put("playerName", p.getPlayerName());
 			jsonPlayer.put("life", p.getLife());
-			//ammo
-			//propeller
-			//score
+			jsonPlayer.put("ammo", p.getAmmo());
+			jsonPlayer.put("propeller", p.getPropeller());
+			jsonPlayer.put("score", p.getScore());
+			
 			arrayNode.addPOJO(jsonPlayer);
 		}
 		msg.putPOJO("players", arrayNode);
