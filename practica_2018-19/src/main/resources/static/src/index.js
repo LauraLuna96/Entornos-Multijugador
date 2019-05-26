@@ -53,8 +53,8 @@ function openWebsocket() {
 		return;
 	}
 	var splChars = "*|,\":<>[]{}`\';()@&$#% ";
-	for (i = 0; i < splChars.length; i++) {
-		if (splChars.indexOf(name.value.charAt(i)) != -1) {
+	for (i = 0; i < name.length; i++) {
+		if (splChars.indexOf(name.charAt(i)) != -1) {
 			// Caracteres no permitidos en el string!
 			console.log("[ERROR] Invalid characters in player name!")
 			return;
