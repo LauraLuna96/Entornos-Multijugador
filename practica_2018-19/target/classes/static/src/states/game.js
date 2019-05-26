@@ -43,6 +43,10 @@ Spacewar.gameState.prototype = {
 	},
 
 	create: function () {
+
+		////// INTERFAZ QUE MUESTRA DATOS DE LOS JUGADORES //////
+		
+		/////////////////////////////////////////////////////////
 		this.bulletTime = 0
 		this.fireBullet = function () {
 			if (game.time.now > this.bulletTime) {
