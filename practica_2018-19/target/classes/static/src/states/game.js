@@ -135,11 +135,12 @@ Spacewar.gameState.prototype = {
 			console.log("[DEBUG] Sending UPDATE MOVEMENT message to server")
 		}
 		game.global.socket.send(JSON.stringify(msg))
-	}
+	},
 }
 
-// Comprueba si hay un ganador y en el caso de haberlo, finaliza el juego //
-function endGame() {
-	console.log("There's a winner! Exiting game state.")
-	game.state.start('endState');
+function clearGame() {
+	game.state.clearCurrentState(); 
+	game.global.currentSala.players = undefined;
+	game.global.myPlayer = new Object();
+	game.global.otherPlayers = [];
 }

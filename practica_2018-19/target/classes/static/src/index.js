@@ -206,6 +206,7 @@ function configWebsocket() {
 								game.global.myPlayer.image.y = player.posY
 								game.global.myPlayer.image.angle = player.facingAngle
 								game.global.myPlayer.life = player.life
+								game.global.myPlayer.isAlive = player.isAlive
 								game.global.myPlayer.ammo = player.ammo
 								game.global.myPlayer.propeller = player.propeller
 							}
@@ -226,6 +227,7 @@ function configWebsocket() {
 									game.global.otherPlayers[player.id].image.y = player.posY
 									game.global.otherPlayers[player.id].image.angle = player.facingAngle
 									game.global.otherPlayers[player.id].life = player.life
+									game.global.otherPlayers[player.id].isAlive = player.isAlive
 								}
 								//console.log("OtherPlayer["+ player.id +"] life: " + game.global.otherPlayers[player.id].life);
 							}
@@ -256,6 +258,7 @@ function configWebsocket() {
 				break
 			case 'END GAME':
 				console.log("Player " + msg.winner.playerName + " won! Exiting game state.")
+				clearGame();
 				game.state.start('endState');
 				showResults(msg);
 				break
