@@ -16,7 +16,6 @@ public class Player extends Spaceship {
 	private Sala sala; // Sala a la que pertenece el jugador, le llega en el constructor
 	private AtomicInteger life;
 	private AtomicInteger ammo; // Munición
-	private AtomicInteger propeller; //Propulsor
 	private AtomicInteger score;
 	private AtomicBoolean alive;
 
@@ -27,7 +26,6 @@ public class Player extends Spaceship {
 		this.playerName = playerName;
 		this.life = new AtomicInteger(3);
 		this.ammo = new AtomicInteger(20);
-		this.propeller = new AtomicInteger(3); // Tendrá 4 posibles valores (0,1,2,3) siendo 3 el máximo
 		this.score = new AtomicInteger(0);
 		this.alive = new AtomicBoolean(true);
 	}
@@ -53,18 +51,6 @@ public class Player extends Spaceship {
 	
 	public void increaseScore(int n) {
 		this.score.addAndGet(n);
-	}
-	
-	public int getPropeller() {
-		return this.propeller.get();
-	}
-	
-	public void decreasePropeller() {
-		this.propeller.decrementAndGet();
-	}
-	
-	public void increasePropeller(int n) {
-		this.propeller.addAndGet(n);
 	}
 	
 	public int getAmmo() {

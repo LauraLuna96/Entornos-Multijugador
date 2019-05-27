@@ -204,7 +204,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				player.loadMovement(node.path("movement").get("thrust").asBoolean(),
 						node.path("movement").get("brake").asBoolean(),
 						node.path("movement").get("rotLeft").asBoolean(),
-						node.path("movement").get("rotRight").asBoolean());
+						node.path("movement").get("rotRight").asBoolean(),
+						node.path("propeller").asBoolean());
 				if (node.path("bullet").asBoolean()) {
 					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
 					sala.getGame().addProjectile(projectile.getId(), projectile);
@@ -326,7 +327,7 @@ public void sendGetRoomsMessageAll() throws Exception {
 			jsonPlayer.put("playerName", p.getPlayerName());
 			jsonPlayer.put("life", p.getLife());
 			jsonPlayer.put("ammo", p.getAmmo());
-			jsonPlayer.put("propeller", p.getPropeller());
+			jsonPlayer.put("propeller", p.getPropellerUses());
 			jsonPlayer.put("score", p.getScore());
 			
 			arrayNode.addPOJO(jsonPlayer);

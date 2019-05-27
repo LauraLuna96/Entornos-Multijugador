@@ -208,7 +208,7 @@ function configWebsocket() {
 								game.global.myPlayer.life = player.life
 								game.global.myPlayer.isAlive = player.isAlive
 								game.global.myPlayer.ammo = player.ammo
-								game.global.myPlayer.propeller = player.propeller
+								game.global.myPlayer.propellerUses = player.propellerUses
 							}
 							//console.log("MyPlayer life: " + game.global.myPlayer.life);
 

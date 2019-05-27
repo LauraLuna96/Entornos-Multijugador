@@ -1,6 +1,8 @@
 Spacewar.gameState = function (game) {
 	this.bulletTime
+	this.propellerTime
 	this.fireBullet
+	this.usePropeller
 	this.numStars = 100 // Should be canvas size dependant
 	this.maxProjectiles = 800 // 8 per player
 }
@@ -40,9 +42,13 @@ Spacewar.gameState.prototype = {
 		game.global.myPlayer.image = game.add.sprite(0, 0, 'spacewar',
 			game.global.myPlayer.shipType)
 		game.global.myPlayer.image.anchor.setTo(0.5, 0.5)
+		game.global.myPlayer.propellerUses = 3;
+		game.global.myPlayer.ammo = 20;
 	},
 
 	create: function () {
+
+		game.input.mouse.capture = true;
 
 		////// INTERFAZ QUE MUESTRA DATOS DE LOS JUGADORES //////
 		var textGroup = game.add.group();
@@ -73,6 +79,24 @@ Spacewar.gameState.prototype = {
 			}
 		}
 
+		/////////////////////////////////////////////////////////
+
+		this.propellerTime = 0;
+		this.usePropeller = function () {
+			if (game.global.myPlayer.propellerUses <= 0 && game.time.now > this.propellerTime){
+				this.propellerTime = game.time.now + 250;
+				console.log("No tienes carga de propulsión.");
+				return false
+			}
+			else if (game.time.now > this.propellerTime) {
+				this.propellerTime = game.time.now + 250;
+				console.log("PROPULSOR USADO!");
+				return true
+			} else {
+				return false
+			}
+		}
+
 		// Esto es para que las teclas se puedan usar fuera del canvas (en el chat, por ej)
 		/*game.onBlur.add(function () {
 			game.input.keyboard.enabled = false;
@@ -94,6 +118,7 @@ Spacewar.gameState.prototype = {
 		this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
 		this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
 		this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+		this.pKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
 		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 		// Stop the following keys from propagating up to the browser
@@ -117,6 +142,7 @@ Spacewar.gameState.prototype = {
 		}
 
 		msg.bullet = false
+		msg.propeller = false
 
 		if (this.wKey.isDown)
 			msg.movement.thrust = true;
@@ -128,7 +154,10 @@ Spacewar.gameState.prototype = {
 			msg.movement.rotRight = true;
 		if (this.spaceKey.isDown) {
 			msg.bullet = this.fireBullet()
-			//console.log("Shoot!")
+			console.log("Shoot!")
+		}
+		if (this.pKey.isDown) { // Servirá para los propulsores
+			msg.propeller = this.usePropeller()
 		}
 
 		if (game.global.DEBUG_MODE) {
