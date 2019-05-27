@@ -26,6 +26,7 @@ public class SpacewarGame {
 	public final static boolean DEBUG_MODE = true;
 	public final static boolean VERBOSE_MODE = true;
 	private boolean isRunning = false;
+	private boolean isOver = false; // Se pondrá a true cuando finalice una partida
 
 	ObjectMapper mapper = new ObjectMapper();
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -42,7 +43,24 @@ public class SpacewarGame {
 	public boolean getIsRunning() {
 		return isRunning;
 	}
-
+	
+	public boolean getIsOver() {
+		return isOver;
+	}
+	
+	public void endGame(String winner) {
+		if (!isOver) {
+			this.isOver = true;
+			System.out.println("[GAME] Game has ended, winner: " + winner);
+			
+			ObjectNode msg = mapper.createObjectNode();
+			msg.put("event", "END GAME");
+			msg.put("winner", winner);
+			sala.broadcast(msg.toString());
+			stopGameLoop();
+		}
+	}
+	
 	public void sendBeginningMessages() throws Exception {
 		for (Player p : players.values()) {
 			ObjectNode msg = mapper.createObjectNode();
@@ -125,10 +143,10 @@ public class SpacewarGame {
 		boolean removeBullets = false;
 
 		try {
+			String winner = "";
 			// Update players
 			for (Player player : players.values()) {
 				ObjectNode jsonPlayer = mapper.createObjectNode();
-
 				if (player.getLife() > 0) {
 					player.calculateMovement();
 					
@@ -138,16 +156,24 @@ public class SpacewarGame {
 					jsonPlayer.put("posX", player.getPosX());
 					jsonPlayer.put("posY", player.getPosY());
 					jsonPlayer.put("facingAngle", player.getFacingAngle());
+					
 				} else if (player.isAlive()) {
 					player.setAlive(false);
 					jsonPlayer.put("id", player.getPlayerId());
 					players.remove(player.getSession().getId());
 					System.out.println("[GAME] Player " + player.getPlayerName() + " defeated.");
-				}
+					if (players.size() == 1) {
+						winner = player.getSession().getId();
+					}
+				}				
 				
 				jsonPlayer.put("isAlive", player.isAlive());
 				
 				arrayNodePlayers.addPOJO(jsonPlayer);
+			}
+			
+			if (players.size() <= 1) {
+				endGame(winner);
 			}
 
 			// Update bullets and handle collision

@@ -254,6 +254,10 @@ function configWebsocket() {
 					}
 				}
 				break
+			case 'END GAME':
+				console.log("Player " + msg.winner + " won! Exiting game state.")
+				game.state.start('endState');
+				break
 			case 'REMOVE PLAYER':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] REMOVE PLAYER message received')

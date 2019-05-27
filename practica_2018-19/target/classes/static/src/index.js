@@ -40,6 +40,7 @@ window.onload = function () {
 	game.state.add('matchmakingState', Spacewar.matchmakingState)
 	game.state.add('roomState', Spacewar.roomState)
 	game.state.add('gameState', Spacewar.gameState)
+	game.state.add('endState', Spacewar.endState) // Creación del estado end para cuando finaliza una partida
 
 	//game.state.start('bootState')
 	// El juego se inicializa cuando el websocket se abre
@@ -198,19 +199,35 @@ function configWebsocket() {
 				if (typeof game.global.myPlayer.image !== 'undefined') {
 					for (var player of msg.players) {
 						if (game.global.myPlayer.id == player.id) {
-							game.global.myPlayer.image.x = player.posX
-							game.global.myPlayer.image.y = player.posY
-							game.global.myPlayer.image.angle = player.facingAngle
+							if (!player.isAlive) {
+								console.log("Tas morio :(")
+							} else {
+								game.global.myPlayer.image.x = player.posX
+								game.global.myPlayer.image.y = player.posY
+								game.global.myPlayer.image.angle = player.facingAngle
+								game.global.myPlayer.life = player.life
+								game.global.myPlayer.ammo = player.ammo
+								game.global.myPlayer.propeller = player.propeller
+							}
+							//console.log("MyPlayer life: " + game.global.myPlayer.life);
+
 						} else {
+
 							if (typeof game.global.otherPlayers[player.id] == 'undefined') {
 								game.global.otherPlayers[player.id] = {
 									image: game.add.sprite(player.posX, player.posY, 'spacewar', player.shipType)
 								}
 								game.global.otherPlayers[player.id].image.anchor.setTo(0.5, 0.5)
 							} else {
-								game.global.otherPlayers[player.id].image.x = player.posX
-								game.global.otherPlayers[player.id].image.y = player.posY
-								game.global.otherPlayers[player.id].image.angle = player.facingAngle
+								if (!player.isAlive) {
+									console.log("OtherPlayer[" + player.id + "] se ha morido :)")
+								} else {
+									game.global.otherPlayers[player.id].image.x = player.posX
+									game.global.otherPlayers[player.id].image.y = player.posY
+									game.global.otherPlayers[player.id].image.angle = player.facingAngle
+									game.global.otherPlayers[player.id].life = player.life
+								}
+								//console.log("OtherPlayer["+ player.id +"] life: " + game.global.otherPlayers[player.id].life);
 							}
 						}
 					}
@@ -231,16 +248,15 @@ function configWebsocket() {
 								explosion.anchor.setTo(0.5, 0.5)
 								explosion.scale.setTo(2, 2)
 								explosion.animations.play('explosion', 15, false, true)
-								game.global.myPlayer.life -= 1;
-
-								let msg = new Object();
-								msg.event = 'TAKE HIT';
-								game.global.socket.send(JSON.stringify(msg));
 							}
 							game.global.projectiles[projectile.id].image.visible = false
 						}
 					}
 				}
+				break
+			case 'END GAME':
+				console.log("Player " + msg.winner + " won! Exiting game state.")
+				game.state.start('endState');
 				break
 			case 'REMOVE PLAYER':
 				if (game.global.DEBUG_MODE) {
