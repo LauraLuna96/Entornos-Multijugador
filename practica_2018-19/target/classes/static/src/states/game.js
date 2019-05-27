@@ -46,12 +46,19 @@ Spacewar.gameState.prototype = {
 
 		////// INTERFAZ QUE MUESTRA DATOS DE LOS JUGADORES //////
 		var textGroup = game.add.group();
-		for (var i = 0; i < game.global.currentSala.players.length; i++) {
+		for (var i = 0; i < game.global.currentSala.players.length+5; i++) {
 			//textGroup.add(game.make.text(10, 10 + i * 5 , game.global.currentSala.players[i].playerName + " / "+ game.global.currentSala.players[i].life + " / "+ game.global.currentSala.players[i].ammo + " / "+ game.global.currentSala.players[i].propeller + " / "+ game.global.currentSala.players[i].score, { font: "12px Arial", fill: generateHexColor() }));
-			textGroup.add(game.make.text(10, 20 + i * 20 , "holiwis profiwis", { font: "20px Orbitron", fill: generateHexColor() }));
+			textGroup.add(game.make.text(10, 10 + i * 20 , "nombre / 3 / 6 / 2 / 17", { font: "12px Orbitron", fill: generateColor(i) }));
 		}
-		function generateHexColor() { 
+		/*function generateHexColor() { 
 			return '#' + ((0.5 + 0.5 * Math.random()) * 0xFFFFFF << 0).toString(16);
+		}*/
+		function generateColor(n) {
+			if (i%2!=0) {
+				return '#40ffe6'
+			} else {
+				return '#ffffff'
+			}
 		}
 		/////////////////////////////////////////////////////////
 
