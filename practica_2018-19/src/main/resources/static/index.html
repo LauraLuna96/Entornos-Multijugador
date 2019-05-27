@@ -76,6 +76,13 @@
 	</div>
 	<div class="row">
 		<div class="col">
+			<div class="header-tooltip">
+				<i class="fas fa-gamepad"></i> Controles: <b>WASD</b> (movimiento) | <b>Espacio</b> (disparar) | <b>Click derecho</b> (propulsor) | <b>Escape</b> (salir de la partida)
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
 			<div class="gameContainer">
 				<!-- div donde ubicaremos el juego -->
 				<div id="gameDiv">
@@ -102,7 +109,7 @@
 									</div>
 									<button type="button" id="btn-createRoom" class="btn btn-spacewars" onclick="createRoom();"><i class="far fa-plus-square"></i>
 										Crear</button>
-										<div id="create-room-error" class="alert alert-danger" style="display:none">
+									<div id="create-room-error" class="alert alert-danger" style="display:none">
 										¡El nombre de la sala es inválido!</div>
 								</form>
 								<button type="button" id="btn-leaveLobby" class="btn btn-spacewars" onclick="leaveLobby();"><i class="fas fa-times"></i>
@@ -128,12 +135,27 @@
 						</div>
 						<div id="menu-sala" style="display:none;" class="menu">
 							<div id="area-lobby-btn">
-								<button type="button" class="btn btn-spacewars" id="btn-leaveRoom" onclick="leaveRoom()"><i class="fas fa-times"></i> Salir</button>
+								<button type="button" class="btn btn-spacewars" id="btn-leaveRoom" onclick="leaveRoom()"><i class="fas fa-times"></i>
+									Salir</button>
 							</div>
 							<h3 id="menu-sala-header">Sala</h3>
 							<i>Esperando a más jugadores ...</i>
 							<div id="area-sala" class="area-menu">
-								
+
+							</div>
+						</div>
+
+						<div id="menu-endgame" class="menu">
+							<div id="area-lobby-btn">
+								<button type="button" class="btn btn-spacewars" id="btn-leaveEndgame"><i class="fas fa-times"></i> Volver al menú</button>
+							</div>
+							<h3 id="menu-endgame-header">Resultados</h3>
+							<i>¡Bien jugado!</i>
+							<div id="area-endgame" class="area-menu">
+								<h4 class="menu-endgame-header2">Ganador</h4>
+								<p id="endgame-winner">Tu Nombre Aquí™</p>
+								<h4 class="menu-endgame-header2">Perdedores</h4>
+								<p id="endgame-losers">Tu Nombre Aquí™</p>
 							</div>
 						</div>
 					</div>

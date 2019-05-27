@@ -41,6 +41,23 @@ h1, h2, h3, h4, h5, h6 {
     width: 1024px;
 }
 
+.header-tooltip {
+    width: 100%;
+    background-color: var(--bg-color);
+    padding: 10px 20px;
+    margin: 10px 0px;
+    border-radius: .3rem;
+    color: #858585;
+}
+
+.menu-endgame-header2 {
+    background-color: var(--theme-color2-dark);
+    margin: 5px -20px 5px 0px;
+    padding: 5px 20px;
+    width: 100%;
+    text-shadow: 1px 2px 0px var(--bg-color-dark);
+}
+
 .chatDiv {
     height: 600px;
     width: 100%;

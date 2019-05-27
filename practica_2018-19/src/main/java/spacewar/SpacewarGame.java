@@ -55,7 +55,28 @@ public class SpacewarGame {
 			
 			ObjectNode msg = mapper.createObjectNode();
 			msg.put("event", "END GAME");
-			msg.put("winner", winner);
+
+			ArrayNode arrayNode = mapper.createArrayNode();
+			for (Player p : sala.getPlayers()) {
+				if (p.getSession().getId() != winner) {
+					ObjectNode jsonPlayer = mapper.createObjectNode();
+					jsonPlayer.put("playerName", p.getPlayerName());
+					jsonPlayer.put("life", p.getLife());
+					jsonPlayer.put("score", p.getScore());
+					
+					arrayNode.addPOJO(jsonPlayer);
+				} else {
+					ObjectNode jsonPlayer = mapper.createObjectNode();
+					jsonPlayer.put("playerName", p.getPlayerName());
+					jsonPlayer.put("life", p.getLife());
+					jsonPlayer.put("score", p.getScore());
+					
+					msg.putPOJO("winner",jsonPlayer);
+				}
+			}
+			
+			msg.putPOJO("losers", arrayNode);
+			
 			sala.broadcast(msg.toString());
 			stopGameLoop();
 		}
