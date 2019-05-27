@@ -30,6 +30,13 @@ public class Player extends Spaceship {
 		this.alive = new AtomicBoolean(true);
 	}
 	
+	public void reset() {
+		this.life = new AtomicInteger(3);
+		this.ammo = new AtomicInteger(20);
+		this.propeller = new AtomicInteger(3);
+		this.alive = new AtomicBoolean(true);
+	}
+	
 	public boolean isAlive() {
 		return this.alive.get();
 	}

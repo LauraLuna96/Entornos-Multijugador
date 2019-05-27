@@ -36,3 +36,11 @@ function showResults(msg) {
 	}
 	$("#endgame-losers").html(losers_str);
 }
+
+function leaveGame() {
+	let msg = new Object()
+	msg.event = 'LEAVE ROOM'
+	console.log("Going back to lobby ...")
+	game.global.socket.send(JSON.stringify(msg))
+	game.state.start('lobbyState');
+}

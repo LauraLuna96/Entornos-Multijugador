@@ -79,6 +79,7 @@ public class Sala {
 	public synchronized void removePlayer(Player player) {
 		players.remove(player.getSession().getId());
 		game.removePlayer(player);
+		player.reset();
 
 		int count = this.numPlayers.decrementAndGet();
 		if (count == 0) {

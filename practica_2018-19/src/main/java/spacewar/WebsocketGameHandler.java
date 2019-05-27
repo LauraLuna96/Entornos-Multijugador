@@ -102,6 +102,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					System.out.println("[ROOM] Player " + player.getPlayerName() + " joined the room " + s.getName());	
 					
 					msg.put("event", "JOIN ROOM");
+					msg.put("roomName", s.getName());
 					player.sendMessage(msg.toString());
 					sendRoomInfoMessage(s);
 					sendGetRoomsMessageAll();
@@ -166,6 +167,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			case "LEAVE ROOM":
 				sala.removePlayer(player);
 				System.out.println("[ROOM] Player " + player.getPlayerName() + " left the room " + sala.getName());
+				
 				if (sala.getNumPlayers() <= 0) {
 					
 					System.out.println("[ROOM] Room " + sala.getName() + " is empty. Deleting it now.");
@@ -173,13 +175,14 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					msg.put("roomName", sala.getName());
 					sendMessageToAllInLobby(msg.toString());
 					salas.remove(sala.getName());
-					session.getAttributes().remove(ROOM_ATTRIBUTE);
 					
 				} else {
 					msg.put("event", "LEAVE ROOM");
 					msg.put("playerName", player.getPlayerName());
 					sala.broadcast(msg.toString());
 				}
+				
+				session.getAttributes().remove(ROOM_ATTRIBUTE);
 				lobbyPlayers.put(player.getPlayerName(), player); // Añade el jugador al lobby
 				
 				sendGetRoomsMessageAll();

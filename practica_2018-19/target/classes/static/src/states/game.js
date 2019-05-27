@@ -41,6 +41,7 @@ Spacewar.gameState.prototype = {
 			+ '_0' + (Math.floor(Math.random() * 6) + 1) + '.png'
 		game.global.myPlayer.image = game.add.sprite(0, 0, 'spacewar',
 			game.global.myPlayer.shipType)
+
 		game.global.UIText[game.global.myPlayer.id] = game.add.text(10, 10 + i * 20 , game.global.myPlayer.playerName + " / "+ game.global.myPlayer.life + " / "+ game.global.myPlayer.ammo + " / "+ game.global.myPlayer.propellerUses + " / "+ game.global.myPlayer.score, { font: "12px Orbitron", fill: "#40ffe6" });
 		game.global.myPlayer.image.anchor.setTo(0.5, 0.5)
 		game.global.myPlayer.propellerUses = 3;
@@ -153,13 +154,7 @@ Spacewar.gameState.prototype = {
 			console.log("[DEBUG] Sending UPDATE MOVEMENT message to server")
 		}
 		game.global.socket.send(JSON.stringify(msg))
-	}
-}
-
-// Comprueba si hay un ganador y en el caso de haberlo, finaliza el juego //
-function endGame() {
-	console.log("There's a winner! Exiting game state.")
-	game.state.start('endState');
+	},
 }
 
 function generateColor(n) {
@@ -168,4 +163,9 @@ function generateColor(n) {
 	} else {
 		return '#ffffff'
 	}
+function clearGame() {
+	game.state.clearCurrentState(); 
+	game.global.currentSala.players = [];
+	game.global.myPlayer = new Object();
+	game.global.otherPlayers = [];
 }

@@ -164,10 +164,11 @@ public class SpacewarGame {
 		boolean removeBullets = false;
 
 		try {
-			String winner = "";
+			String winner = null;
 			// Update players
 			for (Player player : players.values()) {
 				ObjectNode jsonPlayer = mapper.createObjectNode();
+				
 				if (player.getLife() > 0) {
 					player.calculateMovement();
 					
@@ -182,12 +183,19 @@ public class SpacewarGame {
 					jsonPlayer.put("posY", player.getPosY());
 					jsonPlayer.put("facingAngle", player.getFacingAngle());
 					
+					// Si es el único jugador superviviente, gana
+					if (players.size() == 1) {
+						winner = player.getSession().getId();
+					}
+					
 				} else if (player.isAlive()) {
 					player.setAlive(false);
 					jsonPlayer.put("id", player.getPlayerId());
 					players.remove(player.getSession().getId());
 					System.out.println("[GAME] Player " + player.getPlayerName() + " defeated.");
-					if (players.size() == 1) {
+					
+					// Si por alguna razón no quedan jugadores vivos (se han muerto 2 en la misma frame) cogemos el último que muere como ganador
+					if (players.size() == 0) {
 						winner = player.getSession().getId();
 					}
 				}				
@@ -197,7 +205,8 @@ public class SpacewarGame {
 				arrayNodePlayers.addPOJO(jsonPlayer);
 			}
 			
-			if (players.size() <= 1) {
+			if (winner != null) {
+				players.remove(winner);
 				endGame(winner);
 			}
 
