@@ -15,7 +15,7 @@ Spacewar.endState.prototype = {
 	},
 
 	create : function() {
-        game.add.text(50, 100, ('Soy un texto! la partida ha finalizado! :D'), {font: '50px Orbitron', fill: '#c6f9ac'});
+        game.add.text(50, 100, ('Soy un texto! la partida ha finalizado! :D'), {font: '30px Orbitron', fill: '#ffffff'});
 	},
 
 	update : function() {
