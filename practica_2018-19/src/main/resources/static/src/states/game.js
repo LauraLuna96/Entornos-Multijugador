@@ -41,6 +41,8 @@ Spacewar.gameState.prototype = {
 			+ '_0' + (Math.floor(Math.random() * 6) + 1) + '.png'
 		game.global.myPlayer.image = game.add.sprite(0, 0, 'spacewar',
 			game.global.myPlayer.shipType)
+
+		game.global.UIText[game.global.myPlayer.id] = game.add.text(10, 10 + i * 20 , game.global.myPlayer.playerName + " / "+ game.global.myPlayer.life + " / "+ game.global.myPlayer.ammo + " / "+ game.global.myPlayer.propellerUses + " / "+ game.global.myPlayer.score, { font: "12px Orbitron", fill: "#40ffe6" });
 		game.global.myPlayer.image.anchor.setTo(0.5, 0.5)
 		game.global.myPlayer.propellerUses = 3;
 		game.global.myPlayer.ammo = 20;
@@ -51,21 +53,9 @@ Spacewar.gameState.prototype = {
 		game.input.mouse.capture = true;
 
 		////// INTERFAZ QUE MUESTRA DATOS DE LOS JUGADORES //////
-		var textGroup = game.add.group();
-		for (var i = 0; i < game.global.currentSala.players.length+5; i++) {
-			//textGroup.add(game.make.text(10, 10 + i * 5 , game.global.currentSala.players[i].playerName + " / "+ game.global.currentSala.players[i].life + " / "+ game.global.currentSala.players[i].ammo + " / "+ game.global.currentSala.players[i].propeller + " / "+ game.global.currentSala.players[i].score, { font: "12px Arial", fill: generateHexColor() }));
-			textGroup.add(game.make.text(10, 10 + i * 20 , "nombre / 3 / 6 / 2 / 17", { font: "12px Orbitron", fill: generateColor(i) }));
-		}
 		/*function generateHexColor() { 
 			return '#' + ((0.5 + 0.5 * Math.random()) * 0xFFFFFF << 0).toString(16);
 		}*/
-		function generateColor(n) {
-			if (i%2!=0) {
-				return '#40ffe6'
-			} else {
-				return '#ffffff'
-			}
-		}
 		/////////////////////////////////////////////////////////
 
 		this.bulletTime = 0
@@ -130,7 +120,7 @@ Spacewar.gameState.prototype = {
 	},
 
 	update: function () {
-
+		
 		let msg = new Object()
 		msg.event = 'UPDATE MOVEMENT'
 
@@ -167,6 +157,12 @@ Spacewar.gameState.prototype = {
 	},
 }
 
+function generateColor(n) {
+	if (n%2!=0) {
+		return '#40ffe6'
+	} else {
+		return '#ffffff'
+	}
 function clearGame() {
 	game.state.clearCurrentState(); 
 	game.global.currentSala.players = [];
