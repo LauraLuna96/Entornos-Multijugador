@@ -255,8 +255,9 @@ function configWebsocket() {
 				}
 				break
 			case 'END GAME':
-				console.log("Player " + msg.winner + " won! Exiting game state.")
+				console.log("Player " + msg.winner.playerName + " won! Exiting game state.")
 				game.state.start('endState');
+				showResults(msg);
 				break
 			case 'REMOVE PLAYER':
 				if (game.global.DEBUG_MODE) {
@@ -265,13 +266,6 @@ function configWebsocket() {
 				}
 				game.global.otherPlayers[msg.id].image.destroy()
 				delete game.global.otherPlayers[msg.id]
-				break
-			case 'TAKE HIT':
-				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] TAKE HIT message received')
-					console.dir(msg.players)
-				}
-				game.global.myPlayer.life = msg.life;
 				break
 			default:
 				console.dir(msg)
