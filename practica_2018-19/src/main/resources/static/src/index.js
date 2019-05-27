@@ -25,6 +25,7 @@ window.onload = function () {
 		otherPlayers: [],
 		projectiles: [],
 		salas: [],
+		UIText: [],
 		currentSala: null
 	}
 
@@ -187,6 +188,7 @@ function configWebsocket() {
 				}
 				game.global.myPlayer.id = msg.id
 				game.global.myPlayer.shipType = msg.shipType
+				var i = msg.id;
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] ID assigned to player: ' + game.global.myPlayer.id)
 				}
@@ -208,6 +210,9 @@ function configWebsocket() {
 								game.global.myPlayer.life = player.life
 								game.global.myPlayer.ammo = player.ammo
 								game.global.myPlayer.propellerUses = player.propellerUses
+								game.global.myPlayer.playerName = player.playerName
+								game.global.myPlayer.score = player.score
+								game.global.UIText[player.id].setText(game.global.myPlayer.playerName + " / "+ game.global.myPlayer.life + " / "+ game.global.myPlayer.ammo + " / "+ game.global.myPlayer.propellerUses + " / "+ game.global.myPlayer.score);
 							}
 							//console.log("MyPlayer life: " + game.global.myPlayer.life);
 
@@ -218,6 +223,8 @@ function configWebsocket() {
 									image: game.add.sprite(player.posX, player.posY, 'spacewar', player.shipType)
 								}
 								game.global.otherPlayers[player.id].image.anchor.setTo(0.5, 0.5)
+								var i = player.id;
+								game.global.UIText[player.id] = game.add.text(10, 10 + i * 20 , game.global.otherPlayers[player.id].playerName + " / "+ game.global.otherPlayers[player.id].life + " / "+ game.global.otherPlayers[player.id].ammo + " / "+ game.global.otherPlayers[player.id].propellerUses + " / "+ game.global.otherPlayers[player.id].score, { font: "12px Orbitron", fill: "#ffffff" });
 							} else {
 								if (!player.isAlive) {
 									console.log("OtherPlayer[" + player.id + "] se ha morido :)")
@@ -226,6 +233,7 @@ function configWebsocket() {
 									game.global.otherPlayers[player.id].image.y = player.posY
 									game.global.otherPlayers[player.id].image.angle = player.facingAngle
 									game.global.otherPlayers[player.id].life = player.life
+									game.global.UIText[player.id].setText(game.global.otherPlayers[player.id].playerName + " / "+ game.global.otherPlayers[player.id].life + " / "+ game.global.otherPlayers[player.id].ammo + " / "+ game.global.otherPlayers[player.id].propellerUses + " / "+ game.global.otherPlayers[player.id].score);
 								}
 								//console.log("OtherPlayer["+ player.id +"] life: " + game.global.otherPlayers[player.id].life);
 							}
