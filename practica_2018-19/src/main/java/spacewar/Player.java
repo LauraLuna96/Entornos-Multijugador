@@ -11,7 +11,7 @@ public class Player extends Spaceship {
 
 	private final WebSocketSession session;
 	private final String playerName;
-	private final int playerId;
+	private AtomicInteger playerId;
 	private final String shipType;
 	private Sala sala; // Sala a la que pertenece el jugador, le llega en el constructor
 	private AtomicInteger life;
@@ -19,8 +19,7 @@ public class Player extends Spaceship {
 	private AtomicInteger score;
 	private AtomicBoolean alive;
 
-	public Player(int playerId, WebSocketSession session, String playerName) {
-		this.playerId = playerId;
+	public Player(WebSocketSession session, String playerName) {
 		this.session = session;
 		this.shipType = this.getRandomShipType();
 		this.playerName = playerName;
@@ -33,7 +32,6 @@ public class Player extends Spaceship {
 	public void reset() {
 		this.life = new AtomicInteger(3);
 		this.ammo = new AtomicInteger(20);
-		this.propeller = new AtomicInteger(3);
 		this.alive = new AtomicBoolean(true);
 	}
 	
@@ -82,7 +80,11 @@ public class Player extends Spaceship {
 	}
 
 	public int getPlayerId() {
-		return this.playerId;
+		return this.playerId.get();
+	}
+	
+	public void setPlayerId(int newId) {
+		this.playerId.set(newId);
 	}
 
 	public WebSocketSession getSession() {

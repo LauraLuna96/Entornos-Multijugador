@@ -169,7 +169,7 @@ Spacewar.gameState.prototype = {
 
 function clearGame() {
 	game.state.clearCurrentState(); 
-	game.global.currentSala.players = undefined;
+	game.global.currentSala.players = [];
 	game.global.myPlayer = new Object();
 	game.global.otherPlayers = [];
 }

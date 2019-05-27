@@ -67,7 +67,7 @@ public class Sala {
 		if (players.size() < MAX_PLAYERS) {
 			players.put(player.getSession().getId(), player);
 			game.addPlayer(player);
-			numPlayers.incrementAndGet();
+			player.setPlayerId(numPlayers.getAndIncrement());
 			//System.out.println("[ROOM] Room " + this.name + " now has " + count + " players.");
 			metido = true;
 		} else {

@@ -22,7 +22,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private static final String PLAYER_ATTRIBUTE = "PLAYER";
 	private static final String ROOM_ATTRIBUTE = "ROOM";
 	private ObjectMapper mapper = new ObjectMapper();
-	private AtomicInteger playerId = new AtomicInteger(0);
+	//private AtomicInteger playerId = new AtomicInteger(0); Cada sala tiene su propia cuenta de playerIds
 	private AtomicInteger projectileId = new AtomicInteger(0);
 	private Map<String, Player> globalPlayers = new ConcurrentHashMap<>(); // Mapa de jugadores global
 	private Map<String, Player> lobbyPlayers = new ConcurrentHashMap<>(); // Mapa de jugadores en el lobby
@@ -38,7 +38,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		String playerName = uri[uri.length - 1];
 		
 		if (!globalPlayers.containsKey(playerName)) {
-			Player player = new Player(playerId.incrementAndGet(), session, playerName);
+			Player player = new Player(session, playerName);
 
 			System.out.println("[SYS] New player " + playerName + " created.");
 			session.getAttributes().put(PLAYER_ATTRIBUTE, player);
