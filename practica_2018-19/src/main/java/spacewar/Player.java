@@ -1,6 +1,7 @@
 package spacewar;
 
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.web.socket.TextMessage;
@@ -17,6 +18,7 @@ public class Player extends Spaceship {
 	private AtomicInteger ammo; // Munición
 	private AtomicInteger propeller; //Propulsor
 	private AtomicInteger score;
+	private AtomicBoolean alive;
 
 	public Player(int playerId, WebSocketSession session, String playerName) {
 		this.playerId = playerId;
@@ -27,6 +29,15 @@ public class Player extends Spaceship {
 		this.ammo = new AtomicInteger(20);
 		this.propeller = new AtomicInteger(3); // Tendrá 4 posibles valores (0,1,2,3) siendo 3 el máximo
 		this.score = new AtomicInteger(0);
+		this.alive = new AtomicBoolean(true);
+	}
+	
+	public boolean isAlive() {
+		return this.alive.get();
+	}
+	
+	public void setAlive(boolean alive) {
+		this.alive.set(alive);
 	}
 	
 	public int getScore() {

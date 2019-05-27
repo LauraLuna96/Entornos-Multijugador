@@ -199,26 +199,35 @@ function configWebsocket() {
 				if (typeof game.global.myPlayer.image !== 'undefined') {
 					for (var player of msg.players) {
 						if (game.global.myPlayer.id == player.id) {
-							game.global.myPlayer.image.x = player.posX
-							game.global.myPlayer.image.y = player.posY
-							game.global.myPlayer.image.angle = player.facingAngle
-							game.global.myPlayer.life = player.life
-							game.global.myPlayer.ammo = player.ammo
-							game.global.myPlayer.propeller = player.propeller
-							console.log("MyPlayer life: " + game.global.myPlayer.life);
+							if (!player.isAlive) {
+								console.log("Tas morio :(")
+							} else {
+								game.global.myPlayer.image.x = player.posX
+								game.global.myPlayer.image.y = player.posY
+								game.global.myPlayer.image.angle = player.facingAngle
+								game.global.myPlayer.life = player.life
+								game.global.myPlayer.ammo = player.ammo
+								game.global.myPlayer.propeller = player.propeller
+							}
+							//console.log("MyPlayer life: " + game.global.myPlayer.life);
 
 						} else {
+
 							if (typeof game.global.otherPlayers[player.id] == 'undefined') {
 								game.global.otherPlayers[player.id] = {
 									image: game.add.sprite(player.posX, player.posY, 'spacewar', player.shipType)
 								}
 								game.global.otherPlayers[player.id].image.anchor.setTo(0.5, 0.5)
 							} else {
-								game.global.otherPlayers[player.id].image.x = player.posX
-								game.global.otherPlayers[player.id].image.y = player.posY
-								game.global.otherPlayers[player.id].image.angle = player.facingAngle
-								game.global.otherPlayers[player.id].life = player.life
-								console.log("OtherPlayer["+ player.id +"] life: " + game.global.otherPlayers[player.id].life);
+								if (!player.isAlive) {
+									console.log("OtherPlayer[" + player.id + "] se ha morido :)")
+								} else {
+									game.global.otherPlayers[player.id].image.x = player.posX
+									game.global.otherPlayers[player.id].image.y = player.posY
+									game.global.otherPlayers[player.id].image.angle = player.facingAngle
+									game.global.otherPlayers[player.id].life = player.life
+								}
+								//console.log("OtherPlayer["+ player.id +"] life: " + game.global.otherPlayers[player.id].life);
 							}
 						}
 					}

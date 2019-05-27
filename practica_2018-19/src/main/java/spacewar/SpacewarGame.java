@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class SpacewarGame {
 
-	//public final static SpacewarGame INSTANCE = new SpacewarGame();
+	// public final static SpacewarGame INSTANCE = new SpacewarGame();
 	public Sala sala;
 
 	private final static int FPS = 30;
@@ -33,22 +33,22 @@ public class SpacewarGame {
 	// GLOBAL GAME ROOM
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
-	//private AtomicInteger numPlayers = new AtomicInteger();
+	// private AtomicInteger numPlayers = new AtomicInteger();
 
 	public SpacewarGame(Sala sala) {
 		this.sala = sala;
 	}
-	
+
 	public boolean getIsRunning() {
 		return isRunning;
 	}
-	
+
 	public void sendBeginningMessages() throws Exception {
 		for (Player p : players.values()) {
 			ObjectNode msg = mapper.createObjectNode();
 			msg.put("event", "JOIN");
 			msg.put("id", p.getPlayerId());
-			msg.put("shipType",p.getShipType());
+			msg.put("shipType", p.getShipType());
 			p.sendMessage(msg.toString());
 		}
 		ObjectNode msg2 = mapper.createObjectNode();
@@ -60,10 +60,10 @@ public class SpacewarGame {
 	public void addPlayer(Player player) {
 		players.put(player.getSession().getId(), player);
 
-		/*int count = numPlayers.getAndIncrement();
-		if (count == 0) {
-			this.startGameLoop();
-		}*/
+		/*
+		 * int count = numPlayers.getAndIncrement(); if (count == 0) {
+		 * this.startGameLoop(); }
+		 */
 	}
 
 	public Collection<Player> getPlayers() {
@@ -72,11 +72,11 @@ public class SpacewarGame {
 
 	public void removePlayer(Player player) {
 		players.remove(player.getSession().getId());
-		
-		/*int count = this.numPlayers.decrementAndGet();
-		if (count == 0) {
-			this.stopGameLoop();
-		}*/
+
+		/*
+		 * int count = this.numPlayers.decrementAndGet(); if (count == 0) {
+		 * this.stopGameLoop(); }
+		 */
 	}
 
 	public void addProjectile(int id, Projectile projectile) {
@@ -106,17 +106,14 @@ public class SpacewarGame {
 		}
 	}
 
-	/*public void broadcast(String message) {
-		for (Player player : getPlayers()) {
-			try {
-				player.getSession().sendMessage(new TextMessage(message.toString()));
-			} catch (Throwable ex) {
-				System.err.println("Execption sending message to player " + player.getSession().getId());
-				ex.printStackTrace(System.err);
-				this.removePlayer(player);
-			}
-		}
-	}*/
+	/*
+	 * public void broadcast(String message) { for (Player player : getPlayers()) {
+	 * try { player.getSession().sendMessage(new TextMessage(message.toString())); }
+	 * catch (Throwable ex) {
+	 * System.err.println("Execption sending message to player " +
+	 * player.getSession().getId()); ex.printStackTrace(System.err);
+	 * this.removePlayer(player); } } }
+	 */
 
 	private void tick() {
 		ObjectNode json = mapper.createObjectNode();
@@ -129,16 +126,27 @@ public class SpacewarGame {
 
 		try {
 			// Update players
-			for (Player player : sala.getPlayers()) {
-				player.calculateMovement();
-
+			for (Player player : players.values()) {
 				ObjectNode jsonPlayer = mapper.createObjectNode();
-				jsonPlayer.put("id", player.getPlayerId());
-				jsonPlayer.put("life", player.getLife());
-				jsonPlayer.put("shipType", player.getShipType());
-				jsonPlayer.put("posX", player.getPosX());
-				jsonPlayer.put("posY", player.getPosY());
-				jsonPlayer.put("facingAngle", player.getFacingAngle());
+
+				if (player.getLife() > 0) {
+					player.calculateMovement();
+					
+					jsonPlayer.put("id", player.getPlayerId());
+					jsonPlayer.put("life", player.getLife());
+					jsonPlayer.put("shipType", player.getShipType());
+					jsonPlayer.put("posX", player.getPosX());
+					jsonPlayer.put("posY", player.getPosY());
+					jsonPlayer.put("facingAngle", player.getFacingAngle());
+				} else if (player.isAlive()) {
+					player.setAlive(false);
+					jsonPlayer.put("id", player.getPlayerId());
+					players.remove(player.getSession().getId());
+					System.out.println("[GAME] Player " + player.getPlayerName() + " defeated.");
+				}
+				
+				jsonPlayer.put("isAlive", player.isAlive());
+				
 				arrayNodePlayers.addPOJO(jsonPlayer);
 			}
 
