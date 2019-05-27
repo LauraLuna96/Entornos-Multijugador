@@ -20,6 +20,7 @@ public class Player extends Spaceship {
 	private AtomicBoolean alive;
 
 	public Player(WebSocketSession session, String playerName) {
+		this.playerId = new AtomicInteger();
 		this.session = session;
 		this.shipType = this.getRandomShipType();
 		this.playerName = playerName;

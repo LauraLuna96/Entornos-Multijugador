@@ -163,6 +163,7 @@ function generateColor(n) {
 	} else {
 		return '#ffffff'
 	}
+}
 function clearGame() {
 	game.state.clearCurrentState(); 
 	game.global.currentSala.players = [];
