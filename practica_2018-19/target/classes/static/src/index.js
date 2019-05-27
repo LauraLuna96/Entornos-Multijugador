@@ -207,7 +207,7 @@ function configWebsocket() {
 								game.global.myPlayer.image.angle = player.facingAngle
 								game.global.myPlayer.life = player.life
 								game.global.myPlayer.ammo = player.ammo
-								game.global.myPlayer.propeller = player.propeller
+								game.global.myPlayer.propellerUses = player.propellerUses
 							}
 							//console.log("MyPlayer life: " + game.global.myPlayer.life);
 

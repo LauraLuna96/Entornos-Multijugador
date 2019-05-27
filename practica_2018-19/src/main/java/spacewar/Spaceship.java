@@ -1,5 +1,7 @@
 package spacewar;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Spaceship extends SpaceObject {
 
 	private static final double SPACESHIP_SPEED = 0.6;
@@ -7,6 +9,8 @@ public class Spaceship extends SpaceObject {
 	private static final double SPACESHIP_ROTATION_SPEED = 3.00;
 	private static final int SPACESHIP_COLLISION_FACTOR = 400;
 	private static final double SPACE_FRICTION = 0.95;
+	
+	private AtomicInteger propellerUses; //Propulsor
 
 	class LastMovement {
 		boolean thrust = false;
@@ -19,9 +23,22 @@ public class Spaceship extends SpaceObject {
 	private LastMovement lastMovement;
 
 	public Spaceship() {
+		this.propellerUses = new AtomicInteger(3); // Tendrá 4 posibles valores (0,1,2,3) siendo 3 el máximo
 		this.setCollisionFactor(SPACESHIP_COLLISION_FACTOR);
 		// Randomize
 		this.initSpaceship(Math.random() * 1000, Math.random() * 600, Math.random() * 360);
+	}
+	
+	public int getPropellerUses() {
+		return this.propellerUses.get();
+	}
+	
+	public void decreasePropellerUses() {
+		this.propellerUses.decrementAndGet();
+	}
+	
+	public void increasePropellerUses(int n) {
+		this.propellerUses.addAndGet(n);
 	}
 
 	public void initSpaceship(double coordX, double coordY, double facingAngle) {
@@ -42,6 +59,7 @@ public class Spaceship extends SpaceObject {
 	public void calculateMovement() {
 		if (this.lastMovement.propeller) {
 			this.lastMovement.propeller = false;
+			decreasePropellerUses();
 			double coordX = Math.random() * 1000;
 			double coordY = Math.random() * 600;
 			this.setPosition(coordX, coordY);

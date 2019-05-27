@@ -324,7 +324,7 @@ public void sendGetRoomsMessageAll() throws Exception {
 			jsonPlayer.put("playerName", p.getPlayerName());
 			jsonPlayer.put("life", p.getLife());
 			jsonPlayer.put("ammo", p.getAmmo());
-			jsonPlayer.put("propeller", p.getPropeller());
+			jsonPlayer.put("propeller", p.getPropellerUses());
 			jsonPlayer.put("score", p.getScore());
 			
 			arrayNode.addPOJO(jsonPlayer);

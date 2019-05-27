@@ -42,6 +42,8 @@ Spacewar.gameState.prototype = {
 		game.global.myPlayer.image = game.add.sprite(0, 0, 'spacewar',
 			game.global.myPlayer.shipType)
 		game.global.myPlayer.image.anchor.setTo(0.5, 0.5)
+		game.global.myPlayer.propellerUses = 3;
+		game.global.myPlayer.ammo = 20;
 	},
 
 	create: function () {
@@ -81,8 +83,14 @@ Spacewar.gameState.prototype = {
 
 		this.propellerTime = 0;
 		this.usePropeller = function () {
-			if (game.time.now > this.propellerTime) {
+			if (game.global.myPlayer.propellerUses <= 0 && game.time.now > this.propellerTime){
 				this.propellerTime = game.time.now + 250;
+				console.log("No tienes carga de propulsión.");
+				return false
+			}
+			else if (game.time.now > this.propellerTime) {
+				this.propellerTime = game.time.now + 250;
+				console.log("PROPULSOR USADO!");
 				return true
 			} else {
 				return false
@@ -150,7 +158,6 @@ Spacewar.gameState.prototype = {
 		}
 		if (this.pKey.isDown) { // Servirá para los propulsores
 			msg.propeller = this.usePropeller()
-			console.log("PROPULSOR USADO!");
 		}
 
 		if (game.global.DEBUG_MODE) {
