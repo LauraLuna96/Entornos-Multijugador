@@ -44,6 +44,8 @@ Spacewar.gameState.prototype = {
 
 	create: function () {
 
+		game.input.mouse.capture = true;
+
 		////// INTERFAZ QUE MUESTRA DATOS DE LOS JUGADORES //////
 		var textGroup = game.add.group();
 		for (var i = 0; i < game.global.currentSala.players.length+5; i++) {
@@ -128,7 +130,10 @@ Spacewar.gameState.prototype = {
 			msg.movement.rotRight = true;
 		if (this.spaceKey.isDown) {
 			msg.bullet = this.fireBullet()
-			//console.log("Shoot!")
+			console.log("Shoot!")
+		}
+		if (game.input.activePointer.leftButton.isDown) { // Servirá para los propulsores
+			console.log("PROPULSOR USADO!");
 		}
 
 		if (game.global.DEBUG_MODE) {
