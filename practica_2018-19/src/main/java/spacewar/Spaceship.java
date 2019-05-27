@@ -13,6 +13,7 @@ public class Spaceship extends SpaceObject {
 		boolean brake = false;
 		boolean rotLeft = false;
 		boolean rotRight = false;
+		boolean propeller = false;
 	}
 
 	private LastMovement lastMovement;
@@ -30,14 +31,21 @@ public class Spaceship extends SpaceObject {
 		lastMovement = new LastMovement();
 	}
 
-	public void loadMovement(boolean thrust, boolean brake, boolean rotLeft, boolean rotRight) {
+	public void loadMovement(boolean thrust, boolean brake, boolean rotLeft, boolean rotRight, boolean propeller) {
 		this.lastMovement.thrust = thrust;
 		this.lastMovement.brake = brake;
 		this.lastMovement.rotLeft = rotLeft;
 		this.lastMovement.rotRight = rotRight;
+		this.lastMovement.propeller = propeller;
 	}
 
 	public void calculateMovement() {
+		if (this.lastMovement.propeller) {
+			this.lastMovement.propeller = false;
+			double coordX = Math.random() * 1000;
+			double coordY = Math.random() * 600;
+			this.setPosition(coordX, coordY);
+		}
 		this.multVelocity(SPACE_FRICTION);
 
 		if (this.lastMovement.thrust) {

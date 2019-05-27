@@ -1,6 +1,8 @@
 Spacewar.gameState = function (game) {
 	this.bulletTime
+	this.propellerTime
 	this.fireBullet
+	this.usePropeller
 	this.numStars = 100 // Should be canvas size dependant
 	this.maxProjectiles = 800 // 8 per player
 }
@@ -75,6 +77,18 @@ Spacewar.gameState.prototype = {
 			}
 		}
 
+		/////////////////////////////////////////////////////////
+
+		this.propellerTime = 0;
+		this.usePropeller = function () {
+			if (game.time.now > this.propellerTime) {
+				this.propellerTime = game.time.now + 250;
+				return true
+			} else {
+				return false
+			}
+		}
+
 		// Esto es para que las teclas se puedan usar fuera del canvas (en el chat, por ej)
 		/*game.onBlur.add(function () {
 			game.input.keyboard.enabled = false;
@@ -96,6 +110,7 @@ Spacewar.gameState.prototype = {
 		this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
 		this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
 		this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+		this.pKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
 		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 		// Stop the following keys from propagating up to the browser
@@ -119,6 +134,7 @@ Spacewar.gameState.prototype = {
 		}
 
 		msg.bullet = false
+		msg.propeller = false
 
 		if (this.wKey.isDown)
 			msg.movement.thrust = true;
@@ -132,7 +148,8 @@ Spacewar.gameState.prototype = {
 			msg.bullet = this.fireBullet()
 			console.log("Shoot!")
 		}
-		if (game.input.activePointer.leftButton.isDown) { // Servirá para los propulsores
+		if (this.pKey.isDown) { // Servirá para los propulsores
+			msg.propeller = this.usePropeller()
 			console.log("PROPULSOR USADO!");
 		}
 

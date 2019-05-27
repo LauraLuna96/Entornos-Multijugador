@@ -78,9 +78,10 @@ Spacewar.gameState.prototype = {
 		}
 
 		/////////////////////////////////////////////////////////
-		
+
+		this.propellerTime = 0;
 		this.usePropeller = function () {
-			if (game.time.now > this.bulletTime) {
+			if (game.time.now > this.propellerTime) {
 				this.propellerTime = game.time.now + 250;
 				return true
 			} else {
@@ -133,6 +134,7 @@ Spacewar.gameState.prototype = {
 		}
 
 		msg.bullet = false
+		msg.propeller = false
 
 		if (this.wKey.isDown)
 			msg.movement.thrust = true;
