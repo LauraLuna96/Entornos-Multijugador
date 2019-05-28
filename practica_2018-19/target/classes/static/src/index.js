@@ -13,6 +13,10 @@ window.onload = function () {
 		}
 	});
 
+	$('.dropdown-menu').click(function(e) {
+		e.stopPropagation();
+	});
+
 	// Creamos el juego
 	game = new Phaser.Game(1024, 600, Phaser.AUTO, 'gameDiv')
 
@@ -226,6 +230,7 @@ function configWebsocket() {
 								game.global.myPlayer.image.visible = false;
 								game.global.UIText[player.id].setText(game.global.myPlayer.playerName + " / ELIMINADO");
 								game.global.UIText[player.id].addColor("#e2004b", 0);
+								game.global.UIPlayerName[player.id].addColor("#e2004b", 0);
 							} else {
 								game.global.myPlayer.image.x = player.posX
 								game.global.myPlayer.image.y = player.posY
@@ -280,6 +285,7 @@ function configWebsocket() {
 									console.log("OtherPlayer[" + player.id + "] ha muerto :)")
 									game.global.UIText[player.id].setText(game.global.otherPlayers[player.id].playerName + " / ELIMINADO");
 									game.global.UIText[player.id].addColor("#e2004b", 0);
+									game.global.UIPlayerName[player.id].addColor("#e2004b", 0);
 									game.global.otherPlayers[player.id].image.visible = false;
 								} else {
 									game.global.otherPlayers[player.id].image.x = player.posX
@@ -296,7 +302,17 @@ function configWebsocket() {
 									game.global.UIText[player.id].setText(game.global.otherPlayers[player.id].playerName + " / LIFE: " + game.global.otherPlayers[player.id].life + " / AMMO: " + game.global.otherPlayers[player.id].ammo + " / PROPELLER: " + game.global.otherPlayers[player.id].propellerUses + " / SCORE: " + game.global.otherPlayers[player.id].score);
 									game.global.UIPlayerName[player.id].setText(game.global.otherPlayers[player.id].playerName);
 									game.global.UIPlayerName[player.id].position.x = game.global.otherPlayers[player.id].image.x;
+									if (game.global.UIPlayerName[player.id].position.x > 1000) {
+										game.global.UIPlayerName[player.id].position.x = 1000;
+									} else if (game.global.UIPlayerName[player.id].position.x < 24) {
+										game.global.UIPlayerName[player.id].position.x = 24;
+									}
 									game.global.UIPlayerName[player.id].position.y = game.global.otherPlayers[player.id].image.y - 30;
+									if (game.global.UIPlayerName[player.id].position.y > 576) {
+										game.global.UIPlayerName[player.id].position.y = 576;
+									} else if (game.global.UIPlayerName[player.id].position.y < 24) {
+										game.global.UIPlayerName[player.id].position.y = 24;
+									}
 
 								}
 								//console.log("OtherPlayer["+ player.id +"] life: " + game.global.otherPlayers[player.id].life);
@@ -378,6 +394,8 @@ function configWebsocket() {
 					console.dir(msg.players)
 				}
 				game.global.otherPlayers[msg.id].image.destroy()
+				game.global.UIPlayerName[player.id].destroy();
+				game.global.UIText[player.id].destroy();
 				delete game.global.otherPlayers[msg.id]
 				break
 			default:

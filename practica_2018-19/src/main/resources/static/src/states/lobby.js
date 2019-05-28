@@ -32,6 +32,8 @@ Spacewar.lobbyState.prototype = {
 
 function createRoom() {
 	var roomName = $('#new-roomName').val();
+	var roomType = $('#new-roomType').val();
+	//console.log(roomType);
 	if (roomName == "") {
 		$("#create-room-error").html("El nombre no puede estar vacío");
 		$("#create-room-error").show();
@@ -52,6 +54,7 @@ function createRoom() {
 	let msg = new Object()
 	msg.event = 'NEW ROOM'
 	msg.roomName = roomName;
+	msg.roomType = roomType;
 	console.log("Enviada petición de creación de sala: ")
 	game.global.socket.send(JSON.stringify(msg))
 }

@@ -20,7 +20,7 @@ public class Sala {
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private String name;
 	private AtomicInteger numPlayers = new AtomicInteger(0);
-	private final static int MAX_PLAYERS = 3;
+	private final int MAX_PLAYERS;
 	public enum state {
 		AntesPartida,
 		Partida,
@@ -30,7 +30,8 @@ public class Sala {
 	private Lock stateLock = new ReentrantLock();
 	public BlockingQueue<Player> waitingList = new LinkedBlockingQueue<Player>();
 	
-	Sala(String name) {
+	Sala(String name, int maxPlayers) {
+		this.MAX_PLAYERS = maxPlayers;
 		this.name = name;
 		this.game = new SpacewarGame(this);
 		this.currentState = state.AntesPartida;
