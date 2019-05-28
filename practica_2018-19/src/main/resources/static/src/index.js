@@ -184,6 +184,10 @@ function configWebsocket() {
 				updateSalaInfo();
 				break;
 
+			case 'PLAYER LIST':
+				showPlayerList(msg.inGamePlayers);
+				break
+
 			///// MENSAJES DE LA PARTIDA
 			// Mensajes durante la partida
 			case 'START GAME':

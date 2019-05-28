@@ -80,7 +80,7 @@ public class Sala {
 		return name;
 	}
 	
-	public synchronized void startGameIfFull() throws Exception {
+	public synchronized boolean startGameIfFull() throws Exception {
 		if (!game.getIsRunning()) {
 			int count = numPlayers.get();
 			if (count == MAX_PLAYERS) {
@@ -88,10 +88,12 @@ public class Sala {
 				setCurrentState(state.Partida);
 				game.sendBeginningMessages();
 				game.startGameLoop();
+				return true;
 			}
 		} else {
 			System.out.println("[ERROR] Error while starting game in room " + this.name + ", there is a game already in progress.");
 		}
+		return false;
 	}
 	
 	public synchronized boolean tryStartGame() throws Exception {

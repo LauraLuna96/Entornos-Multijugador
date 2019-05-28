@@ -53,5 +53,13 @@ function goMatchmaking() {
 	msg.event = 'JOIN MATCHMAKING'
 	console.log("Enviada petición de unirse al matchmaking")
 	game.global.socket.send(JSON.stringify(msg))
-	game.state.start('matchmakingState');
+}
+
+function showPlayerList(players) {
+	var list_str = "";
+	for (var player of players) {
+		list_str += player.playerName + ", "
+	}
+	list_str = list_str.slice(0,list_str.length-2);
+	$("#player-list").html(list_str);
 }
