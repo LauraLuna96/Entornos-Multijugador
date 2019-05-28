@@ -120,12 +120,12 @@ Spacewar.gameState.prototype = {
 		this.propellerTime = 0;
 		this.usePropeller = function () {
 			if (game.global.myPlayer.propellerUses <= 0 && game.time.now > this.propellerTime){
-				this.propellerTime = game.time.now + 250;
+				this.propellerTime = game.time.now + 500;
 				console.log("No tienes carga de propulsión.");
 				return false
 			}
 			else if (game.time.now > this.propellerTime) {
-				this.propellerTime = game.time.now + 250;
+				this.propellerTime = game.time.now + 500;
 				console.log("PROPULSOR USADO!");
 				return true
 			} else {
