@@ -88,6 +88,8 @@
 				<!-- div donde ubicaremos el juego -->
 				<div id="gameDiv">
 					<div class="menu-container">
+
+						<!-- ////////////// MENÚ PRINCIPAL ////////////// -->
 						<div id="menu-principal" style="display:none;" class="menu">
 							<h3>Menú principal</h3>
 							<i>¡Bienvenido a SpaceWars!</i>
@@ -98,6 +100,8 @@
 									automático</button>
 							</div>
 						</div>
+
+						<!-- ////////////// MENÚ MATCHMAKING ////////////// -->
 						<div id="menu-matchmaking" style="display:none;" class="menu">
 							<div id="area-lobby-btn">
 								<button type="button" id="btn-leaveMatchmaking" class="btn btn-spacewars" onclick="leaveMatchmaking();"><i
@@ -107,15 +111,19 @@
 							<h3><i class="fas fa-sync anim-loading"></i> MatchMaking Automático</h3>
 							<i>Buscando partidas disponibles ...</i>
 						</div>
+
+						<!-- ////////////// MENÚ ESPERANDO EN SALA ////////////// -->
 						<div id="menu-waiting" style="display:none;" class="menu">
-								<div id="area-lobby-btn">
-									<button type="button" id="btn-leaveWaiting" class="btn btn-spacewars" onclick="leaveWaiting();"><i
-										 class="fas fa-times"></i>
-										Dejar la espera</button>
-								</div>
-								<h3><i class="fas fa-sync anim-loading"></i> Esperando para entrar a sala ...</h3>
-								<i>La sala en la que quieres entrar está llena. Si en menos de 5s se queda un hueco libre, podrás entrar. Si no, la espera se cancelará automáticamente.</i>
+							<div id="area-lobby-btn">
+								<button type="button" id="btn-leaveWaiting" class="btn btn-spacewars" onclick="leaveWaiting();"><i class="fas fa-times"></i>
+									Dejar la espera</button>
 							</div>
+							<h3><i class="fas fa-sync anim-loading"></i> Esperando para entrar a sala ...</h3>
+							<i>La sala en la que quieres entrar está llena. Si en menos de 5s se queda un hueco libre, podrás entrar. Si no,
+								la espera se cancelará automáticamente.</i>
+						</div>
+
+						<!-- ////////////// MENÚ LOBBY ////////////// -->
 						<div id="menu-lobby" style="display:none;" class="menu">
 							<div id="area-lobby-btn">
 								<button type="button" id="btn-openRoomDialog" class="btn btn-spacewars" data-toggle="dropdown" aria-haspopup="true"
@@ -139,19 +147,10 @@
 							<i>Selecciona una sala para jugar.</i>
 							<div id="area-lobby" class="area-menu">
 								<!-- Area para mostrar los botones de las salas -->
-								<!--<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
-								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
-								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
-								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
-								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
-								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>
-								<div class="sala-row"><button type="button" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> Nombre sala</button> 1/2 jugadores</div>-->
 							</div>
 						</div>
-						<div id="menu-matchmaking" style="display:none;" class="menu">
-							<h3>Matchmaking</h3>
-							<i>Buscando sala automáticamente ...</i>
-						</div>
+
+						<!-- ////////////// MENÚ DENTRO DE SALA ////////////// -->
 						<div id="menu-sala" style="display:none;" class="menu">
 							<div id="area-lobby-btn">
 								<button type="button" class="btn btn-spacewars" id="btn-beginGame" onclick="sendStartGame()"><i class="fas fa-play-circle"></i>
@@ -163,10 +162,11 @@
 							<i>El juego comenzará automáticamente cuando se llegue al número máximo de jugadores. Si hay más de 1 jugador en
 								la sala, también se puede inicial manualmente con el botón de arriba a la derecha.</i>
 							<div id="area-sala" class="area-menu">
-
+								<!-- Info de la sala -->
 							</div>
 						</div>
 
+						<!-- ////////////// MENÚ ENDGAME ////////////// -->
 						<div id="menu-endgame" style="display:none;" class="menu">
 							<div id="area-lobby-btn">
 								<button type="button" class="btn btn-spacewars" id="btn-leaveEndgame" onclick="leaveGame();"><i class="fas fa-times"></i>

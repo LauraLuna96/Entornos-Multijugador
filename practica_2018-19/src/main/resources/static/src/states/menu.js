@@ -49,5 +49,9 @@ function goLobby() {
 }
 
 function goMatchmaking() {
+	let msg = new Object()
+	msg.event = 'JOIN MATCHMAKING'
+	console.log("Enviada petición de unirse al matchmaking")
+	game.global.socket.send(JSON.stringify(msg))
 	game.state.start('matchmakingState');
 }
