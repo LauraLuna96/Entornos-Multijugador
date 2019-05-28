@@ -14,14 +14,10 @@ Spacewar.matchmakingState.prototype = {
 		if (game.global.DEBUG_MODE) {
 			console.log("[DEBUG] Joining room...");
 		}
-		let message = {
-			event : 'JOIN ROOM'
-		}
-		game.global.socket.send(JSON.stringify(message))
 	},
 
 	create : function() {
-
+		$("#menu-matchmaking").show();
 	},
 
 	update : function() {
@@ -31,5 +27,17 @@ Spacewar.matchmakingState.prototype = {
 			}
 			game.state.start('roomState')
 		}
+	},
+
+	shutdown : function() {
+		$("#menu-matchmaking").hide();
 	}
+}
+
+function leaveMatchmaking() {
+	let msg = new Object()
+	msg.event = 'LEAVE MATCHMAKING'
+	console.log("Enviada petición de salid del matchmaking")
+	game.global.socket.send(JSON.stringify(msg))
+	game.state.start('menuState');
 }
