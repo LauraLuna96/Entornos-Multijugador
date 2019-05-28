@@ -188,6 +188,10 @@ function configWebsocket() {
 				showPlayerList(msg.inGamePlayers);
 				break
 
+			case 'GET RANKING':
+				showRanking(msg.ranking);
+			break
+
 			///// MENSAJES DE LA PARTIDA
 			// Mensajes durante la partida
 			case 'START GAME':
