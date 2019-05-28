@@ -27,6 +27,8 @@ public class SpacewarGame {
 	public final static boolean VERBOSE_MODE = true;
 	private boolean isRunning = false;
 	private boolean isOver = false; // Se pondrá a true cuando finalice una partida
+	private final static int scorePerHit = 10;
+	private final static int bonusScorePerHit = 20;
 
 	ObjectMapper mapper = new ObjectMapper();
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -43,17 +45,17 @@ public class SpacewarGame {
 	public boolean getIsRunning() {
 		return isRunning;
 	}
-	
+
 	public boolean getIsOver() {
 		return isOver;
 	}
-	
+
 	public void endGame(String winner) {
 		if (!isOver) {
 			this.isOver = true;
 			sala.setCurrentState(Sala.state.FinPartida);
 			System.out.println("[GAME] Game has ended, winner: " + winner);
-			
+
 			ObjectNode msg = mapper.createObjectNode();
 			msg.put("event", "END GAME");
 
@@ -64,25 +66,25 @@ public class SpacewarGame {
 					jsonPlayer.put("playerName", p.getPlayerName());
 					jsonPlayer.put("life", p.getLife());
 					jsonPlayer.put("score", p.getScore());
-					
+
 					arrayNode.addPOJO(jsonPlayer);
 				} else {
 					ObjectNode jsonPlayer = mapper.createObjectNode();
 					jsonPlayer.put("playerName", p.getPlayerName());
 					jsonPlayer.put("life", p.getLife());
 					jsonPlayer.put("score", p.getScore());
-					
-					msg.putPOJO("winner",jsonPlayer);
+
+					msg.putPOJO("winner", jsonPlayer);
 				}
 			}
-			
+
 			msg.putPOJO("losers", arrayNode);
-			
+
 			sala.broadcast(msg.toString());
 			stopGameLoop();
 		}
 	}
-	
+
 	public void sendBeginningMessages() throws Exception {
 		for (Player p : players.values()) {
 			ObjectNode msg = mapper.createObjectNode();
@@ -96,14 +98,14 @@ public class SpacewarGame {
 
 		sala.broadcast(msg2.toString());
 	}
-	
+
 	public void sendBeginningMessageTo(Player player) throws Exception {
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "JOIN");
 		msg.put("id", player.getPlayerId());
 		msg.put("shipType", player.getShipType());
 		player.sendMessage(msg.toString());
-		
+
 		ObjectNode msg2 = mapper.createObjectNode();
 		msg2.put("event", "START GAME");
 		player.sendMessage(msg2.toString());
@@ -180,10 +182,10 @@ public class SpacewarGame {
 			// Update players
 			for (Player player : players.values()) {
 				ObjectNode jsonPlayer = mapper.createObjectNode();
-				
+
 				if (player.getLife() > 0) {
 					player.calculateMovement();
-					
+
 					jsonPlayer.put("id", player.getPlayerId());
 					jsonPlayer.put("playerName", player.getPlayerName());
 					jsonPlayer.put("life", player.getLife());
@@ -194,29 +196,30 @@ public class SpacewarGame {
 					jsonPlayer.put("posX", player.getPosX());
 					jsonPlayer.put("posY", player.getPosY());
 					jsonPlayer.put("facingAngle", player.getFacingAngle());
-					
+
 					// Si es el único jugador superviviente, gana
 					if (players.size() == 1) {
 						winner = player.getSession().getId();
 					}
-					
+
 				} else if (player.isAlive()) {
 					player.setAlive(false);
 					jsonPlayer.put("id", player.getPlayerId());
 					players.remove(player.getSession().getId());
 					System.out.println("[GAME] Player " + player.getPlayerName() + " defeated.");
-					
-					// Si por alguna razón no quedan jugadores vivos (se han muerto 2 en la misma frame) cogemos el último que muere como ganador
+
+					// Si por alguna razón no quedan jugadores vivos (se han muerto 2 en la misma
+					// frame) cogemos el último que muere como ganador
 					if (players.size() == 0) {
 						winner = player.getSession().getId();
 					}
-				}				
-				
+				}
+
 				jsonPlayer.put("isAlive", player.isAlive());
-				
+
 				arrayNodePlayers.addPOJO(jsonPlayer);
 			}
-			
+
 			if (winner != null) {
 				players.remove(winner);
 				endGame(winner);
@@ -232,6 +235,14 @@ public class SpacewarGame {
 						// System.out.println("Player " + player.getPlayerId() + " was hit!!!");
 						projectile.setHit(true);
 						player.decreaseLife();
+						// Añade puntuación en cada disparo acertado a un contrincante
+						if (player.isAlive()) {
+							if (player.getLife() != 0) {
+								projectile.getOwner().increaseScore(scorePerHit);
+							} else {
+								projectile.getOwner().increaseScore(bonusScorePerHit); // El disparo que mata tiene un bonus
+							}
+						}
 						break;
 					}
 				}

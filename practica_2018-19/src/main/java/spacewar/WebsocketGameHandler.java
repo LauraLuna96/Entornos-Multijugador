@@ -27,7 +27,6 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private static final String PLAYER_ATTRIBUTE = "PLAYER";
 	private static final String ROOM_ATTRIBUTE = "ROOM";
 	private ObjectMapper mapper = new ObjectMapper();
-
 	// private AtomicInteger playerId = new AtomicInteger(0); Cada sala tiene su
 	// propia cuenta de playerIds
 	private AtomicInteger projectileId = new AtomicInteger(0);
@@ -74,7 +73,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			// game.addPlayer(player);
 		} else {
 			// El nombre del jugador ya existe!
-			System.out.println("[SYS] Player name " + playerName + " is already taken. Rejecting new player with same name.");
+			System.out.println(
+					"[SYS] Player name " + playerName + " is already taken. Rejecting new player with same name.");
 			ObjectNode msg = mapper.createObjectNode();
 			msg.put("event", "ERROR");
 			msg.put("type", "PLAYER NAME TAKEN ERROR");
@@ -224,7 +224,13 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						node.path("movement").get("rotRight").asBoolean(), node.path("propeller").asBoolean());
 				if (node.path("bullet").asBoolean()) {
 					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
-					sala.getGame().addProjectile(projectile.getId(), projectile);
+					// Gestiona el número de balas
+					if (projectile.getOwner().getAmmo() > 0) {
+						projectile.getOwner().decreaseAmmo();
+					}
+					if (projectile.getOwner().getAmmo() > 0) {
+						sala.getGame().addProjectile(projectile.getId(), projectile);
+					}
 				}
 				break;
 
