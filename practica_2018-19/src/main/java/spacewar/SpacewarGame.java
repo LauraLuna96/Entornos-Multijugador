@@ -29,13 +29,20 @@ public class SpacewarGame {
 	private boolean isOver = false; // Se pondrá a true cuando finalice una partida
 	private final static int scorePerHit = 10;
 	private final static int bonusScorePerHit = 20;
+	private final static int powerUpSpawnRate = 20000;
+	private final static int maxPowerUps = 5;
 
 	ObjectMapper mapper = new ObjectMapper();
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	
+	private ScheduledExecutorService powerUpSpawn = Executors.newScheduledThreadPool(1);
 
 	// GLOBAL GAME ROOM
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
+	private Map<Integer, GenericPowerUp> powerUps = new ConcurrentHashMap<>();
+	private AtomicInteger currentPowerUps = new AtomicInteger(0);
+	public AtomicInteger projectileId = new AtomicInteger(0);
 	// private AtomicInteger numPlayers = new AtomicInteger();
 
 	public SpacewarGame(Sala sala) {
@@ -143,12 +150,50 @@ public class SpacewarGame {
 	public void removeProjectile(Projectile projectile) {
 		projectiles.remove(projectile.getId(), projectile);
 	}
+	
+	public void spawnPowerUp() {
+		if (currentPowerUps.get() < maxPowerUps) {
+			// Spawn new power up
+			double posX = Math.random() * 1000;
+			double posY = Math.random() * 600;
+			
+			double randomDouble = Math.random();
+			randomDouble = randomDouble * 3 + 1;
+			int randomInt = (int) randomDouble;
+			//System.out.println(randomInt);
+			
+			GenericPowerUp pu;
+			
+			switch (randomInt) {
+			case 1:
+				pu = new AmmoPowerUp(currentPowerUps.getAndIncrement());
+				break;
+			case 2:
+				pu = new LifePowerUp(currentPowerUps.getAndIncrement());
+				break;
+			case 3:
+				pu = new PropellerPowerUp(currentPowerUps.getAndIncrement());
+				break;
+			default:
+				pu = new PropellerPowerUp(currentPowerUps.getAndIncrement());
+				break;
+			}
+			
+			pu.setPosition(posX, posY);
+			
+			powerUps.put(pu.getId(), pu);
+			System.out.println("[GAME] Powerup created!");
+		}
+	}
 
 	public synchronized void startGameLoop() {
 		if (!isRunning) {
 			isRunning = true;
 			scheduler = Executors.newScheduledThreadPool(1);
 			scheduler.scheduleAtFixedRate(() -> tick(), TICK_DELAY, TICK_DELAY, TimeUnit.MILLISECONDS);
+			
+			powerUpSpawn = Executors.newScheduledThreadPool(1);
+			powerUpSpawn.scheduleAtFixedRate(() -> spawnPowerUp(), powerUpSpawnRate/2, powerUpSpawnRate, TimeUnit.MILLISECONDS);
 		}
 	}
 
@@ -156,6 +201,7 @@ public class SpacewarGame {
 		if (scheduler != null) {
 			isRunning = false;
 			scheduler.shutdown();
+			powerUpSpawn.shutdown();
 		}
 	}
 
@@ -172,6 +218,7 @@ public class SpacewarGame {
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode arrayNodePlayers = mapper.createArrayNode();
 		ArrayNode arrayNodeProjectiles = mapper.createArrayNode();
+		ArrayNode arrayNodePowerUps = mapper.createArrayNode();
 
 		long thisInstant = System.currentTimeMillis();
 		Set<Integer> bullets2Remove = new HashSet<>();
@@ -267,6 +314,34 @@ public class SpacewarGame {
 				}
 				arrayNodeProjectiles.addPOJO(jsonProjectile);
 			}
+			
+			for (GenericPowerUp powerUp : powerUps.values()) {
+				
+				if (powerUp.getIsHit()) {
+					powerUps.remove(powerUp.getId());
+					currentPowerUps.decrementAndGet();
+					break;
+				}
+				
+				// Handle collision
+				for (Player player : sala.getPlayers()) {
+					if (player.intersect(powerUp)) {
+						// System.out.println("Player " + player.getPlayerId() + " was hit!!!");
+						powerUp.setHit(true);
+						powerUp.applyPowerUp(player);
+						break;
+					}
+				}
+				
+				ObjectNode jsonPowerUp = mapper.createObjectNode();
+				jsonPowerUp.put("id", powerUp.getId());
+				jsonPowerUp.put("posX", powerUp.getPosX());
+				jsonPowerUp.put("posY", powerUp.getPosY());
+				jsonPowerUp.put("type", powerUp.type);
+				jsonPowerUp.put("isAlive", !powerUp.getIsHit());
+				
+				arrayNodePowerUps.addPOJO(jsonPowerUp);
+			}
 
 			if (removeBullets)
 				this.projectiles.keySet().removeAll(bullets2Remove);
@@ -274,6 +349,7 @@ public class SpacewarGame {
 			json.put("event", "GAME STATE UPDATE");
 			json.putPOJO("players", arrayNodePlayers);
 			json.putPOJO("projectiles", arrayNodeProjectiles);
+			json.putPOJO("powerUps", arrayNodePowerUps);
 
 			this.sala.broadcast(json.toString());
 		} catch (Throwable ex) {

@@ -32,7 +32,6 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private ObjectMapper mapper = new ObjectMapper();
 	// private AtomicInteger playerId = new AtomicInteger(0); Cada sala tiene su
 	// propia cuenta de playerIds
-	private AtomicInteger projectileId = new AtomicInteger(0);
 
 	// Salas y jugadores
 	private Map<String, Player> globalPlayers = new ConcurrentHashMap<>(); // Mapa de jugadores global
@@ -258,7 +257,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						node.path("movement").get("rotLeft").asBoolean(),
 						node.path("movement").get("rotRight").asBoolean(), node.path("propeller").asBoolean());
 				if (node.path("bullet").asBoolean()) {
-					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
+					Projectile projectile = new Projectile(player, sala.getGame().projectileId.incrementAndGet());
 					// Gestiona el número de balas
 					if (projectile.getOwner().getAmmo() > 0) {
 						projectile.getOwner().decreaseAmmo();

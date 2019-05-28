@@ -42,34 +42,37 @@ Spacewar.gameState.prototype = {
 
 		// Creo las pools de powerups //
 
-		game.global.lifePowerUps = new Array(this.maxLifePowerUps)
+		game.global.lifePowerUp = new Array(this.maxLifePowerUps)
 		for (var i = 0; i < this.maxLifePowerUps; i++) {
-			var sprite = game.add.sprite(game.world.randomX, game.world.randomY, 'LifePowerUp', 'LifePowerUp.png');
+			var sprite = game.add.sprite(0, 0, 'LifePowerUp', 'LifePowerUp.png')
+			sprite.anchor.setTo(0.5,0.5);
 			sprite.scale.setTo(2,2);
-			game.global.lifePowerUps[i] = {
+			game.global.lifePowerUp[i] = {
 				image: sprite
 			}
-			game.global.lifePowerUps[i].image.visible = false
+			game.global.lifePowerUp[i].image.visible = false
 		}
 
-		game.global.ammoPowerUps = new Array(this.maxAmmoPowerUps)
+		game.global.ammoPowerUp = new Array(this.maxAmmoPowerUps)
 		for (var i = 0; i < this.maxAmmoPowerUps; i++) {
-			var sprite = game.add.sprite(game.world.randomX, game.world.randomY, 'AmmoPowerUp', 'AmmoPowerUp.png');
+			var sprite = game.add.sprite(0, 0, 'AmmoPowerUp', 'AmmoPowerUp.png')
+			sprite.anchor.setTo(0.5,0.5);
 			sprite.scale.setTo(2,2);
-			game.global.ammoPowerUps[i] = {
+			game.global.ammoPowerUp[i] = {
 				image: sprite
 			}
-			game.global.ammoPowerUps[i].image.visible = false
+			game.global.ammoPowerUp[i].image.visible = false
 		}
 
-		game.global.propellerPowerUps = new Array(this.maxPropellerPowerUps)
-		for (var i = 0; i < this.maxLifePowerUps; i++) {
-			var sprite = game.add.sprite(game.world.randomX, game.world.randomY, 'PropellerPowerUp', 'PropellerPowerUp.png');
+		game.global.propellerPowerUp = new Array(this.maxPropellerPowerUps)
+		for (var i = 0; i < this.maxPropellerPowerUps; i++) {
+			var sprite = game.add.sprite(0, 0, 'PropellerPowerUp', 'PropellerPowerUp.png');
+			sprite.anchor.setTo(0.5,0.5);
 			sprite.scale.setTo(2,2);
-			game.global.propellerPowerUps[i] = {
+			game.global.propellerPowerUp[i] = {
 				image: sprite
 			}
-			game.global.propellerPowerUps[i].image.visible = false
+			game.global.propellerPowerUp[i].image.visible = false
 		}
 
 		////////////////////////////////

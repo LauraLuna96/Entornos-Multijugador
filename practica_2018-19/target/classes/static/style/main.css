@@ -37,6 +37,11 @@ h1, h2, h3, h4, h5, h6 {
     border-color: var(--theme-color1);
 }
 
+.table-dark {
+    background-color: var(--bg-color);
+    border-color: var(--bg-color-dark);
+}
+
 .gameContainer {
     width: 1024px;
 }
