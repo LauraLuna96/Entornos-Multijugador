@@ -390,6 +390,8 @@ function configWebsocket() {
 					console.dir(msg.players)
 				}
 				game.global.otherPlayers[msg.id].image.destroy()
+				game.global.UIPlayerName[player.id].destroy();
+				game.global.UIText[player.id].destroy();
 				delete game.global.otherPlayers[msg.id]
 				break
 			default:
