@@ -114,6 +114,7 @@ public class Sala {
 	// se le cuele otro. Por eso lo marcamos como synchronized.
 	public synchronized String addPlayer(Player player) throws Exception {
 		String resultado = "";
+		//System.out.println(getCurrentState());
 		if (getCurrentState() != "FinPartida") {
 			if (players.size() < MAX_PLAYERS) {
 				players.put(player.getSession().getId(), player);

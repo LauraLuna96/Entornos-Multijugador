@@ -153,11 +153,13 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				System.out.println("[ROOM] New room " + room.getName() + " created.");
 				salas.put(room.getName(), room); // Guarda la sala en el mapa
 
-				System.out.println("[ROOM] Player " + player.getPlayerName() + " joined the room " + room.getName());
+				// System.out.println("[ROOM] Player " + player.getPlayerName() + " joined the
+				// room " + room.getName());
 				addPlayerToRoom(player, room);
 
 				// Comprobamos si hay gente esperando al matchmaking
-				while (checkMatchmaking(room) && room.getNumPlayers() < room.getMaxPlayers());
+				while (checkMatchmaking(room) && room.getNumPlayers() < room.getMaxPlayers())
+					;
 
 				break;
 
@@ -417,18 +419,20 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	}
 
 	public boolean checkMatchmaking(Sala sala) {
-		Player addPlayer = awaitingMatchmaking.poll();
-		if (addPlayer == null) {
-			System.out.println("[MATCHMAKING] There are no players waiting for matchmaking.");
-		} else {
-			try {
-				System.out.println("[MATCHMAKING] Player " + addPlayer.getPlayerName()
-						+ " trying to join room through matchmaking");
-				addPlayerToRoom(addPlayer, sala);
-				return true;
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if (sala.getCurrentState() != "FinPartida") {
+			Player addPlayer = awaitingMatchmaking.poll();
+			if (addPlayer == null) {
+				System.out.println("[MATCHMAKING] There are no players waiting for matchmaking.");
+			} else {
+				try {
+					System.out.println("[MATCHMAKING] Player " + addPlayer.getPlayerName()
+							+ " trying to join room through matchmaking");
+					addPlayerToRoom(addPlayer, sala);
+					return true;
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		return false;
