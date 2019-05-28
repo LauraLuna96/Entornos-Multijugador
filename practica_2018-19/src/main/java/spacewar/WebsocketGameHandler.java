@@ -566,6 +566,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			msg.put("event", "ERROR");
 			msg.put("type", "JOIN ROOM ERROR");
 			player.sendMessage(msg.toString());
+			
+			sendGetRoomsMessage(player); // Le enviamos el mensaje de las rooms por si tiene info desactualizada
 			break;
 		}
 	}
