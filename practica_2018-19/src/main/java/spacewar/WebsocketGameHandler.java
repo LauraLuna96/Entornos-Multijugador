@@ -102,6 +102,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				} else {
 					System.out.println("[MATCHMAKING] Player " + player.getPlayerName() + " is awaiting matchmaking.");
 					awaitingMatchmaking.add(player);
+					msg.put("event", "CONFIRMATION");
 					msg.put("event", "JOIN MATCHMAKING");
 					player.sendMessage(msg.toString());
 				}
@@ -156,8 +157,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				addPlayerToRoom(player, room);
 
 				// Comprobamos si hay gente esperando al matchmaking
-				while (checkMatchmaking(room) && room.getNumPlayers() < room.getMaxPlayers())
-					;
+				while (checkMatchmaking(room) && room.getNumPlayers() < room.getMaxPlayers());
 
 				break;
 
@@ -420,18 +420,18 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		Player addPlayer = awaitingMatchmaking.poll();
 		if (addPlayer == null) {
 			System.out.println("[MATCHMAKING] There are no players waiting for matchmaking.");
-			return false;
 		} else {
 			try {
 				System.out.println("[MATCHMAKING] Player " + addPlayer.getPlayerName()
 						+ " trying to join room through matchmaking");
 				addPlayerToRoom(addPlayer, sala);
+				return true;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return true;
 		}
+		return false;
 	}
 
 	public synchronized boolean checkInitialMatchmaking(Player player) {

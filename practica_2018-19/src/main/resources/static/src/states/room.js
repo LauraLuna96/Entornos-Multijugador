@@ -33,7 +33,7 @@ function updateSalaInfo() {
 	$("#menu-sala-header").html("Sala " + game.global.currentSala.roomName);
 	var player_str = "<h4>Jugadores en la sala</h4>";
 	for (var i = 0; i < game.global.currentSala.players.length; i++) {
-		player_str += game.global.currentSala.players[i].playerName + "<br>";
+		player_str += "<i class='fas fa-user-astronaut'></i> " + game.global.currentSala.players[i].playerName + "<br>";
 	}
 	$("#area-sala").html(player_str);
 	//console.log(game.global.currentSala.players)
