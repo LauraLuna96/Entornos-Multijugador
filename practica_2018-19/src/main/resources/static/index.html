@@ -98,6 +98,24 @@
 									automático</button>
 							</div>
 						</div>
+						<div id="menu-matchmaking" style="display:none;" class="menu">
+							<div id="area-lobby-btn">
+								<button type="button" id="btn-leaveMatchmaking" class="btn btn-spacewars" onclick="leaveMatchmaking();"><i
+									 class="fas fa-times"></i>
+									Salir del Matchmaking</button>
+							</div>
+							<h3><i class="fas fa-sync anim-loading"></i> MatchMaking Automático</h3>
+							<i>Buscando partidas disponibles ...</i>
+						</div>
+						<div id="menu-waiting" style="display:none;" class="menu">
+								<div id="area-lobby-btn">
+									<button type="button" id="btn-leaveWaiting" class="btn btn-spacewars" onclick="leaveWaiting();"><i
+										 class="fas fa-times"></i>
+										Dejar la espera</button>
+								</div>
+								<h3><i class="fas fa-sync anim-loading"></i> Esperando para entrar a sala ...</h3>
+								<i>La sala en la que quieres entrar está llena. Si en menos de 5s se queda un hueco libre, podrás entrar. Si no, la espera se cancelará automáticamente.</i>
+							</div>
 						<div id="menu-lobby" style="display:none;" class="menu">
 							<div id="area-lobby-btn">
 								<button type="button" id="btn-openRoomDialog" class="btn btn-spacewars" data-toggle="dropdown" aria-haspopup="true"
@@ -136,7 +154,7 @@
 						</div>
 						<div id="menu-sala" style="display:none;" class="menu">
 							<div id="area-lobby-btn">
-								<button type="button" class="btn btn-spacewars" id="btn-leaveRoom" onclick="sendStartGame()"><i class="fas fa-times"></i>
+								<button type="button" class="btn btn-spacewars" id="btn-beginGame" onclick="sendStartGame()"><i class="fas fa-play-circle"></i>
 									Empezar partida</button>
 								<button type="button" class="btn btn-spacewars" id="btn-leaveRoom" onclick="leaveRoom()"><i class="fas fa-times"></i>
 									Salir</button>

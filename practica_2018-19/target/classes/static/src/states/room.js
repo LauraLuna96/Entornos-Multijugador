@@ -48,3 +48,20 @@ function sendStartGame() {
 	console.log("Enviada petición para iniciar partida");
 	game.global.socket.send(JSON.stringify(msg));
 }
+
+
+function showWaiting() {
+	$("#menu-lobby").hide();
+	$("#menu-waiting").show();
+}
+
+function hideWaiting() {
+	$("#menu-waiting").hide();
+}
+
+function leaveWaiting() {
+	let msg = new Object();
+	msg.event = 'LEAVE WAITING';
+	console.log("Enviada petición para salir de la espera");
+	game.global.socket.send(JSON.stringify(msg));
+}
