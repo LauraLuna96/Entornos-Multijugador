@@ -71,6 +71,10 @@ public class Player extends Spaceship {
 	public int decreaseLife() {
 		return this.life.decrementAndGet();
 	}
+	
+	public void increaseLife(int n) {
+		this.life.addAndGet(n);
+	}
 
 	public int getLife() {
 		return this.life.get();
