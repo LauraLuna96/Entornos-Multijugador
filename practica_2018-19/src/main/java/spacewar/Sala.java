@@ -17,10 +17,38 @@ public class Sala {
 	private String name;
 	private AtomicInteger numPlayers = new AtomicInteger(0);
 	private final static int MAX_PLAYERS = 3;
+	public enum state {
+		AntesPartida,
+		Partida,
+		FinPartida
+	}
+	private state currentState;
+	private ReentrantLock stateLock = new ReentrantLock();
 	
 	Sala(String name) {
 		this.name = name;
 		this.game = new SpacewarGame(this);
+		this.currentState = state.AntesPartida;
+	}
+	
+	public String getCurrentState() {
+		stateLock.lock();
+		String actual = "";
+		try {
+			actual = this.currentState.toString();
+		} finally {
+			stateLock.unlock();
+		}	
+		return actual;
+	}
+	
+	public void setCurrentState(state newState) {
+		stateLock.lock();
+		try {
+			this.currentState = newState;
+		} finally {
+			stateLock.unlock();
+		}
 	}
 	
 	public int getMaxPlayers() {
@@ -52,6 +80,21 @@ public class Sala {
 			int count = numPlayers.get();
 			if (count == MAX_PLAYERS) {
 				System.out.println("[GAME] Room " + this.name + " is full, starting game now.");
+				setCurrentState(state.Partida);
+				game.sendBeginningMessages();
+				game.startGameLoop();
+			}
+		} else {
+			System.out.println("[ERROR] Error while starting game in room " + this.name + ", there is a game already in progress.");
+		}
+	}
+	
+	public synchronized void tryStartGame() throws Exception {
+		if (!game.getIsRunning()) {
+			int count = numPlayers.get();
+			if (count > 1) {
+				System.out.println("[GAME] Room " + this.name + " started the game manually (there are >1 players)");
+				setCurrentState(state.Partida);
 				game.sendBeginningMessages();
 				game.startGameLoop();
 			}

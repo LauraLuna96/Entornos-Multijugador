@@ -41,3 +41,10 @@ function leaveRoom() {
 	game.global.socket.send(JSON.stringify(msg));
 	game.state.start('lobbyState');
 }
+
+function sendStartGame() {
+	let msg = new Object();
+	msg.event = 'START GAME';
+	console.log("Enviada petición para iniciar partida");
+	game.global.socket.send(JSON.stringify(msg));
+}

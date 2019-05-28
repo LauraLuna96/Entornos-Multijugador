@@ -198,6 +198,11 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				msg.put("shipType", player.getShipType());
 				player.sendMessage(msg.toString());*/
 				break;
+				
+			// Un jugador quiere iniciar la partida manualmente (solo si hay más de 1 jugador en la sala, pero aún no se ha llegado al nº de jugadores maximo)
+			case "START GAME":
+				sala.tryStartGame();
+				break;
 
 			// Actualizar posición
 			case "UPDATE MOVEMENT":

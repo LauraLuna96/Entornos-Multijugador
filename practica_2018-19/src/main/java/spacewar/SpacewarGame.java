@@ -51,6 +51,7 @@ public class SpacewarGame {
 	public void endGame(String winner) {
 		if (!isOver) {
 			this.isOver = true;
+			sala.setCurrentState(Sala.state.FinPartida);
 			System.out.println("[GAME] Game has ended, winner: " + winner);
 			
 			ObjectNode msg = mapper.createObjectNode();
