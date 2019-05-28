@@ -157,7 +157,16 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			// Un jugador ha creado una sala
 			case "NEW ROOM":
 				lobbyPlayers.remove(player.getPlayerName()); // Quita al jugador del lobby
-				Sala room = new Sala(node.get("roomName").asText()); // Crea la sala
+				int numPlayers = 2;
+				switch (node.get("roomType").asText()) {
+				case "1vs1":
+					numPlayers = 2;
+					break;
+				case "fortnite":
+					numPlayers = 5;
+					break;
+				}
+				Sala room = new Sala(node.get("roomName").asText(), numPlayers); // Crea la sala
 
 				System.out.println("[ROOM] New room " + room.getName() + " created.");
 				salas.put(room.getName(), room); // Guarda la sala en el mapa

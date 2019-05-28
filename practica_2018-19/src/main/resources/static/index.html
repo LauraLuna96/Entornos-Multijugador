@@ -185,6 +185,10 @@
 										<label for="new-roomName">(Sin caracteres especiales ni espacios)</label><br>
 										<input onsubmit="" type="text" autocomplete="off" id="new-roomName" placeholder="Nombre de la sala">
 									</div>
+									<select class="form-control" id="new-roomType">
+										<option value="1vs1">1vs1</option>
+										<option value="fortnite">Battle Royale</option>
+									</select>
 									<button type="button" id="btn-createRoom" class="btn btn-spacewars" onclick="createRoom();"><i class="far fa-plus-square"></i>
 										Crear</button>
 									<div id="create-room-error" class="alert alert-danger" style="display:none">

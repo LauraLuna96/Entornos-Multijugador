@@ -13,6 +13,10 @@ window.onload = function () {
 		}
 	});
 
+	$('.dropdown-menu').click(function(e) {
+		e.stopPropagation();
+	});
+
 	// Creamos el juego
 	game = new Phaser.Game(1024, 600, Phaser.AUTO, 'gameDiv')
 

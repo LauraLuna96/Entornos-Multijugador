@@ -13,6 +13,10 @@ window.onload = function () {
 		}
 	});
 
+	$('.dropdown-menu').click(function(e) {
+		e.stopPropagation();
+	});
+
 	// Creamos el juego
 	game = new Phaser.Game(1024, 600, Phaser.AUTO, 'gameDiv')
 
@@ -390,6 +394,8 @@ function configWebsocket() {
 					console.dir(msg.players)
 				}
 				game.global.otherPlayers[msg.id].image.destroy()
+				game.global.UIPlayerName[player.id].destroy();
+				game.global.UIText[player.id].destroy();
 				delete game.global.otherPlayers[msg.id]
 				break
 			default:
