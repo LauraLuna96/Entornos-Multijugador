@@ -189,13 +189,25 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				System.out.println("[ROOM] Player " + player.getPlayerName() + " left the room " + sala.getName());
 				
 				// Comprobamos si hay algún player en la waiting room
-				if (sala.tryAddPlayerFromWaitingRoom()) {
+				Player addPlayer = sala.tryAddPlayerFromWaitingRoom();
+				if (addPlayer != null) {
+					
 					msg.put("event", "JOIN ROOM");
 					msg.put("roomName", sala.getName());
-					player.sendMessage(msg.toString());
+					addPlayer.sendMessage(msg.toString());
 					sendRoomInfoMessage(sala);
 					sendGetRoomsMessageAll();
 					sala.startGameIfFull();
+					
+					// Si la partida ya estaba iniciada, mandamos el mensaje de partida
+					if (sala.getCurrentState() == "Partida") {
+						try {
+							sala.getGame().sendBeginningMessageTo(addPlayer);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				}
 				
 				// Comprobamos si queda algún jugador más
@@ -290,6 +302,28 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			msg.put("event", "LEAVE ROOM");
 			msg.put("playerName", player.getPlayerName());
 			sala.broadcast(msg.toString());
+			
+			// Comprobamos si hay algún player en la waiting room
+			Player addPlayer = sala.tryAddPlayerFromWaitingRoom();
+			if (addPlayer != null) {
+				
+				msg.put("event", "JOIN ROOM");
+				msg.put("roomName", sala.getName());
+				addPlayer.sendMessage(msg.toString());
+				sendRoomInfoMessage(sala);
+				sendGetRoomsMessageAll();
+				sala.startGameIfFull();
+				
+				// Si la partida ya estaba iniciada, mandamos el mensaje de partida
+				if (sala.getCurrentState() == "Partida") {
+					try {
+						sala.getGame().sendBeginningMessageTo(addPlayer);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
 		}
 
 		System.out.println("[SYS] Player " + player.getPlayerName() + " disconnected.");

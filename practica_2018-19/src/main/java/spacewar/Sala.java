@@ -142,21 +142,20 @@ public class Sala {
 		}
 	}
 	
-	public synchronized boolean tryAddPlayerFromWaitingRoom() {
-		boolean result = false;
+	public synchronized Player tryAddPlayerFromWaitingRoom() {
 		Player waitingPlayer = waitingList.poll();
 		if (waitingPlayer != null) {
 			try {
 				if (addPlayer(waitingPlayer) == "joined") {
 				System.out.println("[ROOM] The player " + waitingPlayer.getPlayerName() + " has entered the room from the waiting list.");
-				result = true;
+				return waitingPlayer;
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return result;
+		return null;
 	}
 	
 	// Método que manda un mensaje específico a TODOS los jugadores (de la sala)
