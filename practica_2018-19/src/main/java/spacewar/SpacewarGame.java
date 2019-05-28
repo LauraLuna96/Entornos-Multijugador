@@ -235,6 +235,7 @@ public class SpacewarGame {
 						// System.out.println("Player " + player.getPlayerId() + " was hit!!!");
 						projectile.setHit(true);
 						player.decreaseLife();
+						// Añade puntuación en cada disparo acertado a un contrincante
 						if (player.isAlive()) {
 							if (player.getLife() != 0) {
 								projectile.getOwner().increaseScore(scorePerHit);
