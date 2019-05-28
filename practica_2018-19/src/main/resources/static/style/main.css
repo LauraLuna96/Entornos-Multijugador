@@ -177,6 +177,7 @@ input:focus {
     z-index: 999;
     position:absolute;
     width: calc(100% - 30px);
+    max-width: 1024px;
     height: 100%;
     padding: 100px;
 }
