@@ -63,3 +63,27 @@ function showPlayerList(players) {
 	list_str = list_str.slice(0,list_str.length-2);
 	$("#player-list").html(list_str);
 }
+
+function goRanking() {
+	$("#menu-principal").hide();
+	$("#menu-ranking").show();
+
+	let msg = new Object()
+	msg.event = 'GET RANKING'
+	console.log("Enviada petición para recibir la info del ranking")
+	game.global.socket.send(JSON.stringify(msg))
+}
+
+function showRanking(ranking) {
+	var i = 1;
+	for (var player of ranking) {
+		var id_str = "#ranking-" + i;
+		i++;
+		$(id_str).html(player.playerName + " (" + player.score + " pts)");
+	}
+}
+
+function leaveRanking() {
+	$("#menu-ranking").hide();
+	$("#menu-principal").show();
+}

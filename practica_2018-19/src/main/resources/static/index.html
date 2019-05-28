@@ -99,7 +99,8 @@
 								<button type="button" class="btn btn-spacewars btn-lg" id="btn-goLobby" onclick="goLobby()">Elegir sala
 									manualmente</button><br>
 								<button type="button" class="btn btn-spacewars btn-lg" id="btn-goMatchmaking" onclick="goMatchmaking()">Matchmaking
-									automático</button>
+									automático</button><br>
+								<button type="button" class="btn btn-spacewars btn-lg" id="btn-ranking" onclick="goRanking()">Top 10 Jugadores</button>
 							</div>
 						</div>
 
@@ -114,6 +115,53 @@
 							<i>Buscando partidas disponibles ...</i>
 						</div>
 
+						<!-- ////////////// MENÚ RANKING ////////////// -->
+						<div id="menu-ranking" style="display:none;" class="menu">
+							<div id="area-lobby-btn">
+								<button type="button" id="btn-leaveRanking" class="btn btn-spacewars" onclick="leaveRanking();"><i class="fas fa-times"></i>
+									Salir del Ranking</button>
+							</div>
+							<h3>Top 10 Jugadores</h3>
+							<i>¡Los mejores jugadores del juego!</i>
+							<div id="area-ranking" class="area-menu">
+								<table class="table table-dark">
+									<tbody>
+										<tr>
+											<td>1º</td>
+											<td id="ranking-1">---</td>
+											<td>6º</td>
+											<td id="ranking-6">---</td>
+										</tr>
+										<tr>
+											<td>2º</td>
+											<td id="ranking-2">---</td>
+											<td>7º</td>
+											<td id="ranking-7">---</td>
+										</tr>
+										<tr>
+											<td>3º</td>
+											<td id="ranking-3">---</td>
+											<td>8º</td>
+											<td id="ranking-8">---</td>
+										</tr>
+										<tr>
+											<td>4º</td>
+											<td id="ranking-4">---</td>
+											<td>9º</td>
+											<td id="ranking-9">---</td>
+										</tr>
+										<tr>
+											<td>5º</td>
+											<td id="ranking-5">---</td>
+											<td>10º</td>
+											<td id="ranking-10">---</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+
 						<!-- ////////////// MENÚ ESPERANDO EN SALA ////////////// -->
 						<div id="menu-waiting" style="display:none;" class="menu">
 							<div id="area-lobby-btn">
@@ -121,7 +169,8 @@
 									Dejar la espera</button>
 							</div>
 							<h3><i class="fas fa-sync anim-loading"></i> Esperando para entrar a sala ...</h3>
-							<i>La sala en la que quieres entrar está llena. Si en menos de 5s se queda un hueco libre, podrás entrar. Si no,
+							<i>La sala en la que quieres entrar está llena. Si en menos de 5s se queda un hueco libre, podrás entrar. Si
+								no,
 								la espera se cancelará automáticamente.</i>
 						</div>
 
@@ -161,7 +210,8 @@
 									Salir</button>
 							</div>
 							<h3 id="menu-sala-header">Sala</h3>
-							<i>El juego comenzará automáticamente cuando se llegue al número máximo de jugadores. Si hay más de 1 jugador en
+							<i>El juego comenzará automáticamente cuando se llegue al número máximo de jugadores. Si hay más de 1 jugador
+								en
 								la sala, también se puede inicial manualmente con el botón de arriba a la derecha.</i>
 							<div id="area-sala" class="area-menu">
 								<!-- Info de la sala -->
@@ -210,14 +260,6 @@
 		<div class="col">
 			<div class="header-tooltip">
 				<i class="fas fa-user-astronaut"></i> <b>Jugadores en partida:</b> <span style="color: var(--theme-color2);" id="player-list"></span>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col">
-			<div class="footer-tooltip">
-				<h5>Top 10 Jugadores</h5>
 			</div>
 		</div>
 	</div>

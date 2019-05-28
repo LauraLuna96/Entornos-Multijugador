@@ -1,6 +1,9 @@
 package spacewar;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -94,6 +97,10 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			Sala sala = (Sala) session.getAttributes().get(ROOM_ATTRIBUTE);
 
 			switch (node.get("event").asText()) {
+			
+			case "GET RANKING":
+				sendRanking(player);
+				break;
 			//////////////////////////////////////////////////////
 			// SALAS
 
@@ -340,6 +347,37 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		// game.broadcast(msg.toString());
 	}
 
+	public void sendRanking(Player player) {
+		ObjectNode msg = mapper.createObjectNode();
+
+		msg.put("event", "GET RANKING");
+		List<Player> ranking = new LinkedList<Player>();
+		for (Player p : globalPlayers.values()) {
+			ranking.add(p);
+		}
+		// Solo deja comparar tipos no primitivos?
+		ranking.sort((a,b)->new Integer(b.getScore()).compareTo(new Integer(a.getScore())));
+		
+		ArrayNode arrayNode = mapper.createArrayNode();
+		int i = 0;
+		while (i < 10 && i < ranking.size()) {
+			ObjectNode jsonPlayer = mapper.createObjectNode();
+			jsonPlayer.put("playerName", ranking.get(i).getPlayerName());
+			jsonPlayer.put("score", ranking.get(i).getScore());
+			
+			arrayNode.addPOJO(jsonPlayer);
+			i++;
+		}
+		
+		msg.putPOJO("ranking", arrayNode);
+		try {
+			player.sendMessage(msg.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	// Método que envia un msg a todos los jugadores
 	public void sendMessageToAll(String msg) throws Exception {
 		Collection<Player> copy = globalPlayers.values();
@@ -566,6 +604,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			msg.put("event", "ERROR");
 			msg.put("type", "JOIN ROOM ERROR");
 			player.sendMessage(msg.toString());
+			
+			sendGetRoomsMessage(player); // Le enviamos el mensaje de las rooms por si tiene info desactualizada
 			break;
 		}
 	}
