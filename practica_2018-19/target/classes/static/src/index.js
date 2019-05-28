@@ -232,7 +232,17 @@ function configWebsocket() {
 								game.global.UIText[player.id].setText(game.global.myPlayer.playerName + " / " + game.global.myPlayer.life + " / " + game.global.myPlayer.ammo + " / " + game.global.myPlayer.propellerUses + " / " + game.global.myPlayer.score);
 								game.global.UIPlayerName[player.id].setText(game.global.myPlayer.playerName);
 								game.global.UIPlayerName[player.id].position.x = game.global.myPlayer.image.x;
+								if (game.global.UIPlayerName[player.id].position.x > 1000) {
+									game.global.UIPlayerName[player.id].position.x = 1000;
+								} else if (game.global.UIPlayerName[player.id].position.x < 24) {
+									game.global.UIPlayerName[player.id].position.x = 24;
+								}
 								game.global.UIPlayerName[player.id].position.y = game.global.myPlayer.image.y - 30;
+								if (game.global.UIPlayerName[player.id].position.y > 576) {
+									game.global.UIPlayerName[player.id].position.y = 576;
+								} else if (game.global.UIPlayerName[player.id].position.y < 24) {
+									game.global.UIPlayerName[player.id].position.y = 24;
+								}
 
 
 							}
