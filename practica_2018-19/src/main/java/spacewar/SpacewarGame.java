@@ -96,10 +96,21 @@ public class SpacewarGame {
 
 		sala.broadcast(msg2.toString());
 	}
+	
+	public void sendBeginningMessageTo(Player player) throws Exception {
+		ObjectNode msg = mapper.createObjectNode();
+		msg.put("event", "JOIN");
+		msg.put("id", player.getPlayerId());
+		msg.put("shipType", player.getShipType());
+		player.sendMessage(msg.toString());
+		
+		ObjectNode msg2 = mapper.createObjectNode();
+		msg2.put("event", "START GAME");
+		player.sendMessage(msg2.toString());
+	}
 
 	public void addPlayer(Player player) {
 		players.put(player.getSession().getId(), player);
-
 		/*
 		 * int count = numPlayers.getAndIncrement(); if (count == 0) {
 		 * this.startGameLoop(); }

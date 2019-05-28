@@ -78,6 +78,10 @@ function leaveLobby() {
 function updateRoomList(rooms) {
 	$("#area-lobby").html("");
 	for (i = 0; i < rooms.length; i++) {
-		$("#area-lobby").append('<div class="sala-row"><button type="button" data-roomname="'+rooms[i].roomName+'" onclick="joinRoom($(this));" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> '+ rooms[i].roomName + '</button> '+ rooms[i].numPlayers+'/'+rooms[i].maxPlayers+' jugadores</div>')
+		if (rooms[i].state != "FinPartida"){
+			$("#area-lobby").append('<div class="sala-row"><button type="button" data-roomname="'+rooms[i].roomName+'" onclick="joinRoom($(this));" class="btn btn-spacewars btn-sala"><i class="fas fa-sign-in-alt"></i> '+ rooms[i].roomName + '</button> '+ rooms[i].numPlayers+'/'+rooms[i].maxPlayers+' jugadores</div>')
+		} else {
+			$("#area-lobby").append('<div class="sala-row"><button type="button" data-roomname="'+rooms[i].roomName+'" class="btn btn-spacewars btn-sala btn-sala-unavailable" disabled><i class="fas fa-sign-in-alt"></i> '+ rooms[i].roomName + '</button> <b>[ PARTIDA ACABADA ]</b>  '+ rooms[i].numPlayers+'/'+rooms[i].maxPlayers+' jugadores</div>')
+		}
 	}
 }

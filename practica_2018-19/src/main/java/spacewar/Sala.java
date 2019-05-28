@@ -2,7 +2,9 @@ package spacewar;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -23,7 +25,8 @@ public class Sala {
 		FinPartida
 	}
 	private state currentState;
-	private ReentrantLock stateLock = new ReentrantLock();
+	private Lock stateLock = new ReentrantLock();
+	private BlockingQueue<Player> waitingList = new LinkedBlockingQueue<Player>();
 	
 	Sala(String name) {
 		this.name = name;
@@ -89,7 +92,7 @@ public class Sala {
 		}
 	}
 	
-	public synchronized void tryStartGame() throws Exception {
+	public synchronized boolean tryStartGame() throws Exception {
 		if (!game.getIsRunning()) {
 			int count = numPlayers.get();
 			if (count > 1) {
@@ -97,26 +100,35 @@ public class Sala {
 				setCurrentState(state.Partida);
 				game.sendBeginningMessages();
 				game.startGameLoop();
+				return true;
 			}
 		} else {
 			System.out.println("[ERROR] Error while starting game in room " + this.name + ", there is a game already in progress.");
 		}
+		return false;
 	}
 	
 	// No queremos que, mientras estamos comprobando si un jugador puede meterse o no,
 	// se le cuele otro. Por eso lo marcamos como synchronized.
-	public synchronized boolean addPlayer(Player player) throws Exception {
-		boolean metido = false;
-		if (players.size() < MAX_PLAYERS) {
-			players.put(player.getSession().getId(), player);
-			game.addPlayer(player);
-			player.setPlayerId(numPlayers.getAndIncrement());
-			//System.out.println("[ROOM] Room " + this.name + " now has " + count + " players.");
-			metido = true;
+	public synchronized String addPlayer(Player player) throws Exception {
+		String resultado = "";
+		if (getCurrentState() != "FinPartida") {
+			if (players.size() < MAX_PLAYERS) {
+				players.put(player.getSession().getId(), player);
+				game.addPlayer(player);
+				player.setPlayerId(numPlayers.getAndIncrement());
+				//System.out.println("[ROOM] Room " + this.name + " now has " + count + " players.");
+				resultado = "joined";
+			} else {
+				waitingList.put(player);
+				resultado = "waiting";
+				System.out.println("[ROOM] Player " + player.getPlayerName() + " was put in the waiting list for room " + this.name);
+			}
 		} else {
-			metido = false;
+			resultado = "error";
+			System.out.println("[ROOM] Player " + player.getPlayerName() + " couldn't get into room " + this.name);
 		}
-		return metido;
+		return resultado;
 	}
 	
 	public synchronized void removePlayer(Player player) {
@@ -128,6 +140,23 @@ public class Sala {
 		if (count == 0) {
 			game.stopGameLoop();
 		}
+	}
+	
+	public synchronized boolean tryAddPlayerFromWaitingRoom() {
+		boolean result = false;
+		Player waitingPlayer = waitingList.poll();
+		if (waitingPlayer != null) {
+			try {
+				if (addPlayer(waitingPlayer) == "joined") {
+				System.out.println("[ROOM] The player " + waitingPlayer.getPlayerName() + " has entered the room from the waiting list.");
+				result = true;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
 	}
 	
 	// Método que manda un mensaje específico a TODOS los jugadores (de la sala)
@@ -158,6 +187,7 @@ public class Sala {
 		
 		public ObjectNode getSalaAsObjectNode(ObjectNode jsonSala) {
 			jsonSala.put("roomName", getName());
+			jsonSala.put("state", getCurrentState());
 			jsonSala.put("numPlayers", getNumPlayers());
 			jsonSala.put("maxPlayers", MAX_PLAYERS);
 			return jsonSala;
