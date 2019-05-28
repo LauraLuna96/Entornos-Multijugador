@@ -39,5 +39,4 @@ function leaveMatchmaking() {
 	msg.event = 'LEAVE MATCHMAKING'
 	console.log("Enviada petición de salid del matchmaking")
 	game.global.socket.send(JSON.stringify(msg))
-	game.state.start('menuState');
 }
