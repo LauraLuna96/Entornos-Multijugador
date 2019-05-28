@@ -24,6 +24,9 @@ window.onload = function () {
 		myPlayer: new Object(),
 		otherPlayers: [],
 		projectiles: [],
+		lifePowerUps: [],
+		ammoPowerUps: [],
+		propellerPowerUps: [],
 		salas: [],
 		UIText: [],
 		UIPlayerName: [], // El nombre aparecerá sobre la nave de cada jugador para saber quién es quién
@@ -317,6 +320,44 @@ function configWebsocket() {
 								explosion.animations.play('explosion', 15, false, true)
 							}
 							game.global.projectiles[projectile.id].image.visible = false
+						}
+					}
+
+					for (var powerUp of msg.powerUps) {
+						switch (powerUp.type) {
+							case "lifePowerUp":
+								if (powerUp.isAlive) {
+									game.global.lifePowerUp[powerUp.id].image.x = powerUp.posX
+									game.global.lifePowerUp[powerUp.id].image.y = powerUp.posY
+									if (game.global.lifePowerUp[powerUp.id].image.visible === false) {
+										game.global.lifePowerUp[powerUp.id].image.visible = true
+									}
+								} else {
+									game.global.lifePowerUp[powerUp.id].image.visible = false
+								}
+								break;
+							case "ammoPowerUp":
+							if (powerUp.isAlive) {
+								game.global.ammoPowerUp[powerUp.id].image.x = powerUp.posX
+								game.global.ammoPowerUp[powerUp.id].image.y = powerUp.posY
+								if (game.global.ammoPowerUp[powerUp.id].image.visible === false) {
+									game.global.ammoPowerUp[powerUp.id].image.visible = true
+								}
+							} else {
+								game.global.ammoPowerUp[powerUp.id].image.visible = false
+							}
+								break;
+							case "propellerPowerUp":
+							if (powerUp.isAlive) {
+								game.global.propellerPowerUp[powerUp.id].image.x = powerUp.posX
+								game.global.propellerPowerUp[powerUp.id].image.y = powerUp.posY
+								if (game.global.propellerPowerUp[powerUp.id].image.visible === false) {
+									game.global.propellerPowerUp[powerUp.id].image.visible = true
+								}
+							} else {
+								game.global.propellerPowerUp[powerUp.id].image.visible = false
+							}
+								break;
 						}
 					}
 				}
