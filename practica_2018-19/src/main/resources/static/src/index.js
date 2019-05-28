@@ -26,6 +26,7 @@ window.onload = function () {
 		projectiles: [],
 		salas: [],
 		UIText: [],
+		UIPlayerName: [], // El nombre aparecerá sobre la nave de cada jugador para saber quién es quién
 		currentSala: null
 	}
 
@@ -219,7 +220,13 @@ function configWebsocket() {
 								game.global.myPlayer.propellerUses = player.propellerUses
 								game.global.myPlayer.playerName = player.playerName
 								game.global.myPlayer.score = player.score
+
 								game.global.UIText[player.id].setText(game.global.myPlayer.playerName + " / "+ game.global.myPlayer.life + " / "+ game.global.myPlayer.ammo + " / "+ game.global.myPlayer.propellerUses + " / "+ game.global.myPlayer.score);
+								game.global.UIPlayerName[player.id].setText(game.global.myPlayer.playerName);
+								game.global.UIPlayerName[player.id].position.x = game.global.myPlayer.image.x;
+								game.global.UIPlayerName[player.id].position.y = game.global.myPlayer.image.y-30;
+
+
 							}
 							//console.log("MyPlayer life: " + game.global.myPlayer.life);
 
@@ -231,7 +238,11 @@ function configWebsocket() {
 								}
 								game.global.otherPlayers[player.id].image.anchor.setTo(0.5, 0.5)
 								var i = player.id;
+
+								game.global.UIPlayerName[player.id] = game.add.text(game.global.otherPlayers[player.id].image.x, game.global.otherPlayers[player.id].image.y+20, game.global.otherPlayers[player.id].playerName, { font: "12px Orbitron", fill: "#ffffff" });
+								game.global.UIPlayerName[player.id].anchor.set(0.5, 0.5);
 								game.global.UIText[player.id] = game.add.text(10, 10 + i * 20 , game.global.otherPlayers[player.id].playerName + " / "+ game.global.otherPlayers[player.id].life + " / "+ game.global.otherPlayers[player.id].ammo + " / "+ game.global.otherPlayers[player.id].propellerUses + " / "+ game.global.otherPlayers[player.id].score, { font: "12px Orbitron", fill: "#ffffff" });
+							
 							} else {
 								if (!player.isAlive) {
 									console.log("OtherPlayer[" + player.id + "] ha muerto :)")
@@ -239,13 +250,18 @@ function configWebsocket() {
 									game.global.otherPlayers[player.id].image.x = player.posX
 									game.global.otherPlayers[player.id].image.y = player.posY
 									game.global.otherPlayers[player.id].image.angle = player.facingAngle
-									game.global.UIText[player.id].setText(game.global.otherPlayers[player.id].playerName + " / "+ game.global.otherPlayers[player.id].life + " / "+ game.global.otherPlayers[player.id].ammo + " / "+ game.global.otherPlayers[player.id].propellerUses + " / "+ game.global.otherPlayers[player.id].score);
+
 									game.global.otherPlayers[player.id].isAlive = player.isAlive
 									game.global.otherPlayers[player.id].playerName = player.playerName
 									game.global.otherPlayers[player.id].ammo = player.ammo
 									game.global.otherPlayers[player.id].propellerUses = player.propellerUses
 									game.global.otherPlayers[player.id].score = player.score
 									game.global.otherPlayers[player.id].life = player.life
+									
+									game.global.UIText[player.id].setText(game.global.otherPlayers[player.id].playerName + " / "+ game.global.otherPlayers[player.id].life + " / "+ game.global.otherPlayers[player.id].ammo + " / "+ game.global.otherPlayers[player.id].propellerUses + " / "+ game.global.otherPlayers[player.id].score);
+									game.global.UIPlayerName[player.id].setText(game.global.otherPlayers[player.id].playerName);
+									game.global.UIPlayerName[player.id].position.x = game.global.otherPlayers[player.id].image.x;
+									game.global.UIPlayerName[player.id].position.y = game.global.otherPlayers[player.id].image.y-30;
 
 								}
 								//console.log("OtherPlayer["+ player.id +"] life: " + game.global.otherPlayers[player.id].life);
