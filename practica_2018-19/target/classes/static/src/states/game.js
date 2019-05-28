@@ -42,7 +42,17 @@ Spacewar.gameState.prototype = {
 		game.global.myPlayer.image = game.add.sprite(0, 0, 'spacewar',
 			game.global.myPlayer.shipType)
 
-		
+		// Cargamos los power ups (PRUEBA)
+		let lifePowerUp = game.add.sprite(game.world.randomX,
+			game.world.randomY, 'LifePowerUp', 'LifePowerUp.png');
+		lifePowerUp.scale.setTo(2,2);
+		let ammoPowerUp = game.add.sprite(game.world.randomX,
+				game.world.randomY, 'AmmoPowerUp', 'AmmoPowerUp.png');
+		ammoPowerUp.scale.setTo(2,2);
+		let propellerPowerUp = game.add.sprite(game.world.randomX,
+			game.world.randomY, 'PropellerPowerUp', 'PropellerPowerUp.png');
+		propellerPowerUp.scale.setTo(2,2);	
+
 		game.global.myPlayer.image.anchor.setTo(0.5, 0.5)
 		game.global.myPlayer.propellerUses = 3;
 		game.global.myPlayer.ammo = 20;
