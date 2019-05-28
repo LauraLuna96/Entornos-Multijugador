@@ -42,6 +42,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	// Waiting list
 	private ScheduledExecutorService waitingListScheduler = Executors.newScheduledThreadPool(1);
 	public BlockingQueue<Player> lastAddedToWaitingLists = new LinkedBlockingQueue<Player>();
+	
+	// Lista de jugadores en partida
+	private Map<String, Player> inGamePlayers = new ConcurrentHashMap<>(); // Mapa de jugadores en partida
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -103,7 +106,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					System.out.println("[MATCHMAKING] Player " + player.getPlayerName() + " is awaiting matchmaking.");
 					awaitingMatchmaking.add(player);
 					msg.put("event", "CONFIRMATION");
-					msg.put("event", "JOIN MATCHMAKING");
+					msg.put("type", "JOIN MATCHMAKING");
 					player.sendMessage(msg.toString());
 				}
 				break;
@@ -112,7 +115,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			case "LEAVE MATCHMAKING":
 				awaitingMatchmaking.remove(player);
 				msg.put("event", "CONFIRMATION");
-				msg.put("event", "LEAVE MATCHMAKING");
+				msg.put("type", "LEAVE MATCHMAKING");
 				player.sendMessage(msg.toString());
 				break;
 
@@ -153,11 +156,13 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				System.out.println("[ROOM] New room " + room.getName() + " created.");
 				salas.put(room.getName(), room); // Guarda la sala en el mapa
 
-				System.out.println("[ROOM] Player " + player.getPlayerName() + " joined the room " + room.getName());
+				// System.out.println("[ROOM] Player " + player.getPlayerName() + " joined the
+				// room " + room.getName());
 				addPlayerToRoom(player, room);
 
 				// Comprobamos si hay gente esperando al matchmaking
-				while (checkMatchmaking(room) && room.getNumPlayers() < room.getMaxPlayers());
+				while (checkMatchmaking(room) && room.getNumPlayers() < room.getMaxPlayers())
+					;
 
 				break;
 
@@ -203,6 +208,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						msg2.put("id", player.getPlayerId());
 						sala.broadcast(msg2.toString());
 					}
+					
+					inGamePlayers.remove(player.getPlayerName());
+					sendPlayerListMessage();
 				}
 
 				session.getAttributes().remove(ROOM_ATTRIBUTE);
@@ -227,8 +235,13 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			// Un jugador quiere iniciar la partida manualmente (solo si hay más de 1
 			// jugador en la sala, pero aún no se ha llegado al nº de jugadores maximo)
 			case "START GAME":
-				if (sala.tryStartGame())
+				if (sala.tryStartGame()) {
+					for (Player p : sala.getPlayers()) {
+						inGamePlayers.put(p.getPlayerName(), p);
+					}
+					sendPlayerListMessage();
 					sendGetRoomsMessageAll();
+				}
 				break;
 
 			// Actualizar posición
@@ -276,17 +289,48 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		if (player == null)
 			return;
 		globalPlayers.remove(player.getPlayerName());
-
+		
 		Sala sala = (Sala) session.getAttributes().get(ROOM_ATTRIBUTE);
 		if (sala != null) {
-			sala.removePlayer(player);
 			ObjectNode msg = mapper.createObjectNode();
-			msg.put("event", "LEAVE ROOM");
-			msg.put("playerName", player.getPlayerName());
-			sala.broadcast(msg.toString());
+			sala.removePlayer(player);
+			System.out.println("[ROOM] Player " + player.getPlayerName() + " left the room " + sala.getName());
 
+			// Comprobamos si hay algún player en la waiting room
 			addPlayerToRoomFromWaitingList(sala);
+
+			// Comprobamos si hay gente esperando al matchmaking
+			checkMatchmaking(sala);
+
+			// Comprobamos si queda algún jugador más
+			if (sala.getNumPlayers() <= 0) {
+
+				System.out.println("[ROOM] Room " + sala.getName() + " is empty. Deleting it now.");
+				msg.put("event", "DELETE ROOM");
+				msg.put("roomName", sala.getName());
+				sendMessageToAllInLobby(msg.toString());
+				salas.remove(sala.getName());
+
+			} else {
+				msg.put("event", "LEAVE ROOM");
+				msg.put("playerName", player.getPlayerName());
+				sala.broadcast(msg.toString());
+
+				if (sala.getCurrentState() == "Partida") {
+					ObjectNode msg2 = mapper.createObjectNode();
+					msg2.put("event", "REMOVE PLAYER");
+					msg2.put("id", player.getPlayerId());
+					sala.broadcast(msg2.toString());
+				}
+				
+				inGamePlayers.remove(player.getPlayerName());
+				sendPlayerListMessage();
+			}
+			
+			sendGetRoomsMessageAll();
 		}
+
+		session.getAttributes().remove(ROOM_ATTRIBUTE);
 
 		System.out.println("[SYS] Player " + player.getPlayerName() + " disconnected.");
 
@@ -374,6 +418,27 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		msg.putPOJO("players", arrayNode);
 		sala.broadcast(msg.toString());
 	}
+	
+	public void sendPlayerListMessage() {
+		ObjectNode msg = mapper.createObjectNode();
+		msg.put("event", "PLAYER LIST");
+		
+		ArrayNode arrayNode = mapper.createArrayNode();
+		for (Player p : inGamePlayers.values()) {
+			ObjectNode jsonPlayer = mapper.createObjectNode();
+			jsonPlayer.put("playerName", p.getPlayerName());
+
+			arrayNode.addPOJO(jsonPlayer);
+		}
+		msg.putPOJO("inGamePlayers", arrayNode);
+		
+		try {
+			sendMessageToAll(msg.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public void removeFromWaitingList() {
 		Player player = lastAddedToWaitingLists.poll();
@@ -417,18 +482,20 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	}
 
 	public boolean checkMatchmaking(Sala sala) {
-		Player addPlayer = awaitingMatchmaking.poll();
-		if (addPlayer == null) {
-			System.out.println("[MATCHMAKING] There are no players waiting for matchmaking.");
-		} else {
-			try {
-				System.out.println("[MATCHMAKING] Player " + addPlayer.getPlayerName()
-						+ " trying to join room through matchmaking");
-				addPlayerToRoom(addPlayer, sala);
-				return true;
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if (sala.getCurrentState() != "FinPartida") {
+			Player addPlayer = awaitingMatchmaking.poll();
+			if (addPlayer == null) {
+				System.out.println("[MATCHMAKING] There are no players waiting for matchmaking.");
+			} else {
+				try {
+					System.out.println("[MATCHMAKING] Player " + addPlayer.getPlayerName()
+							+ " trying to join room through matchmaking");
+					addPlayerToRoom(addPlayer, sala);
+					return true;
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		return false;
@@ -466,6 +533,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 
 			// Si la partida ya estaba iniciada, mandamos el mensaje de partida
 			if (s.getCurrentState() == "Partida") {
+				inGamePlayers.put(player.getPlayerName(), player);
+				sendPlayerListMessage();
 				try {
 					s.getGame().sendBeginningMessageTo(player);
 				} catch (Exception e) {
@@ -476,7 +545,12 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 
 			// Ahora comprobamos si la sala está llena, y si tenemos que empezar el juego
 			// Es importante que esto se envíe después del mensaje de JOIN ROOM
-			s.startGameIfFull();
+			if (s.startGameIfFull()) {
+				for (Player p : s.getPlayers()) {
+					inGamePlayers.put(p.getPlayerName(), p);
+				}
+				sendPlayerListMessage();
+			}
 			break;
 		case "waiting":
 			lobbyPlayers.remove(player.getPlayerName()); // Quita al jugador del lobby
@@ -506,12 +580,20 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			addPlayer.sendMessage(msg.toString());
 			sendRoomInfoMessage(sala);
 			sendGetRoomsMessageAll();
-			sala.startGameIfFull();
+
+			if (sala.startGameIfFull()) {
+				for (Player p : sala.getPlayers()) {
+					inGamePlayers.put(p.getPlayerName(), p);
+					sendPlayerListMessage();
+				}
+			}
 
 			// Si la partida ya estaba iniciada, mandamos el mensaje de partida
 			if (sala.getCurrentState() == "Partida") {
 				try {
 					sala.getGame().sendBeginningMessageTo(addPlayer);
+					inGamePlayers.put(addPlayer.getPlayerName(), addPlayer);
+					sendPlayerListMessage();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
