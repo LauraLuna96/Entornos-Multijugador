@@ -126,7 +126,7 @@ Spacewar.gameState.prototype = {
 			}
 			else if (game.time.now > this.propellerTime) {
 				this.propellerTime = game.time.now + 500;
-				console.log("PROPULSOR USADO!");
+				//console.log("PROPULSOR USADO!");
 				return true
 			} else {
 				return false
@@ -189,7 +189,10 @@ Spacewar.gameState.prototype = {
 		this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
 		this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 		this.pKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
+		this.escapeKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+		this.escapeKey.onDown.add(function() {leaveGame();});
 
 		// Stop the following keys from propagating up to the browser
 		/*game.input.keyboard.addKeyCapture([Phaser.Keyboard.W,
@@ -224,7 +227,7 @@ Spacewar.gameState.prototype = {
 			msg.movement.rotRight = true;
 		if (this.spaceKey.isDown) {
 			msg.bullet = this.fireBullet()
-			console.log("Shoot!")
+			//console.log("Shoot!")
 		}
 		if (this.pKey.isDown) { // Servirá para los propulsores
 			msg.propeller = this.usePropeller()
@@ -269,4 +272,13 @@ function powerUpExists(powerUpArray) {
 			return false;
 		}
 	}
+}
+
+function leaveGame() {
+	clearGame();
+	let msg = new Object();
+	msg.event = 'LEAVE ROOM';
+	console.log("Enviada petición para salir de la sala");
+	game.global.socket.send(JSON.stringify(msg));
+	game.state.start('lobbyState');
 }
