@@ -42,7 +42,7 @@ Spacewar.gameState.prototype = {
 		game.global.myPlayer.image = game.add.sprite(0, 0, 'spacewar',
 			game.global.myPlayer.shipType)
 
-		game.global.UIText[game.global.myPlayer.id] = game.add.text(10, 10 + i * 20 , game.global.myPlayer.playerName + " / "+ game.global.myPlayer.life + " / "+ game.global.myPlayer.ammo + " / "+ game.global.myPlayer.propellerUses + " / "+ game.global.myPlayer.score, { font: "12px Orbitron", fill: "#40ffe6" });
+		
 		game.global.myPlayer.image.anchor.setTo(0.5, 0.5)
 		game.global.myPlayer.propellerUses = 3;
 		game.global.myPlayer.ammo = 20;
@@ -51,6 +51,7 @@ Spacewar.gameState.prototype = {
 	create: function () {
 
 		game.input.mouse.capture = true;
+		game.global.UIText[game.global.myPlayer.id] = game.add.text(10, 10 + game.global.myPlayer.id * 20 , game.global.myPlayer.playerName + " / "+ game.global.myPlayer.life + " / "+ game.global.myPlayer.ammo + " / "+ game.global.myPlayer.propellerUses + " / "+ game.global.myPlayer.score, { font: "12px Orbitron", fill: "#40ffe6" });
 
 		////// INTERFAZ QUE MUESTRA DATOS DE LOS JUGADORES //////
 		/*function generateHexColor() { 
