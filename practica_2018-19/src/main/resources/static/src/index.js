@@ -243,8 +243,13 @@ function configWebsocket() {
 
 								game.global.UIPlayerName[player.id] = game.add.text(game.global.otherPlayers[player.id].image.x, game.global.otherPlayers[player.id].image.y + 20, game.global.otherPlayers[player.id].playerName, { font: "12px Orbitron", fill: "#ffffff" });
 								game.global.UIPlayerName[player.id].anchor.set(0.5, 0.5);
+								game.global.UIPlayerName[player.id].stroke = '#000000';
+    							game.global.UIPlayerName[player.id].strokeThickness = 3;
+								
 								game.global.UIText[player.id] = game.add.text(10, 10 + i * 20, game.global.otherPlayers[player.id].playerName + " / " + game.global.otherPlayers[player.id].life + " / " + game.global.otherPlayers[player.id].ammo + " / " + game.global.otherPlayers[player.id].propellerUses + " / " + game.global.otherPlayers[player.id].score, { font: "12px Orbitron", fill: "#ffffff" });
-
+								game.global.UIText[player.id].stroke = '#000000';
+    							game.global.UIText[player.id].strokeThickness = 3;
+							
 							} else {
 								if (!player.isAlive) {
 									console.log("OtherPlayer[" + player.id + "] ha muerto :)")

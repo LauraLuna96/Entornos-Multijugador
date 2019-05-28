@@ -63,6 +63,10 @@ public class Player extends Spaceship {
 	public void decreaseAmmo() {
 		this.ammo.decrementAndGet();
 	}
+	
+	public void increaseAmmo(int n) {
+		this.ammo.addAndGet(n);
+	}
 
 	public int decreaseLife() {
 		return this.life.decrementAndGet();
