@@ -233,9 +233,14 @@ function configWebsocket() {
 									game.global.otherPlayers[player.id].image.x = player.posX
 									game.global.otherPlayers[player.id].image.y = player.posY
 									game.global.otherPlayers[player.id].image.angle = player.facingAngle
-									game.global.otherPlayers[player.id].life = player.life
 									game.global.UIText[player.id].setText(game.global.otherPlayers[player.id].playerName + " / "+ game.global.otherPlayers[player.id].life + " / "+ game.global.otherPlayers[player.id].ammo + " / "+ game.global.otherPlayers[player.id].propellerUses + " / "+ game.global.otherPlayers[player.id].score);
 									game.global.otherPlayers[player.id].isAlive = player.isAlive
+									game.global.otherPlayers[player.id].playerName = player.playerName
+									game.global.otherPlayers[player.id].ammo = player.ammo
+									game.global.otherPlayers[player.id].propellerUses = player.propellerUses
+									game.global.otherPlayers[player.id].score = player.score
+									game.global.otherPlayers[player.id].life = player.life
+
 								}
 								//console.log("OtherPlayer["+ player.id +"] life: " + game.global.otherPlayers[player.id].life);
 							}
