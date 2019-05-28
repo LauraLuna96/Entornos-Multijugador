@@ -177,6 +177,7 @@ input:focus {
     z-index: 999;
     position:absolute;
     width: calc(100% - 30px);
+    max-width: 1024px;
     height: 100%;
     padding: 100px;
 }
@@ -224,6 +225,19 @@ input:focus {
 
 .btn-sala {
     vertical-align: middle;
+}
+
+.btn-sala-unavailable {
+    vertical-align: middle;
+    background-color: var(--warning-color1);
+    border-color: var(--warning-color2);
+}
+
+.btn-sala-unavailable:hover {
+    background-color: #2e2e2e;
+    border-color: var(--warning-color1);
+    color: var(--warning-color1);
+    box-shadow: 0px 0px 5px var(--warning-color1);
 }
 
 .dropdown-menu {
