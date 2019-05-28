@@ -236,7 +236,7 @@ function configWebsocket() {
 								game.global.myPlayer.playerName = player.playerName
 								game.global.myPlayer.score = player.score
 
-								game.global.UIText[player.id].setText(game.global.myPlayer.playerName + " / " + game.global.myPlayer.life + " / " + game.global.myPlayer.ammo + " / " + game.global.myPlayer.propellerUses + " / " + game.global.myPlayer.score);
+								game.global.UIText[player.id].setText(game.global.myPlayer.playerName + " / LIFE: " + game.global.myPlayer.life + " / AMMO: " + game.global.myPlayer.ammo + " / PROPELLER: " + game.global.myPlayer.propellerUses + " / SCORE: " + game.global.myPlayer.score);
 								game.global.UIPlayerName[player.id].setText(game.global.myPlayer.playerName);
 								game.global.UIPlayerName[player.id].position.x = game.global.myPlayer.image.x;
 								if (game.global.UIPlayerName[player.id].position.x > 1000) {
@@ -269,7 +269,7 @@ function configWebsocket() {
 								game.global.UIPlayerName[player.id].stroke = '#000000';
 								game.global.UIPlayerName[player.id].strokeThickness = 3;
 
-								game.global.UIText[player.id] = game.add.text(10, 10 + i * 20, game.global.otherPlayers[player.id].playerName + " / " + game.global.otherPlayers[player.id].life + " / " + game.global.otherPlayers[player.id].ammo + " / " + game.global.otherPlayers[player.id].propellerUses + " / " + game.global.otherPlayers[player.id].score, { font: "16px Orbitron", fill: "#ffffff" });
+								game.global.UIText[player.id] = game.add.text(10, 10 + i * 20, game.global.otherPlayers[player.id].playerName + " / LIFE: " + game.global.otherPlayers[player.id].life + " / AMMO: " + game.global.otherPlayers[player.id].ammo + " / PROPELLER: " + game.global.otherPlayers[player.id].propellerUses + " / SCORE: " + game.global.otherPlayers[player.id].score, { font: "16px Orbitron", fill: "#ffffff" });
 								game.global.UIText[player.id].fontWeight = 'bold';
 								game.global.UIText[player.id].stroke = '#000000';
 								game.global.UIText[player.id].strokeThickness = 3;
@@ -291,7 +291,7 @@ function configWebsocket() {
 									game.global.otherPlayers[player.id].score = player.score
 									game.global.otherPlayers[player.id].life = player.life
 
-									game.global.UIText[player.id].setText(game.global.otherPlayers[player.id].playerName + " / " + game.global.otherPlayers[player.id].life + " / " + game.global.otherPlayers[player.id].ammo + " / " + game.global.otherPlayers[player.id].propellerUses + " / " + game.global.otherPlayers[player.id].score);
+									game.global.UIText[player.id].setText(game.global.otherPlayers[player.id].playerName + " / LIFE: " + game.global.otherPlayers[player.id].life + " / AMMO: " + game.global.otherPlayers[player.id].ammo + " / PROPELLER: " + game.global.otherPlayers[player.id].propellerUses + " / SCORE: " + game.global.otherPlayers[player.id].score);
 									game.global.UIPlayerName[player.id].setText(game.global.otherPlayers[player.id].playerName);
 									game.global.UIPlayerName[player.id].position.x = game.global.otherPlayers[player.id].image.x;
 									game.global.UIPlayerName[player.id].position.y = game.global.otherPlayers[player.id].image.y - 30;
