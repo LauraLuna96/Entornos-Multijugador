@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -26,7 +28,7 @@ public class Sala {
 	}
 	private state currentState;
 	private Lock stateLock = new ReentrantLock();
-	private BlockingQueue<Player> waitingList = new LinkedBlockingQueue<Player>();
+	public BlockingQueue<Player> waitingList = new LinkedBlockingQueue<Player>();
 	
 	Sala(String name) {
 		this.name = name;
