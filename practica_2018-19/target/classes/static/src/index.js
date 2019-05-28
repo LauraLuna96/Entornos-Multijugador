@@ -130,6 +130,12 @@ function configWebsocket() {
 
 			///// MENSAJES DE SALAS
 			// Mensajes para la gestión de las salas
+			case 'WAITING ROOM':
+			console.log("Waiting to enter the room ...")
+			break
+			case 'LEAVE WAITING':
+			game.state.start('lobbyState');
+			break
 			case 'JOIN ROOM':
 				console.log("Joined room " + msg.roomName)
 				if (game.global.currentSala == null) game.global.currentSala = new Object();
@@ -202,7 +208,7 @@ function configWebsocket() {
 					for (var player of msg.players) {
 						if (game.global.myPlayer.id == player.id) {
 							if (!player.isAlive) {
-								console.log("Tas morio :(")
+								console.log("Has muerto :(")
 							} else {
 								game.global.myPlayer.image.x = player.posX
 								game.global.myPlayer.image.y = player.posY
@@ -228,7 +234,7 @@ function configWebsocket() {
 								game.global.UIText[player.id] = game.add.text(10, 10 + i * 20 , game.global.otherPlayers[player.id].playerName + " / "+ game.global.otherPlayers[player.id].life + " / "+ game.global.otherPlayers[player.id].ammo + " / "+ game.global.otherPlayers[player.id].propellerUses + " / "+ game.global.otherPlayers[player.id].score, { font: "12px Orbitron", fill: "#ffffff" });
 							} else {
 								if (!player.isAlive) {
-									console.log("OtherPlayer[" + player.id + "] se ha morido :)")
+									console.log("OtherPlayer[" + player.id + "] ha muerto :)")
 								} else {
 									game.global.otherPlayers[player.id].image.x = player.posX
 									game.global.otherPlayers[player.id].image.y = player.posY

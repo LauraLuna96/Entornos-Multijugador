@@ -2,7 +2,12 @@ package spacewar;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.web.socket.CloseStatus;
@@ -27,6 +32,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private Map<String, Player> globalPlayers = new ConcurrentHashMap<>(); // Mapa de jugadores global
 	private Map<String, Player> lobbyPlayers = new ConcurrentHashMap<>(); // Mapa de jugadores en el lobby
 	private Map<String, Sala> salas = new ConcurrentHashMap<>(); // Mapa de salas existentes
+	private ScheduledExecutorService waitingListScheduler = Executors.newScheduledThreadPool(1);
+	public BlockingQueue<Player> lastAddedToWaitingLists = new LinkedBlockingQueue<Player>();
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -130,6 +137,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					msg.put("event", "WAITING ROOM");
 					msg.put("roomName", s.getName());
 					player.sendMessage(msg.toString());
+					lastAddedToWaitingLists.put(player);
+					waitingListScheduler.schedule(() -> removeFromWaitingList(), 5, TimeUnit.SECONDS);
 					break;
 				case "error":
 					msg.put("event", "ERROR");
@@ -411,5 +420,27 @@ public void sendGetRoomsMessageAll() throws Exception {
 		}
 		msg.putPOJO("players", arrayNode);
 		sala.broadcast(msg.toString());
+	}
+	
+	public void removeFromWaitingList() {
+		Player player = lastAddedToWaitingLists.poll();
+		if (player == null) {
+			System.out.println("[ERROR] Error while removing player from waiting list");
+		}
+		Sala sala = (Sala) player.getSession().getAttributes().get(ROOM_ATTRIBUTE);
+		if (sala.waitingList.remove(player)) {
+			player.getSession().getAttributes().remove(ROOM_ATTRIBUTE);
+			lobbyPlayers.put(player.getPlayerName(), player); // Añade el jugador al lobby
+			ObjectNode msg = mapper.createObjectNode();
+			msg.put("event", "LEAVE WAITING");
+			System.out.println("[ROOM] Player " + player.getPlayerName() + " removed from waiting list.");
+			try {
+				player.sendMessage(msg.toString());
+				sendGetRoomsMessage(player);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }
