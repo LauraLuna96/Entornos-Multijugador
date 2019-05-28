@@ -278,7 +278,7 @@ public class SpacewarGame {
 
 				// Handle collision
 				for (Player player : sala.getPlayers()) {
-					if ((projectile.getOwner().getPlayerId() != player.getPlayerId()) && player.intersect(projectile)) {
+					if ((player.isAlive()) && (projectile.getOwner().getPlayerId() != player.getPlayerId()) && player.intersect(projectile)) {
 						// System.out.println("Player " + player.getPlayerId() + " was hit!!!");
 						projectile.setHit(true);
 						player.decreaseLife();

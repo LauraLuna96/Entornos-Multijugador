@@ -223,6 +223,7 @@ function configWebsocket() {
 						if (game.global.myPlayer.id == player.id) {
 							if (!player.isAlive) {
 								console.log("Has muerto :(")
+								game.global.myPlayer.image.visible = false;
 								game.global.UIText[player.id].setText(game.global.myPlayer.playerName + " / ELIMINADO");
 								game.global.UIText[player.id].addColor("#e2004b", 0);
 							} else {
@@ -279,6 +280,7 @@ function configWebsocket() {
 									console.log("OtherPlayer[" + player.id + "] ha muerto :)")
 									game.global.UIText[player.id].setText(game.global.otherPlayers[player.id].playerName + " / ELIMINADO");
 									game.global.UIText[player.id].addColor("#e2004b", 0);
+									game.global.otherPlayers[player.id].image.visible = false;
 								} else {
 									game.global.otherPlayers[player.id].image.x = player.posX
 									game.global.otherPlayers[player.id].image.y = player.posY
@@ -291,7 +293,7 @@ function configWebsocket() {
 									game.global.otherPlayers[player.id].score = player.score
 									game.global.otherPlayers[player.id].life = player.life
 
-									game.global.UIText[player.id].setText(game.global.otherPlayers[player.id].playerName + " / " + game.global.otherPlayers[player.id].life + " / " + game.global.otherPlayers[player.id].ammo + " / " + game.global.otherPlayers[player.id].propellerUses + " / " + game.global.otherPlayers[player.id].score);
+									game.global.UIText[player.id].setText(game.global.otherPlayers[player.id].playerName + " / LIFE: " + game.global.otherPlayers[player.id].life + " / AMMO: " + game.global.otherPlayers[player.id].ammo + " / PROPELLER: " + game.global.otherPlayers[player.id].propellerUses + " / SCORE: " + game.global.otherPlayers[player.id].score);
 									game.global.UIPlayerName[player.id].setText(game.global.otherPlayers[player.id].playerName);
 									game.global.UIPlayerName[player.id].position.x = game.global.otherPlayers[player.id].image.x;
 									game.global.UIPlayerName[player.id].position.y = game.global.otherPlayers[player.id].image.y - 30;
